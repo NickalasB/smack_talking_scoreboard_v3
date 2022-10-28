@@ -43,7 +43,8 @@ void main() {
   });
 }
 
-Future<void> Function(WidgetTester) appHarness(WidgetTestHarnessCallback<AppHarness> callback) {
+Future<void> Function(WidgetTester) appHarness(
+    WidgetTestHarnessCallback<AppHarness> callback) {
   return (tester) => givenWhenThenWidgetTest(AppHarness(tester), callback);
 }
 
@@ -75,6 +76,7 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
   }
 }
 
-class FakeCounterBloc extends FakeBloc<CounterEvent, CounterState> implements CounterBloc {
+class FakeCounterBloc extends FakeBloc<CounterEvent, CounterState>
+    implements CounterBloc {
   FakeCounterBloc(super.initialState);
 }

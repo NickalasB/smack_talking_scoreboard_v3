@@ -31,7 +31,9 @@ void main() {
       expect(bloc.state, equals(const CounterState(0)));
     });
 
-    test('should not decrease score by 1 when DecreaseScoreEvent added if score is zero', () async {
+    test(
+        'should not decrease score by 1 when DecreaseScoreEvent added if score is zero',
+        () async {
       final bloc = CounterBloc()..add(DecreaseScoreEvent());
       await tick();
       expect(bloc.state, equals(const CounterState(0)));
