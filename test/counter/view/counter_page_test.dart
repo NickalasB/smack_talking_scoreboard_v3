@@ -44,7 +44,8 @@ void main() {
 }
 
 Future<void> Function(WidgetTester) appHarness(
-    WidgetTestHarnessCallback<AppHarness> callback) {
+  WidgetTestHarnessCallback<AppHarness> callback,
+) {
   return (tester) => givenWhenThenWidgetTest(AppHarness(tester), callback);
 }
 
