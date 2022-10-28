@@ -9,26 +9,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:given_when_then/given_when_then.dart';
-import 'package:smack_talking_scoreboard_v3/counter/counter.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 
 import '../../helpers/fake_bloc.dart';
 import '../../helpers/pump_app.dart';
 
 void main() {
-  group('CounterPage', () {
-    testWidgets('renders CounterView', (tester) async {
-      await tester.pumpApp(const CounterPage());
-      expect(find.byType(CounterView), findsOneWidget);
+  group('ScoreboardPage', () {
+    testWidgets('renders ScoreboardView', (tester) async {
+      await tester.pumpApp(const ScoreboardPage());
+      expect(find.byType(ScoreboardView), findsOneWidget);
     });
   });
 
-  group('CounterView', () {
+  group('ScoreboardView', () {
     testWidgets(
       'should add IncreaseScoreEvent when add button tapped',
       appHarness((given, when, then) async {
         await given.appIsPumped();
         await when.tester.tap(find.byKey(const Key('increase_button')));
-        expect(then.harness.counterBloc.addedEvents, [IncreaseScoreEvent()]);
+        expect(then.harness.scoreBloc.addedEvents, [IncreaseScoreEvent()]);
       }),
     );
 
@@ -37,7 +40,7 @@ void main() {
       appHarness((given, when, then) async {
         await given.appIsPumped();
         await when.tester.tap(find.byKey(const Key('decrease_button')));
-        expect(then.harness.counterBloc.addedEvents, [DecreaseScoreEvent()]);
+        expect(then.harness.scoreBloc.addedEvents, [DecreaseScoreEvent()]);
       }),
     );
   });
@@ -51,17 +54,17 @@ Future<void> Function(WidgetTester) appHarness(
 
 class AppHarness extends WidgetTestHarness {
   AppHarness(super.tester);
-  final counterBloc = FakeCounterBloc(const CounterState(0));
+  final scoreBloc = FakeScoreBloc(const ScoreboardState(0));
 }
 
 extension AppGiven on WidgetTestGiven<AppHarness> {
   Future<void> appIsPumped() async {
     await harness.tester.pumpApp(
-      BlocProvider<CounterBloc>(
-        create: (context) => harness.counterBloc,
+      BlocProvider<ScoreBloc>(
+        create: (context) => harness.scoreBloc,
         child: Builder(
           builder: (context) {
-            return const CounterView();
+            return const ScoreboardView();
           },
         ),
       ),
@@ -77,7 +80,7 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
   }
 }
 
-class FakeCounterBloc extends FakeBloc<CounterEvent, CounterState>
-    implements CounterBloc {
-  FakeCounterBloc(super.initialState);
+class FakeScoreBloc extends FakeBloc<CounterEvent, ScoreboardState>
+    implements ScoreBloc {
+  FakeScoreBloc(super.initialState);
 }

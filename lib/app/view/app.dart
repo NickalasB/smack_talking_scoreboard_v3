@@ -7,8 +7,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:smack_talking_scoreboard_v3/counter/counter.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -28,7 +28,7 @@ class App extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const CounterPage(),
+      home: const ScoreboardPage(),
     );
   }
 }

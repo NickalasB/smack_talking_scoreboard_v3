@@ -6,37 +6,39 @@
 // https://opensource.org/licenses/MIT.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smack_talking_scoreboard_v3/counter/counter.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 
 import '../../helpers/test_helpers.dart';
 
 void main() {
-  group('CounterBloc', () {
+  group('ScoreBloc', () {
     test('initial state is 0', () {
-      expect(CounterBloc().state, equals(const CounterState(0)));
+      expect(ScoreBloc().state, equals(const ScoreboardState(0)));
     });
 
     test('should increase score by 1 when IncreaseScoreEvent added', () async {
-      final bloc = CounterBloc()..add(IncreaseScoreEvent());
+      final bloc = ScoreBloc()..add(IncreaseScoreEvent());
       await tick();
-      expect(bloc.state, equals(const CounterState(1)));
+      expect(bloc.state, equals(const ScoreboardState(1)));
     });
 
     test('should decrease score by 1 when DecreaseScoreEvent added', () async {
-      final bloc = CounterBloc()..add(IncreaseScoreEvent());
+      final bloc = ScoreBloc()..add(IncreaseScoreEvent());
       await tick();
-      expect(bloc.state, equals(const CounterState(1)));
+      expect(bloc.state, equals(const ScoreboardState(1)));
       bloc.add(DecreaseScoreEvent());
       await tick();
-      expect(bloc.state, equals(const CounterState(0)));
+      expect(bloc.state, equals(const ScoreboardState(0)));
     });
 
     test(
         'should not decrease score by 1 when DecreaseScoreEvent added if score is zero',
         () async {
-      final bloc = CounterBloc()..add(DecreaseScoreEvent());
+      final bloc = ScoreBloc()..add(DecreaseScoreEvent());
       await tick();
-      expect(bloc.state, equals(const CounterState(0)));
+      expect(bloc.state, equals(const ScoreboardState(0)));
     });
   });
 }
