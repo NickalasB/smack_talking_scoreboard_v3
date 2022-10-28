@@ -16,7 +16,7 @@ class CounterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => CounterCubit(),
+      create: (_) => CounterBloc(),
       child: const CounterView(),
     );
   }
@@ -27,21 +27,23 @@ class CounterView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.counterAppBarTitle)),
       body: const Center(child: CounterText()),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FloatingActionButton(
-            onPressed: () => context.read<CounterCubit>().increment(),
+            key: const Key('increase_button'),
+            onPressed: () =>
+                context.read<CounterBloc>().add(IncreaseScoreEvent()),
             child: const Icon(Icons.add),
           ),
           const SizedBox(height: 8),
           FloatingActionButton(
-            onPressed: () => context.read<CounterCubit>().decrement(),
+            key: const Key('decrease_button'),
+            onPressed: () =>
+                context.read<CounterBloc>().add(DecreaseScoreEvent()),
             child: const Icon(Icons.remove),
           ),
         ],
@@ -56,7 +58,9 @@ class CounterText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final count = context.select((CounterCubit cubit) => cubit.state);
-    return Text('$count', style: theme.textTheme.headline1);
+    final l10n = context.l10n;
+
+    final count = context.select((CounterBloc bloc) => bloc.state.score);
+    return Text('${l10n.player1}: $count', style: theme.textTheme.titleLarge);
   }
 }

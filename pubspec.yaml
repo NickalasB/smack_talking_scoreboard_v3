@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   bloc: ^8.1.0
+  equatable: ^2.0.5
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
@@ -20,6 +21,7 @@ dev_dependencies:
   bloc_test: ^9.1.0
   flutter_test:
     sdk: flutter
+  given_when_then: ^0.2.0
   mocktail: ^0.3.0
   very_good_analysis: ^3.1.0
 
