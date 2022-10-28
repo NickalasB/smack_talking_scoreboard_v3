@@ -35,13 +35,15 @@ class CounterView extends StatelessWidget {
         children: [
           FloatingActionButton(
             key: const Key('increase_button'),
-            onPressed: () => context.read<CounterBloc>().add(IncreaseScoreEvent()),
+            onPressed: () =>
+                context.read<CounterBloc>().add(IncreaseScoreEvent()),
             child: const Icon(Icons.add),
           ),
           const SizedBox(height: 8),
           FloatingActionButton(
             key: const Key('decrease_button'),
-            onPressed: () => context.read<CounterBloc>().add(DecreaseScoreEvent()),
+            onPressed: () =>
+                context.read<CounterBloc>().add(DecreaseScoreEvent()),
             child: const Icon(Icons.remove),
           ),
         ],
