@@ -1,7 +1,7 @@
 {
     "@@locale": "en",
-    "counterAppBarTitle": "Counter",
-    "@counterAppBarTitle": {
-        "description": "Text shown in the AppBar of the Counter Page"
+    "player1": "Player 1",
+    "@player1": {
+        "description": "Generic label for player 1"
     }
 }
