@@ -10,14 +10,16 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 
 class ScoreBloc extends Bloc<CounterEvent, ScoreboardState> {
   ScoreBloc() : super(const ScoreboardState(0)) {
-    on<IncreaseScoreEvent>((event, emit) {
-      return emit(ScoreboardState(state.score + 1));
-    });
+    on<IncreaseScoreEvent>(_increaseScore);
 
     on<DecreaseScoreEvent>((event, emit) {
       if (state.score >= 1) {
         return emit(ScoreboardState(state.score - 1));
       }
     });
+  }
+
+  void _increaseScore(IncreaseScoreEvent event, Emitter<ScoreboardState> emit) {
+    emit(ScoreboardState(state.score + 1));
   }
 }

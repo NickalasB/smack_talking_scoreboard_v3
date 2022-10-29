@@ -1,13 +1,17 @@
 {
-    "@@locale": "en",
-    "player1": "Player {playerId}",
-    "@player1": {
-        "description": "Generic label for player 1",
-        "placeholders": {
-            "playerId": {
-                "type": "int",
-                "example": "1"
-            }
-        }
+  "@@locale": "en",
+  "player1": "Player {playerId}",
+  "@player1": {
+    "description": "Generic label for player 1",
+    "placeholders": {
+      "playerId": {
+        "type": "int",
+        "example": "1"
+      }
     }
+  },
+  "forTheWin": "FTW",
+  "@forTheWin": {
+    "description": "button label abbreviation for the term 'for the win'"
+  }
 }

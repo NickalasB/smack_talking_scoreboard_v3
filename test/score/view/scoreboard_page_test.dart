@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:given_when_then/given_when_then.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
@@ -19,6 +20,16 @@ import '../../helpers/pump_app.dart';
 
 void main() {
   group('ScoreboardPage', () {
+    testGoldens(
+      'Should look correct',
+      appHarness((given, when, then) async {
+        await given.appIsPumped();
+
+        expect(find.byType(ScoreboardView), findsOneWidget);
+        await then.multiScreenGoldensMatch('scoreboard_page');
+      }),
+    );
+
     testWidgets('renders ScoreboardView', (tester) async {
       await tester.pumpApp(const ScoreboardPage());
       expect(find.byType(ScoreboardView), findsOneWidget);
@@ -72,7 +83,11 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
   }
 }
 
-extension AppThen on WidgetTestThen<AppHarness> {}
+extension AppThen on WidgetTestThen<AppHarness> {
+  Future<void> multiScreenGoldensMatch(String testName) {
+    return multiScreenGolden(tester, testName);
+  }
+}
 
 extension AppWhen on WidgetTestWhen<AppHarness> {
   Future<void> idle() {
