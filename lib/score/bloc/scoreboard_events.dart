@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 
-class CounterEvent extends Equatable {
+class ScoreboardEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class IncreaseScoreEvent extends CounterEvent {
+class IncreaseScoreEvent extends ScoreboardEvent {
   IncreaseScoreEvent();
 }
 
-class DecreaseScoreEvent extends CounterEvent {
+class DecreaseScoreEvent extends ScoreboardEvent {
   DecreaseScoreEvent();
 }

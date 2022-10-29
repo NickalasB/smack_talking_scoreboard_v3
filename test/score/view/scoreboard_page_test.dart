@@ -95,7 +95,7 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
   }
 }
 
-class FakeScoreBloc extends FakeBloc<CounterEvent, ScoreboardState>
+class FakeScoreBloc extends FakeBloc<ScoreboardEvent, ScoreboardState>
     implements ScoreBloc {
   FakeScoreBloc(super.initialState);
 }

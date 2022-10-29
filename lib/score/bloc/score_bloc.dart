@@ -8,7 +8,7 @@ import 'package:bloc/bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 
-class ScoreBloc extends Bloc<CounterEvent, ScoreboardState> {
+class ScoreBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
   ScoreBloc() : super(const ScoreboardState(0)) {
     on<IncreaseScoreEvent>(_increaseScore);
 
