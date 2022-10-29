@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class VolumeButton extends StatelessWidget {
@@ -10,11 +9,11 @@ class VolumeButton extends StatelessWidget {
     final bool isVolumeOn = false;
     return IconButton(
       icon: DecoratedBox(
-        child: isVolumeOn ? Icon(Icons.volume_up) : Icon(Icons.volume_off),
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.grey,
         ),
+        child: isVolumeOn ? Icon(Icons.volume_up) : Icon(Icons.volume_off),
       ),
       iconSize: 64,
       color: Colors.white,

@@ -9,12 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ftw_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/speak_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
-
-import '../bloc/scoreboard_events.dart';
 
 class ScoreboardPage extends StatelessWidget {
   const ScoreboardPage({super.key});
@@ -106,11 +105,13 @@ class PlayerScore extends StatelessWidget {
                 if (primaryVelocity != null) {
                   if (primaryVelocity < 0) {
                     context.addScoreboardEvent(
-                        IncreaseScoreEvent(playerId: playerId));
+                      IncreaseScoreEvent(playerId: playerId),
+                    );
                   }
                   if (primaryVelocity > 0) {
                     context.addScoreboardEvent(
-                        DecreaseScoreEvent(playerId: playerId));
+                      DecreaseScoreEvent(playerId: playerId),
+                    );
                   }
                 }
               },
