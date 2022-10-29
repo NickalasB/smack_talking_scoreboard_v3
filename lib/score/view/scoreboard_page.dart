@@ -29,14 +29,16 @@ class ScoreboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            PlayerScore(playerId: 1),
-            SizedBox(height: 16),
-            PlayerScore(playerId: 2),
-          ],
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Expanded(child: PlayerScore(playerId: 1)),
+              SizedBox(height: 16),
+              Expanded(child: PlayerScore(playerId: 2)),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Column(
@@ -73,18 +75,39 @@ class PlayerScore extends StatelessWidget {
     final score = context.select((ScoreBloc bloc) => bloc.state.score);
     final theme = Theme.of(context);
 
-    return Column(
-      children: [
-        Text(
-          l10n.player1(playerId),
-          style: theme.textTheme.titleLarge,
-        ),
-        const SizedBox(height: 16),
-        Text(
-          score.toString(),
-          style: theme.textTheme.titleLarge,
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            constraints: const BoxConstraints(minHeight: 48),
+            decoration: BoxDecoration(
+              border: Border.all(),
+            ),
+            child: Center(
+              child: Text(
+                l10n.player1(playerId),
+                style: theme.textTheme.titleLarge,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Flexible(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border.all(),
+              ),
+              child: Center(
+                child: Text(
+                  score.toString(),
+                  style: TextStyle(fontSize: 260),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
