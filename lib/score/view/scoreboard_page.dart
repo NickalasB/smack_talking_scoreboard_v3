@@ -9,9 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ftw_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/speak_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
+
+import '../bloc/scoreboard_events.dart';
 
 class ScoreboardPage extends StatelessWidget {
   const ScoreboardPage({super.key});
@@ -19,7 +22,7 @@ class ScoreboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ScoreBloc(),
+      create: (_) => ScoreboardBloc(),
       child: const ScoreboardView(),
     );
   }
@@ -53,25 +56,6 @@ class ScoreboardView extends StatelessWidget {
           ],
         ),
       ),
-      // floatingActionButton: Column(
-      //   mainAxisAlignment: MainAxisAlignment.end,
-      //   crossAxisAlignment: CrossAxisAlignment.end,
-      //   children: [
-      //     FloatingActionButton(
-      //       key: const Key('increase_button'),
-      //       onPressed: () =>
-      //           context.read<ScoreBloc>().add(IncreaseScoreEvent()),
-      //       child: const Icon(Icons.add),
-      //     ),
-      //     const SizedBox(height: 8),
-      //     FloatingActionButton(
-      //       key: const Key('decrease_button'),
-      //       onPressed: () =>
-      //           context.read<ScoreBloc>().add(DecreaseScoreEvent()),
-      //       child: const Icon(Icons.remove),
-      //     ),
-      //   ],
-      // ),
     );
   }
 }
@@ -84,7 +68,11 @@ class PlayerScore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final score = context.select((ScoreBloc bloc) => bloc.state.score);
+    final score = context
+            .select((ScoreboardBloc bloc) => bloc.state.game)
+            .players[playerId]
+            ?.score ??
+        0;
     final theme = Theme.of(context);
 
     return Padding(
@@ -109,13 +97,31 @@ class PlayerScore extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Expanded(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(),
-              ),
-              child: FittedBox(
-                child: Text(
-                  score.toString(),
+            child: GestureDetector(
+              key: const Key('scoreboard_gesture'),
+              onTap: () => context
+                  .addScoreboardEvent(IncreaseScoreEvent(playerId: playerId)),
+              onVerticalDragEnd: (details) {
+                final primaryVelocity = details.primaryVelocity;
+                if (primaryVelocity != null) {
+                  if (primaryVelocity < 0) {
+                    context.addScoreboardEvent(
+                        IncreaseScoreEvent(playerId: playerId));
+                  }
+                  if (primaryVelocity > 0) {
+                    context.addScoreboardEvent(
+                        DecreaseScoreEvent(playerId: playerId));
+                  }
+                }
+              },
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                ),
+                child: FittedBox(
+                  child: Text(
+                    score.toString(),
+                  ),
                 ),
               ),
             ),

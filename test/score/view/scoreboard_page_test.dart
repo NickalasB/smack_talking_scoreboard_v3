@@ -71,7 +71,7 @@ class AppHarness extends WidgetTestHarness {
 extension AppGiven on WidgetTestGiven<AppHarness> {
   Future<void> appIsPumped() async {
     await harness.tester.pumpApp(
-      BlocProvider<ScoreBloc>(
+      BlocProvider<ScoreboardBloc>(
         create: (context) => harness.scoreBloc,
         child: Builder(
           builder: (context) {
@@ -96,6 +96,6 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
 }
 
 class FakeScoreBloc extends FakeBloc<ScoreboardEvent, ScoreboardState>
-    implements ScoreBloc {
+    implements ScoreboardBloc {
   FakeScoreBloc(super.initialState);
 }
