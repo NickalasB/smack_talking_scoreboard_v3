@@ -7,21 +7,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 
 class ScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
-  ScoreboardBloc()
-      : super(
-          const ScoreboardState(
-            Game(
-              players: {
-                1: Player(playerId: 1),
-                2: Player(playerId: 2),
-              },
-            ),
-          ),
-        ) {
+  ScoreboardBloc() : super(initialScoreboardState) {
     on<IncreaseScoreEvent>(_increaseScore);
 
     on<DecreaseScoreEvent>((event, emit) {

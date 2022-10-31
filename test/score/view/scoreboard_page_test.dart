@@ -17,6 +17,9 @@ import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 
 import '../../helpers/fake_bloc.dart';
 import '../../helpers/pump_app.dart';
+import 'scoreboard_page_objects.dart';
+
+final scoreboardPage = ScoreBoardPageObject();
 
 void main() {
   group('ScoreboardPage', () {
@@ -41,17 +44,49 @@ void main() {
       'should add IncreaseScoreEvent when add button tapped',
       appHarness((given, when, then) async {
         await given.appIsPumped();
-        await when.tester.tap(find.byKey(const Key('increase_button')));
-        expect(then.harness.scoreBloc.addedEvents, [IncreaseScoreEvent()]);
+        await when.tester.tap(scoreboardPage.playerScore(forPlayerId: 1));
+        expect(
+          then.harness.scoreBloc.addedEvents,
+          [IncreaseScoreEvent(playerId: 1)],
+        );
       }),
     );
 
     testWidgets(
-      'should add DecreaseScoreEvent when add button tapped',
+      'should add DecreaseScoreEvent when swiping down on player score',
       appHarness((given, when, then) async {
         await given.appIsPumped();
-        await when.tester.tap(find.byKey(const Key('decrease_button')));
-        expect(then.harness.scoreBloc.addedEvents, [DecreaseScoreEvent()]);
+
+        await when.tester.timedDrag(
+          scoreboardPage.playerScore(forPlayerId: 1),
+          const Offset(0, 300),
+          const Duration(milliseconds: 750),
+        );
+
+        await when.tester.pumpAndSettle();
+        expect(
+          then.harness.scoreBloc.addedEvents,
+          [DecreaseScoreEvent(playerId: 1)],
+        );
+      }),
+    );
+
+    testWidgets(
+      'should add IncreaseScoreEvent when swiping up on player score',
+      appHarness((given, when, then) async {
+        await given.appIsPumped();
+
+        await when.tester.timedDrag(
+          scoreboardPage.playerScore(forPlayerId: 1),
+          const Offset(0, -300),
+          const Duration(milliseconds: 750),
+        );
+
+        await when.tester.pumpAndSettle();
+        expect(
+          then.harness.scoreBloc.addedEvents,
+          [IncreaseScoreEvent(playerId: 1)],
+        );
       }),
     );
   });
@@ -65,7 +100,7 @@ Future<void> Function(WidgetTester) appHarness(
 
 class AppHarness extends WidgetTestHarness {
   AppHarness(super.tester);
-  final scoreBloc = FakeScoreBloc(const ScoreboardState(0));
+  final scoreBloc = FakeScoreBloc(initialScoreboardState);
 }
 
 extension AppGiven on WidgetTestGiven<AppHarness> {

@@ -97,10 +97,10 @@ class PlayerScore extends StatelessWidget {
           const SizedBox(height: 8),
           Expanded(
             child: GestureDetector(
-              key: const Key('scoreboard_gesture'),
+              key: Key('scoreboard_gesture_player_$playerId'),
               onTap: () => context
                   .addScoreboardEvent(IncreaseScoreEvent(playerId: playerId)),
-              onVerticalDragEnd: (details) {
+              onVerticalDragEnd: (DragEndDetails details) {
                 final primaryVelocity = details.primaryVelocity;
                 if (primaryVelocity != null) {
                   if (primaryVelocity < 0) {

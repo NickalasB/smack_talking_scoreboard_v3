@@ -5,15 +5,17 @@ class VolumeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO(nibradshaw): get this off of state;
-    final bool isVolumeOn = false;
+    // TODO(nibradshaw): fix this once volume is added
+    // final bool isVolumeOn = false;
+    // final volumeIcon =
+    //     isVolumeOn ? const Icon(Icons.volume_up) : const Icon(Icons.volume_off);
     return IconButton(
-      icon: DecoratedBox(
-        decoration: const BoxDecoration(
+      icon: const DecoratedBox(
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.grey,
         ),
-        child: isVolumeOn ? Icon(Icons.volume_up) : Icon(Icons.volume_off),
+        child: Icon(Icons.volume_off),
       ),
       iconSize: 64,
       color: Colors.white,
