@@ -119,8 +119,11 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
 }
 
 extension AppThen on WidgetTestThen<AppHarness> {
-  Future<void> multiScreenGoldensMatch(String testName) {
-    return multiScreenGolden(tester, testName);
+  Future<void> multiScreenGoldensMatch(
+    String testName, {
+    List<Device> devices = const [Device.phone],
+  }) {
+    return multiScreenGolden(tester, testName, devices: devices);
   }
 }
 
