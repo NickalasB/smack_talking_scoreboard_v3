@@ -28,10 +28,8 @@ void main() {
       appHarness((given, when, then) async {
         await given.appIsPumped();
 
-        await expectLater(
-          find.byType(ScoreboardView),
-          matchesGoldenFile('../view/goldens/scoreboard_page.png'),
-        );
+        expect(find.byType(ScoreboardView), findsOneWidget);
+        await then.multiScreenGoldensMatch('scoreboard_page');
       }),
     );
 
@@ -123,7 +121,7 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
 extension AppThen on WidgetTestThen<AppHarness> {
   Future<void> multiScreenGoldensMatch(
     String testName, {
-    List<Device> devices = const [Device.phone],
+    List<Device>? devices,
   }) {
     return multiScreenGolden(tester, testName, devices: devices);
   }
