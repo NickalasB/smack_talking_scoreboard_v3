@@ -28,10 +28,7 @@ void main() {
       appHarness((given, when, then) async {
         await given.appIsPumped();
 
-        await expectLater(
-          find.byType(ScoreboardView),
-          matchesGoldenFile('../view/goldens/scoreboard_page.png'),
-        );
+        await then.multiScreenGoldensMatch('scoreboard_page');
       }),
     );
 
