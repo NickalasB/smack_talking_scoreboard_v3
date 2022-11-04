@@ -20,7 +20,8 @@ class VolumeButton extends StatelessWidget {
       iconSize: 64,
       color: Colors.white,
       splashColor: Colors.greenAccent,
-      onPressed: () {},
+      // TODO(nibradshaw): implement me
+      onPressed: () {}, // coverage:ignore-line
     );
   }
 }

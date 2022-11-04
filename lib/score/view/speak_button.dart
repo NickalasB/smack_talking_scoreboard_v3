@@ -25,7 +25,8 @@ class SpeakButton extends StatelessWidget {
       ),
       color: Colors.green,
       splashColor: Colors.greenAccent,
-      onPressed: () {},
+      // TODO(nibradshaw): implement this
+      onPressed: () {}, // coverage:ignore-line
     );
   }
 }

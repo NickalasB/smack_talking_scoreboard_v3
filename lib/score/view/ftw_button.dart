@@ -28,9 +28,8 @@ class FtwButton extends StatelessWidget {
           }) {
             return const SizedBox.shrink();
           },
-          onChanged: (text) {
-            // TODO(nibradshaw): add an event to the bloc here
-          },
+          // TODO(nibradshaw): add an event to the bloc here
+          onChanged: (text) {}, // coverage:ignore-line
           keyboardType: TextInputType.number,
           textAlign: TextAlign.center,
           controller: TextEditingController(),
