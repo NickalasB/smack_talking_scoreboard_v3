@@ -10,8 +10,8 @@
       }
     }
   },
-  "forTheWin": "FTW",
-  "@forTheWin": {
-    "description": "button label abbreviation for the term 'for the win'"
+  "addYourOwnSmackTalk": "Add Your Own Smack Talk!",
+  "@addYourOwnSmackTalk": {
+    "description": "title for settings bottom sheet"
   }
 }
