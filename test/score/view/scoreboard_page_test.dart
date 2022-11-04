@@ -28,8 +28,10 @@ void main() {
       appHarness((given, when, then) async {
         await given.appIsPumped();
 
-        expect(find.byType(ScoreboardView), findsOneWidget);
-        await then.multiScreenGoldensMatch('scoreboard_page');
+        await expectLater(
+          find.byType(ScoreboardView),
+          matchesGoldenFile('../view/goldens/scoreboard_page.png'),
+        );
       }),
     );
 
