@@ -11,9 +11,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 
 extension PumpApp on WidgetTester {
-  Future<void> pumpApp(Widget widget, {Widget? wrap}) {
+  Future<void> pumpApp(Widget widget) {
     return pumpWidget(
       MaterialApp(
+        debugShowCheckedModeBanner: false,
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,

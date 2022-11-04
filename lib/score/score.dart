@@ -5,5 +5,5 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-export 'bloc/counter_bloc.dart';
-export 'view/counter_page.dart';
+export 'bloc/score_bloc.dart';
+export 'view/scoreboard_page.dart';

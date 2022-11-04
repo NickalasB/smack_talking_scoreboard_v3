@@ -11,3 +11,5 @@ jobs:
     with:
       flutter_channel: stable
       flutter_version: 3.3.3
+      test_optimization: false
+      runs_on: macos-latest
