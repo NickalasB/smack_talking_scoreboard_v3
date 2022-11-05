@@ -10,7 +10,7 @@ class FtwButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircularIconButton(
+    return CircularButton(
       key: const Key('settings_button'),
       onTap: () async {
         final text = await showModalBottomSheet<String?>(
@@ -39,7 +39,7 @@ class FtwButton extends StatelessWidget {
         );
         print('Nick text = $text');
       },
-      icon: const Icon(Icons.settings),
+      child: const Icon(Icons.settings),
     );
   }
 }

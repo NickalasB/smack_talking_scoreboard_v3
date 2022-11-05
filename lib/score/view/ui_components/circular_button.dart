@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class CircularIconButton extends StatelessWidget {
-  const CircularIconButton({
+class CircularButton extends StatelessWidget {
+  const CircularButton({
     super.key,
     required this.onTap,
-    required this.icon,
+    required this.child,
     this.color = Colors.grey,
   });
 
   final Color color;
-  final Icon icon;
+  final Widget child;
   final VoidCallback onTap;
 
   @override
@@ -19,13 +19,18 @@ class CircularIconButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: color,
-          boxShadow: const [BoxShadow(blurRadius: 8)],
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 8,
+              blurStyle: BlurStyle.outer,
+              color: color,
+            ),
+          ],
         ),
-        child: icon,
+        child: child,
       ),
       iconSize: 64,
       color: Colors.white,
-      splashColor: Colors.greenAccent,
       onPressed: onTap,
     );
   }
