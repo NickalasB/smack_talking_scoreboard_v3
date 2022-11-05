@@ -20,7 +20,7 @@ class FtwButton extends StatelessWidget {
           builder: (context) => Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: SizedBox(
-              height: 260,
+              height: 340,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -81,13 +81,21 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextField(controller: controller),
+          TextField(
+            controller: controller,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+            ),
+            style: theme.textTheme.titleLarge,
+          ),
           const Spacer(),
           PrimaryButton(
             onPressed: () => Navigator.of(context).pop(controller.text),

@@ -23,7 +23,12 @@ class PrimaryButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
         side: BorderSide(color: theme.primaryColor),
       ),
-      child: Text(label),
+      child: Text(
+        label,
+        style: theme.textTheme.titleLarge?.copyWith(
+          color: theme.canvasColor,
+        ),
+      ),
     );
   }
 }
