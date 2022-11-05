@@ -6,10 +6,9 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 
 import 'helpers/fake_bloc.dart';
-import 'helpers/pump_app.dart';
+import 'helpers/pump_material_widget.dart';
 
 Future<void> Function(WidgetTester) appHarness(
   WidgetTestHarnessCallback<AppHarness> callback,
@@ -23,13 +22,13 @@ class AppHarness extends WidgetTestHarness {
 }
 
 extension AppGiven on WidgetTestGiven<AppHarness> {
-  Future<void> appIsPumped() async {
-    await harness.tester.pumpApp(
+  Future<void> pumpWidget(Widget child) async {
+    await harness.tester.pumpMaterialWidget(
       BlocProvider<ScoreboardBloc>(
         create: (context) => harness.scoreBloc,
         child: Builder(
           builder: (context) {
-            return const ScoreboardView();
+            return child;
           },
         ),
       ),
@@ -47,6 +46,13 @@ extension AppThen on WidgetTestThen<AppHarness> {
     List<Device>? devices,
   }) {
     return multiScreenGolden(tester, testName, devices: devices);
+  }
+
+  Future<void> screenMatchesGolden(Finder finder, String name) async {
+    await expectLater(
+      finder,
+      matchesGoldenFile('./goldens/$name.png'),
+    );
   }
 }
 

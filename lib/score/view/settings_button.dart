@@ -3,8 +3,8 @@ import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/circular_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
-class FtwButton extends StatelessWidget {
-  const FtwButton({
+class SettingsButton extends StatelessWidget {
+  const SettingsButton({
     super.key,
   });
 

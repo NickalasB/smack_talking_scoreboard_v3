@@ -11,7 +11,7 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 
 import '../../harness.dart';
-import '../../helpers/pump_app.dart';
+import '../../helpers/pump_material_widget.dart';
 import 'scoreboard_page_objects.dart';
 
 final scoreboardPage = ScoreBoardPageObject();
@@ -21,14 +21,14 @@ void main() {
     testGoldens(
       'Should look correct',
       appHarness((given, when, then) async {
-        await given.appIsPumped();
+        await given.pumpWidget(const ScoreboardView());
 
         await then.multiScreenGoldensMatch('scoreboard_page');
       }),
     );
 
     testWidgets('renders ScoreboardView', (tester) async {
-      await tester.pumpApp(const ScoreboardPage());
+      await tester.pumpMaterialWidget(const ScoreboardPage());
       expect(find.byType(ScoreboardView), findsOneWidget);
     });
   });
@@ -37,7 +37,7 @@ void main() {
     testWidgets(
       'should add IncreaseScoreEvent when add button tapped',
       appHarness((given, when, then) async {
-        await given.appIsPumped();
+        await given.pumpWidget(const ScoreboardView());
         await when.userTaps(scoreboardPage.playerScore(forPlayerId: 1));
         expect(
           then.harness.scoreBloc.addedEvents,
@@ -49,7 +49,7 @@ void main() {
     testWidgets(
       'should add DecreaseScoreEvent when swiping down on player score',
       appHarness((given, when, then) async {
-        await given.appIsPumped();
+        await given.pumpWidget(const ScoreboardView());
 
         await when.tester.timedDrag(
           scoreboardPage.playerScore(forPlayerId: 1),
@@ -68,7 +68,7 @@ void main() {
     testWidgets(
       'should add IncreaseScoreEvent when swiping up on player score',
       appHarness((given, when, then) async {
-        await given.appIsPumped();
+        await given.pumpWidget(const ScoreboardView());
 
         await when.tester.timedDrag(
           scoreboardPage.playerScore(forPlayerId: 1),
@@ -89,7 +89,7 @@ void main() {
     testWidgets(
       'Should launch Settings Bottom sheet when clicking on settings button',
       appHarness((given, when, then) async {
-        await given.appIsPumped();
+        await given.pumpWidget(const ScoreboardView());
         await when.userTaps(scoreboardPage.settingsButton);
         await when.pumpAndSettle();
 

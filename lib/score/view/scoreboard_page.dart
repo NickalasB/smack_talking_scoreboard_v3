@@ -46,7 +46,7 @@ class ScoreboardView extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
-                  Flexible(child: FtwButton()),
+                  Flexible(child: SettingsButton()),
                   Flexible(child: SpeakButton()),
                   Flexible(child: VolumeButton()),
                 ],
