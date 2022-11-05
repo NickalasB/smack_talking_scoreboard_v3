@@ -17,3 +17,11 @@ class DecreaseScoreEvent extends ScoreboardEvent {
   @override
   List<Object?> get props => [playerId];
 }
+
+class SaveInsultEvent extends ScoreboardEvent {
+  SaveInsultEvent(this.insult);
+  final String? insult;
+
+  @override
+  List<Object?> get props => [insult];
+}

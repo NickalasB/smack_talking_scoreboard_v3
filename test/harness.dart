@@ -65,6 +65,10 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
     return tester.pumpAndSettle(const Duration(seconds: 3));
   }
 
+  Future<void> userTypes(String text, Finder finder) {
+    return tester.enterText(finder, text);
+  }
+
   Future<void> idle() {
     return TestAsyncUtils.guard<void>(() => tester.binding.idle());
   }

@@ -13,5 +13,9 @@
   "addYourOwnSmackTalk": "Add Your Own Smack Talk!",
   "@addYourOwnSmackTalk": {
     "description": "title for settings bottom sheet"
+  },
+  "done": "DONE",
+  "@done": {
+    "description": "button label for when a user is finished"
   }
 }

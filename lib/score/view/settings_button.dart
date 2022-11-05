@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/circular_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
+
+import '../bloc/scoreboard_events.dart';
 
 class SettingsButton extends StatelessWidget {
   const SettingsButton({
@@ -13,7 +16,8 @@ class SettingsButton extends StatelessWidget {
     return CircularButton(
       key: const Key('settings_button'),
       onTap: () async {
-        final text = await showModalBottomSheet<String?>(
+        final scoreboardBloc = context.readScoreboard;
+        final addedInsult = await showModalBottomSheet<String?>(
           context: context,
           useRootNavigator: true,
           isScrollControlled: true,
@@ -37,7 +41,8 @@ class SettingsButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
         );
-        print('Nick text = $text');
+
+        scoreboardBloc.add(SaveInsultEvent(addedInsult));
       },
       child: const Icon(Icons.settings),
     );
@@ -82,6 +87,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10 = context.l10n;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -90,6 +96,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextField(
+            key: const Key('insult_text_field'),
             controller: controller,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
@@ -99,7 +106,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
           const Spacer(),
           PrimaryButton(
             onPressed: () => Navigator.of(context).pop(controller.text),
-            label: 'DONE',
+            label: l10.done,
           ),
         ],
       ),
