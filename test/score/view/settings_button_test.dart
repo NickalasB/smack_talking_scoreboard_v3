@@ -26,7 +26,7 @@ void main() {
     );
 
     testWidgets(
-      'Settings dialog should return text from TextField',
+      'Should add SaveInsultEvent when hitting dialog done button',
       appHarness((given, when, then) async {
         await given.pumpWidget(const SettingsButton());
 
