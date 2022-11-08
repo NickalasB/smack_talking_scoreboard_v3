@@ -8,8 +8,7 @@ import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
-
-import '../view/models/player.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 
 class ScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
   ScoreboardBloc() : super(initialScoreboardState) {
