@@ -5,30 +5,33 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
+
+import '../view/models/player.dart';
 
 class ScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
   ScoreboardBloc() : super(initialScoreboardState) {
     on<IncreaseScoreEvent>(_increaseScore);
 
     on<DecreaseScoreEvent>((event, emit) {
-      final players = state.game.players;
-      final player = players[event.playerId];
-      if (player != null && player.score >= 1) {
-        final otherPlayers = players
-          ..entries.where((element) => element.key != event.playerId);
+      final players = List<Player>.from(state.game.players);
 
-        final currentScore = player.score;
+      final currentPlayer =
+          players.singleWhereOrNull((p) => p.playerId == event.playerId);
+
+      final otherPlayers = players..remove(currentPlayer);
+
+      if (currentPlayer != null && currentPlayer.score >= 1) {
+        final currentScore = currentPlayer.score;
         return emit(
           ScoreboardState(
             state.game.copyWith(
-              players: {
+              players: [
                 ...otherPlayers,
-                event.playerId:
-                    Player(playerId: event.playerId, score: currentScore - 1)
-              },
+                currentPlayer.copyWith(score: currentScore - 1),
+              ],
             ),
           ),
         );
@@ -37,22 +40,22 @@ class ScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
   }
 
   void _increaseScore(IncreaseScoreEvent event, Emitter<ScoreboardState> emit) {
-    final players = state.game.players;
-    final player = players[event.playerId];
+    final players = List<Player>.from(state.game.players);
 
-    final otherPlayers = players
-      ..entries.where((element) => element.key != event.playerId);
+    final currentPlayer =
+        players.singleWhereOrNull((p) => p.playerId == event.playerId);
 
-    if (player != null) {
-      final currentScore = player.score;
+    final otherPlayers = players..remove(currentPlayer);
+
+    if (currentPlayer != null) {
+      final currentScore = currentPlayer.score;
       return emit(
         ScoreboardState(
           state.game.copyWith(
-            players: {
+            players: [
+              currentPlayer.copyWith(score: currentScore + 1),
               ...otherPlayers,
-              event.playerId:
-                  Player(playerId: event.playerId, score: currentScore + 1)
-            },
+            ],
           ),
         ),
       );

@@ -7,10 +7,10 @@ import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 void main() {
   group('Game ViewModel', () {
     test('Should have value-type equality', () {
-      final game1 = Game(players: const {1: Player(playerId: 1)});
+      final game1 = Game(players: const [Player(playerId: 1)]);
 
       expect(game1, equals(game1.copyWith()));
-      expect(game1, isNot(game1.copyWith(players: {1: Player(playerId: 2)})));
+      expect(game1, isNot(game1.copyWith(players: [Player(playerId: 2)])));
     });
   });
 }

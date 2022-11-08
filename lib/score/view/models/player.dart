@@ -6,6 +6,16 @@ class Player extends Equatable {
     this.score = 0,
   });
 
+  Player copyWith({
+    int? playerId,
+    int? score,
+  }) {
+    return Player(
+      playerId: playerId ?? this.playerId,
+      score: score ?? this.score,
+    );
+  }
+
   final int playerId;
   final int score;
 
