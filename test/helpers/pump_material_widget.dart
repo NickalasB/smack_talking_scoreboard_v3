@@ -10,8 +10,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 
-extension PumpApp on WidgetTester {
-  Future<void> pumpApp(Widget widget) {
+extension PumpMaterialWidget on WidgetTester {
+  Future<void> pumpMaterialWidget(Widget widget) {
     return pumpWidget(
       MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -20,7 +20,7 @@ extension PumpApp on WidgetTester {
           GlobalMaterialLocalizations.delegate,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        home: widget,
+        home: Material(child: widget),
       ),
     );
   }
