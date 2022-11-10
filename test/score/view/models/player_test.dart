@@ -13,5 +13,26 @@ void main() {
       expect(originalPlayer, isNot(Player(playerId: 2, score: 1)));
       expect(originalPlayer, isNot(Player(playerId: 1, score: 2)));
     });
+
+    test('toJson', () {
+      expect(
+        Player(playerId: 1, score: 1).toJson(),
+        {
+          'playerId': 1,
+          'score': 1,
+        },
+      );
+    });
+
+    test('fromJson', () {
+      expect(
+          Player.fromJson(
+            Player(playerId: 1, score: 1).toJson(),
+          ),
+          Player(
+            playerId: 1,
+            score: 1,
+          ));
+    });
   });
 }
