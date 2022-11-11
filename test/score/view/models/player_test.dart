@@ -26,13 +26,14 @@ void main() {
 
     test('fromJson', () {
       expect(
-          Player.fromJson(
-            Player(playerId: 1, score: 1).toJson(),
-          ),
-          Player(
-            playerId: 1,
-            score: 1,
-          ));
+        Player.fromJson(
+          Player(playerId: 1, score: 1).toJson(),
+        ),
+        Player(
+          playerId: 1,
+          score: 1,
+        ),
+      );
     });
   });
 }
