@@ -7,25 +7,29 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 typedef FakeScoreboardJson = Map<String, dynamic>?;
 
 class FakeStorage implements Storage {
-  final storageCompletersMap = <String, FakeScoreboardJson>{};
+  final storageMap = <String, FakeScoreboardJson>{};
+  final readForKeyCalls = [];
+  final writeForKeyCalls = [];
 
   @override
   Future<void> clear() async {
-    storageCompletersMap.clear();
+    storageMap.clear();
   }
 
   @override
   Future<void> delete(String key) async {
-    storageCompletersMap.remove(key);
+    storageMap.remove(key);
   }
 
   @override
   FakeScoreboardJson read(String key) {
-    return storageCompletersMap[key];
+    readForKeyCalls.add(key);
+    return storageMap[key];
   }
 
   @override
   Future<void> write(String key, dynamic value) async {
-    storageCompletersMap.putIfAbsent(key, () => value as FakeScoreboardJson);
+    writeForKeyCalls.add(key);
+    storageMap.putIfAbsent(key, () => value as FakeScoreboardJson);
   }
 }

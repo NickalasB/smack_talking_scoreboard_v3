@@ -22,6 +22,9 @@ void main() {
     test('initial state is Game with Player1 and Player2 with scores of zero',
         () {
       final bloc = ScoreboardBloc();
+      expect(testStorage.readForKeyCalls, ['ScoreboardBloc']);
+      expect(testStorage.writeForKeyCalls, ['ScoreboardBloc']);
+
       final initialState = ScoreboardState(
         Game(
           players: const [
@@ -35,6 +38,9 @@ void main() {
         bloc.state,
         equals(initialState),
       );
+
+      expect(testStorage.readForKeyCalls, hasLength(1));
+      expect(testStorage.writeForKeyCalls, hasLength(1));
 
       expect(
         ScoreboardState.fromJson(testStorage.read('ScoreboardBloc')!),
