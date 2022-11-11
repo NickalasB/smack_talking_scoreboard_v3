@@ -13,14 +13,5 @@ void main() {
       expect(game1, equals(game1.copyWith()));
       expect(game1, isNot(game1.copyWith(players: [Player(playerId: 2)])));
     });
-
-    test('toJson', () {
-      expect(
-        Game(players: const [Player(playerId: 1)]).toJson(),
-        {
-          'players': [Player(playerId: 1, score: 0)]
-        },
-      );
-    });
   });
 }

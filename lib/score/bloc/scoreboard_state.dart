@@ -18,8 +18,9 @@ extension ScoreboardContext on BuildContext {
 class ScoreboardState extends Equatable {
   const ScoreboardState(this.game);
 
-  factory ScoreboardState.fromJson(Map<String, dynamic> json) =>
-      _$ScoreboardStateFromJson(json);
+  factory ScoreboardState.fromJson(Map<String, dynamic> json) {
+    return _$ScoreboardStateFromJson(json);
+  }
 
   Map<String, dynamic> toJson() => _$ScoreboardStateToJson(this);
 

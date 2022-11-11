@@ -1,12 +1,13 @@
+// coverage:ignore-file
+
 import 'dart:async';
 
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-typedef StorageCompleter = Completer<dynamic>;
+typedef FakeScoreboardJson = Map<String, dynamic>?;
 
 class FakeStorage implements Storage {
-  final storageCompletersMap = <String, StorageCompleter>{};
-  final storageCompleter = StorageCompleter();
+  final storageCompletersMap = <String, FakeScoreboardJson>{};
 
   @override
   Future<void> clear() async {
@@ -16,17 +17,15 @@ class FakeStorage implements Storage {
   @override
   Future<void> delete(String key) async {
     storageCompletersMap.remove(key);
-    return storageCompleter.future;
   }
 
   @override
-  StorageCompleter? read(String key) {
+  FakeScoreboardJson read(String key) {
     return storageCompletersMap[key];
   }
 
   @override
-  Future<void> write(String key, dynamic value) {
-    storageCompletersMap.putIfAbsent(key, () => storageCompleter);
-    return storageCompleter.future;
+  Future<void> write(String key, dynamic value) async {
+    storageCompletersMap.putIfAbsent(key, () => value as FakeScoreboardJson);
   }
 }

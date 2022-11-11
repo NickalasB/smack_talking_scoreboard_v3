@@ -6,6 +6,7 @@
 // https://opensource.org/licenses/MIT.
 
 // ignore_for_file:avoid_redundant_argument_values
+// ignore_for_file:prefer_const_constructors
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
@@ -13,23 +14,31 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 
+import '../../flutter_test_config.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
-  group('ScoreBloc', () {
-    test('initial state is 0', () {
-      expect(
-        ScoreboardBloc().state,
-        equals(
-          const ScoreboardState(
-            Game(
-              players: [
-                Player(playerId: 1, score: 0),
-                Player(playerId: 2, score: 0),
-              ],
-            ),
-          ),
+  group('HydratedScoreBloc', () {
+    test('initial state is Game with Player1 and Player2 with scores of zero',
+        () {
+      final bloc = ScoreboardBloc();
+      final initialState = ScoreboardState(
+        Game(
+          players: const [
+            Player(playerId: 1, score: 0),
+            Player(playerId: 2, score: 0),
+          ],
         ),
+      );
+
+      expect(
+        bloc.state,
+        equals(initialState),
+      );
+
+      expect(
+        ScoreboardState.fromJson(testStorage.read('ScoreboardBloc')!),
+        initialState,
       );
     });
 
