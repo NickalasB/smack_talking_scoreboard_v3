@@ -1,38 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/circular_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
 class SettingsButton extends StatelessWidget {
-  const SettingsButton({
+  const SettingsButton(
+    this.bloc, {
     super.key,
   });
+  final ScoreboardBloc bloc;
 
   @override
   Widget build(BuildContext context) {
     return CircularButton(
       key: const Key('settings_button'),
-      onTap: () async {
-        final scoreboardBloc = context.readScoreboard;
-        final addedInsult = await showModalBottomSheet<String?>(
+      onTap: () {
+        showModalBottomSheet<String?>(
           context: context,
-          useRootNavigator: true,
           isScrollControlled: true,
-          builder: (context) => Padding(
-            padding: MediaQuery.of(context).viewInsets,
-            child: SizedBox(
-              height: 340,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: const [
-                  BottomSheetHeader(
-                    key: Key('settings_bottom_sheet'),
-                  ),
-                  Flexible(child: BottomSheetContent()),
-                ],
+          builder: (context) => BlocProvider<ScoreboardBloc>.value(
+            value: bloc,
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: SizedBox(
+                height: 340,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: const [
+                    BottomSheetHeader(
+                      key: Key('settings_bottom_sheet'),
+                    ),
+                    Flexible(
+                      child: BottomSheetContent(),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -40,8 +49,6 @@ class SettingsButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
         );
-
-        scoreboardBloc.add(SaveInsultEvent(addedInsult));
       },
       child: const Icon(Icons.settings),
     );
@@ -74,7 +81,9 @@ class BottomSheetHeader extends StatelessWidget {
 }
 
 class BottomSheetContent extends StatefulWidget {
-  const BottomSheetContent({super.key});
+  const BottomSheetContent({
+    super.key,
+  });
 
   @override
   State<BottomSheetContent> createState() => _BottomSheetContentState();
@@ -85,8 +94,11 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.selectScoreboard;
     final theme = Theme.of(context);
     final l10 = context.l10n;
+    final insults = bloc.state.insults;
+    final insultCount = insults.length;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -102,9 +114,26 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
             ),
             style: theme.textTheme.titleLarge,
           ),
-          const Spacer(),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: ListView.builder(
+                itemCount: insultCount,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return Text(
+                    insults[index],
+                  );
+                },
+              ),
+            ),
+          ),
           PrimaryButton(
-            onPressed: () => Navigator.of(context).pop(controller.text),
+            onPressed: () {
+              bloc.add(SaveInsultEvent(controller.text));
+
+              Navigator.of(context).pop(controller.text);
+            },
             label: l10.done,
           ),
         ],

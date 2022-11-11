@@ -46,10 +46,21 @@ class ScoreboardView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Flexible(child: SettingsButton()),
-                  Flexible(child: SpeakButton()),
-                  Flexible(child: VolumeButton()),
+                children: [
+                  Flexible(
+                    child: BlocProvider<ScoreboardBloc>.value(
+                      value: context.readScoreboard,
+                      child: Builder(
+                        builder: (_) {
+                          return SettingsButton(
+                            context.readScoreboard,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  const Flexible(child: SpeakButton()),
+                  const Flexible(child: VolumeButton()),
                 ],
               ),
             ),

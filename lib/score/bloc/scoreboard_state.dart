@@ -12,11 +12,13 @@ part 'scoreboard_state.g.dart';
 extension ScoreboardContext on BuildContext {
   ScoreboardBloc get readScoreboard => read<ScoreboardBloc>();
   void addScoreboardEvent(ScoreboardEvent event) => readScoreboard.add(event);
+
+  ScoreboardBloc get selectScoreboard => select((ScoreboardBloc b) => b);
 }
 
 @JsonSerializable()
 class ScoreboardState extends Equatable {
-  const ScoreboardState(this.game);
+  const ScoreboardState(this.game, {this.insults = const []});
 
   factory ScoreboardState.fromJson(Map<String, dynamic> json) {
     return _$ScoreboardStateFromJson(json);
@@ -24,10 +26,21 @@ class ScoreboardState extends Equatable {
 
   Map<String, dynamic> toJson() => _$ScoreboardStateToJson(this);
 
+  ScoreboardState copyWith({
+    Game? game,
+    List<String>? insults,
+  }) {
+    return ScoreboardState(
+      game ?? this.game,
+      insults: insults ?? this.insults,
+    );
+  }
+
   final Game game;
+  final List<String> insults;
 
   @override
-  List<Object?> get props => [game];
+  List<Object?> get props => [game, insults];
 }
 
 ScoreboardState get initialScoreboardState => const ScoreboardState(

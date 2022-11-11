@@ -18,6 +18,9 @@ import '../../flutter_test_config.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
+  //needed for CI
+  setUpAll(() => testStorage.clear());
+
   group('HydratedScoreBloc', () {
     test('initial state is Game with Player1 and Player2 with scores of zero',
         () {
@@ -32,6 +35,7 @@ void main() {
             Player(playerId: 2, score: 0),
           ],
         ),
+        insults: const [],
       );
 
       expect(
@@ -48,62 +52,116 @@ void main() {
       );
     });
 
-    test('should increase score by 1 when IncreaseScoreEvent added', () async {
-      final bloc = ScoreboardBloc()..add(IncreaseScoreEvent(playerId: 1));
-      await tick();
-      expect(
-        bloc.state,
-        equals(
-          const ScoreboardState(
-            Game(
-              players: [
-                Player(playerId: 1, score: 1),
-                Player(playerId: 2, score: 0),
-              ],
+    group('IncreaseScoreEvent', () {
+      test('should increase score by 1 when IncreaseScoreEvent added',
+          () async {
+        final bloc = ScoreboardBloc()..add(IncreaseScoreEvent(playerId: 1));
+        await tick();
+        expect(
+          bloc.state,
+          equals(
+            const ScoreboardState(
+              Game(
+                players: [
+                  Player(playerId: 1, score: 1),
+                  Player(playerId: 2, score: 0),
+                ],
+              ),
             ),
           ),
-        ),
-      );
+        );
+      });
     });
 
-    test('should decrease score by 1 when DecreaseScoreEvent added', () async {
-      final bloc = ScoreboardBloc()..add(IncreaseScoreEvent(playerId: 2));
-      await tick();
-      bloc.add(DecreaseScoreEvent(playerId: 2));
-      await tick();
-      expect(
-        bloc.state,
-        equals(
-          const ScoreboardState(
-            Game(
-              players: [
-                Player(playerId: 1, score: 0),
-                Player(playerId: 2, score: 0),
-              ],
+    group('DecreaseScoreEvent', () {
+      test('should decrease score by 1 when DecreaseScoreEvent added',
+          () async {
+        final bloc = ScoreboardBloc()..add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+        bloc.add(DecreaseScoreEvent(playerId: 2));
+        await tick();
+        expect(
+          bloc.state,
+          equals(
+            const ScoreboardState(
+              Game(
+                players: [
+                  Player(playerId: 1, score: 0),
+                  Player(playerId: 2, score: 0),
+                ],
+              ),
             ),
           ),
-        ),
-      );
+        );
+      });
+
+      test(
+          'should not decrease score by 1 when DecreaseScoreEvent added if score is zero',
+          () async {
+        final bloc = ScoreboardBloc()..add(DecreaseScoreEvent(playerId: 1));
+        await tick();
+        expect(
+          bloc.state,
+          equals(
+            const ScoreboardState(
+              Game(
+                players: [
+                  Player(playerId: 1, score: 0),
+                  Player(playerId: 2, score: 0),
+                ],
+              ),
+            ),
+          ),
+        );
+      });
     });
 
-    test(
-        'should not decrease score by 1 when DecreaseScoreEvent added if score is zero',
-        () async {
-      final bloc = ScoreboardBloc()..add(DecreaseScoreEvent(playerId: 1));
-      await tick();
-      expect(
-        bloc.state,
-        equals(
-          const ScoreboardState(
-            Game(
-              players: [
-                Player(playerId: 1, score: 0),
-                Player(playerId: 2, score: 0),
-              ],
+    group('SaveInsultEvent', () {
+      test(
+          'should emit state with new insult when SaveInsultEvent added with valid text',
+          () async {
+        final bloc = ScoreboardBloc();
+        await tick();
+
+        bloc.add(SaveInsultEvent('be better'));
+        await tick();
+        expect(
+          bloc.state,
+          equals(
+            const ScoreboardState(
+              Game(
+                players: [
+                  Player(playerId: 1, score: 0),
+                  Player(playerId: 2, score: 0),
+                ],
+              ),
+              insults: ['be better'],
             ),
           ),
-        ),
-      );
+        );
+      });
+
+      test(
+          'should NOT emit state with new insult when SaveInsultEvent added with empty or null text',
+          () async {
+        final bloc = ScoreboardBloc();
+        await tick();
+
+        bloc.add(SaveInsultEvent(''));
+        await tick();
+        expect(
+          bloc.state,
+          equals(initialScoreboardState),
+        );
+
+        bloc.add(SaveInsultEvent(null));
+        await tick();
+
+        expect(
+          bloc.state,
+          equals(initialScoreboardState),
+        );
+      });
     });
   });
 }

@@ -15,6 +15,8 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     on<IncreaseScoreEvent>(_increaseScore);
 
     on<DecreaseScoreEvent>(_decreaseScore);
+
+    on<SaveInsultEvent>(_saveInsult);
   }
 
   void _increaseScore(IncreaseScoreEvent event, Emitter<ScoreboardState> emit) {
@@ -60,6 +62,12 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
           ),
         ),
       );
+    }
+  }
+
+  void _saveInsult(SaveInsultEvent event, Emitter<ScoreboardState> emit) {
+    if (event.insult != null && event.insult!.isNotEmpty) {
+      emit(state.copyWith(insults: [event.insult!, ...state.insults]));
     }
   }
 

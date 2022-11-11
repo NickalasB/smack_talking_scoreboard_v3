@@ -13,6 +13,8 @@ class FakeStorage implements Storage {
 
   @override
   Future<void> clear() async {
+    readForKeyCalls.clear();
+    writeForKeyCalls.clear();
     storageMap.clear();
   }
 

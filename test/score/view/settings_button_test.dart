@@ -13,7 +13,7 @@ void main() {
     testGoldens(
       'Settings bottom sheet should look right',
       appHarness((given, when, then) async {
-        await given.pumpWidget(const SettingsButton());
+        await given.pumpWidget(SettingsButton(given.harness.scoreBloc));
 
         await when.userTaps(scoreboardPage.settingsButton);
         await when.pumpAndSettle();
@@ -28,7 +28,7 @@ void main() {
     testWidgets(
       'Should add SaveInsultEvent when hitting dialog done button',
       appHarness((given, when, then) async {
-        await given.pumpWidget(const SettingsButton());
+        await given.pumpWidget(SettingsButton(given.harness.scoreBloc));
 
         await when.userTaps(scoreboardPage.settingsButton);
         await when.pumpAndSettle();
