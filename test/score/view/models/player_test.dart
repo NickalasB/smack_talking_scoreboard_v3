@@ -8,10 +8,32 @@ void main() {
     test('Should have value-type equality', () {
       final originalPlayer = Player(playerId: 1, score: 1);
 
-      expect(originalPlayer, equals(Player(playerId: 1, score: 1)));
+      expect(originalPlayer, originalPlayer.copyWith());
 
-      expect(originalPlayer, isNot(Player(playerId: 2, score: 1)));
-      expect(originalPlayer, isNot(Player(playerId: 1, score: 2)));
+      expect(originalPlayer, isNot(originalPlayer.copyWith(playerId: 2)));
+      expect(originalPlayer, isNot(originalPlayer.copyWith(score: 2)));
+    });
+
+    test('toJson', () {
+      expect(
+        Player(playerId: 1, score: 1).toJson(),
+        {
+          'playerId': 1,
+          'score': 1,
+        },
+      );
+    });
+
+    test('fromJson', () {
+      expect(
+        Player.fromJson(
+          Player(playerId: 1, score: 1).toJson(),
+        ),
+        Player(
+          playerId: 1,
+          score: 1,
+        ),
+      );
     });
   });
 }

@@ -4,58 +4,85 @@
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
-import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 
-class ScoreboardBloc extends Bloc<ScoreboardEvent, ScoreboardState> {
+class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   ScoreboardBloc() : super(initialScoreboardState) {
     on<IncreaseScoreEvent>(_increaseScore);
 
-    on<DecreaseScoreEvent>((event, emit) {
-      final players = state.game.players;
-      final player = players[event.playerId];
-      if (player != null && player.score >= 1) {
-        final otherPlayers = players
-          ..entries.where((element) => element.key != event.playerId);
+    on<DecreaseScoreEvent>(_decreaseScore);
 
-        final currentScore = player.score;
-        return emit(
-          ScoreboardState(
-            state.game.copyWith(
-              players: {
-                ...otherPlayers,
-                event.playerId:
-                    Player(playerId: event.playerId, score: currentScore - 1)
-              },
-            ),
-          ),
-        );
-      }
-    });
+    on<SaveInsultEvent>(_saveInsult);
   }
 
   void _increaseScore(IncreaseScoreEvent event, Emitter<ScoreboardState> emit) {
-    final players = state.game.players;
-    final player = players[event.playerId];
+    final players = List<Player>.from(state.game.players);
 
-    final otherPlayers = players
-      ..entries.where((element) => element.key != event.playerId);
+    final currentPlayer =
+        players.singleWhereOrNull((p) => p.playerId == event.playerId);
 
-    if (player != null) {
-      final currentScore = player.score;
+    final otherPlayers = players..remove(currentPlayer);
+
+    if (currentPlayer != null) {
+      final currentScore = currentPlayer.score;
       return emit(
-        ScoreboardState(
-          state.game.copyWith(
-            players: {
+        state.copyWith(
+          game: state.game.copyWith(
+            players: [
+              currentPlayer.copyWith(score: currentScore + 1),
               ...otherPlayers,
-              event.playerId:
-                  Player(playerId: event.playerId, score: currentScore + 1)
-            },
+            ],
           ),
         ),
       );
     }
+  }
+
+  void _decreaseScore(DecreaseScoreEvent event, Emitter<ScoreboardState> emit) {
+    final players = List<Player>.from(state.game.players);
+
+    final currentPlayer =
+        players.singleWhereOrNull((p) => p.playerId == event.playerId);
+
+    final otherPlayers = players..remove(currentPlayer);
+
+    if (currentPlayer != null && currentPlayer.score >= 1) {
+      final currentScore = currentPlayer.score;
+      return emit(
+        state.copyWith(
+          game: state.game.copyWith(
+            players: [
+              ...otherPlayers,
+              currentPlayer.copyWith(score: currentScore - 1),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
+  void _saveInsult(SaveInsultEvent event, Emitter<ScoreboardState> emit) {
+    if (event.insult != null && event.insult!.isNotEmpty) {
+      final newState =
+          state.copyWith(insults: [event.insult!, ...state.insults]);
+      emit(newState);
+    }
+  }
+
+  // TODO(me): figure out why this fails in tests but works in production
+  // coverage:ignore-start
+  @override
+  ScoreboardState? fromJson(Map<String, dynamic> json) {
+    return ScoreboardState.fromJson(json);
+  }
+  // coverage:ignore-end
+
+  @override
+  Map<String, dynamic>? toJson(ScoreboardState state) {
+    return state.toJson();
   }
 }

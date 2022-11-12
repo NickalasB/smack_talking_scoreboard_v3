@@ -37,6 +37,8 @@ test/failures
 /dev/integration_tests/**/Pods
 /packages/flutter/coverage/
 version
+# ignore golden-failures
+**/failures
 
 # packages file containing multi-root paths
 .packages.generated

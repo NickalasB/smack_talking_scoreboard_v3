@@ -5,6 +5,7 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
@@ -45,10 +46,21 @@ class ScoreboardView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Flexible(child: SettingsButton()),
-                  Flexible(child: SpeakButton()),
-                  Flexible(child: VolumeButton()),
+                children: [
+                  Flexible(
+                    child: BlocProvider<ScoreboardBloc>.value(
+                      value: context.readScoreboard,
+                      child: Builder(
+                        builder: (_) {
+                          return SettingsButton(
+                            context.readScoreboard,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  const Flexible(child: SpeakButton()),
+                  const Flexible(child: VolumeButton()),
                 ],
               ),
             ),
@@ -69,7 +81,8 @@ class PlayerScore extends StatelessWidget {
     final l10n = context.l10n;
     final score = context
             .select((ScoreboardBloc bloc) => bloc.state.game)
-            .players[playerId]
+            .players
+            .firstWhereOrNull((p) => p.playerId == playerId)
             ?.score ??
         0;
     final theme = Theme.of(context);
