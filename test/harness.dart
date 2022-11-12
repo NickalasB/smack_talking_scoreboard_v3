@@ -9,6 +9,7 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 
 import 'helpers/fake_bloc.dart';
 import 'helpers/pump_material_widget.dart';
+import 'helpers/test_helpers.dart';
 
 Future<void> Function(WidgetTester) appHarness(
   WidgetTestHarnessCallback<AppHarness> callback,
@@ -33,6 +34,11 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
         ),
       ),
     );
+  }
+
+  Future<void> scoreBoardState(ScoreboardState state) async {
+    harness.scoreBloc.emit(state);
+    await tick();
   }
 }
 
