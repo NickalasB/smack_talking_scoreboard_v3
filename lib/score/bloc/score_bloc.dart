@@ -30,8 +30,8 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     if (currentPlayer != null) {
       final currentScore = currentPlayer.score;
       return emit(
-        ScoreboardState(
-          state.game.copyWith(
+        state.copyWith(
+          game: state.game.copyWith(
             players: [
               currentPlayer.copyWith(score: currentScore + 1),
               ...otherPlayers,
@@ -53,8 +53,8 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     if (currentPlayer != null && currentPlayer.score >= 1) {
       final currentScore = currentPlayer.score;
       return emit(
-        ScoreboardState(
-          state.game.copyWith(
+        state.copyWith(
+          game: state.game.copyWith(
             players: [
               ...otherPlayers,
               currentPlayer.copyWith(score: currentScore - 1),
@@ -67,7 +67,9 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
   void _saveInsult(SaveInsultEvent event, Emitter<ScoreboardState> emit) {
     if (event.insult != null && event.insult!.isNotEmpty) {
-      emit(state.copyWith(insults: [event.insult!, ...state.insults]));
+      final newState =
+          state.copyWith(insults: [event.insult!, ...state.insults]);
+      emit(newState);
     }
   }
 

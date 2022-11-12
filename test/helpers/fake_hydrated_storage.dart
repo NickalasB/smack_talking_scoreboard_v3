@@ -32,6 +32,7 @@ class FakeStorage implements Storage {
   @override
   Future<void> write(String key, dynamic value) async {
     writeForKeyCalls.add(key);
-    storageMap.putIfAbsent(key, () => value as FakeScoreboardJson);
+    final json = value as FakeScoreboardJson;
+    storageMap.update(key, (value) => json, ifAbsent: () => json);
   }
 }

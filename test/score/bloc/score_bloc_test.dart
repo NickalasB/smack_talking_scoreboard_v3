@@ -18,9 +18,6 @@ import '../../flutter_test_config.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
-  //needed for CI
-  setUpAll(() => testStorage.clear());
-
   group('HydratedScoreBloc', () {
     test('initial state is Game with Player1 and Player2 with scores of zero',
         () {
@@ -125,19 +122,27 @@ void main() {
 
         bloc.add(SaveInsultEvent('be better'));
         await tick();
+
+        const updatedState = ScoreboardState(
+          Game(
+            players: [
+              Player(playerId: 1, score: 0),
+              Player(playerId: 2, score: 0),
+            ],
+          ),
+          insults: ['be better'],
+        );
+
         expect(
           bloc.state,
-          equals(
-            const ScoreboardState(
-              Game(
-                players: [
-                  Player(playerId: 1, score: 0),
-                  Player(playerId: 2, score: 0),
-                ],
-              ),
-              insults: ['be better'],
-            ),
-          ),
+          equals(updatedState),
+        );
+
+        await tick();
+
+        expect(
+          ScoreboardState.fromJson(testStorage.read('ScoreboardBloc')!),
+          updatedState,
         );
       });
 
@@ -160,6 +165,41 @@ void main() {
         expect(
           bloc.state,
           equals(initialScoreboardState),
+        );
+      });
+
+      test(
+          'should emit proper state with insults and scores when both are update',
+          () async {
+        final bloc = ScoreboardBloc();
+        await tick();
+
+        bloc
+          ..add(SaveInsultEvent('be better'))
+          ..add(IncreaseScoreEvent(playerId: 1));
+        await tick();
+        await tick();
+
+        const updatedState = ScoreboardState(
+          Game(
+            players: [
+              Player(playerId: 1, score: 1),
+              Player(playerId: 2, score: 0),
+            ],
+          ),
+          insults: ['be better'],
+        );
+
+        expect(
+          bloc.state,
+          equals(updatedState),
+        );
+
+        await tick();
+
+        expect(
+          ScoreboardState.fromJson(testStorage.read('ScoreboardBloc')!),
+          updatedState,
         );
       });
     });
