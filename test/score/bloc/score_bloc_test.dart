@@ -44,7 +44,7 @@ void main() {
       expect(testStorage.writeForKeyCalls, hasLength(1));
 
       expect(
-        ScoreboardState.fromJson(testStorage.read('ScoreboardBloc')!),
+        bloc.fromJson(testStorage.read('ScoreboardBloc')!),
         initialState,
       );
     });
@@ -141,7 +141,7 @@ void main() {
         await tick();
 
         expect(
-          ScoreboardState.fromJson(testStorage.read('ScoreboardBloc')!),
+          bloc.fromJson(testStorage.read('ScoreboardBloc')!),
           updatedState,
         );
       });
@@ -198,7 +198,7 @@ void main() {
         await tick();
 
         expect(
-          ScoreboardState.fromJson(testStorage.read('ScoreboardBloc')!),
+          bloc.fromJson(testStorage.read('ScoreboardBloc')!),
           updatedState,
         );
       });
