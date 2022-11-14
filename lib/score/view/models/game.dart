@@ -31,7 +31,4 @@ class Game extends Equatable {
 
   @override
   List<Object?> get props => [players, round];
-
-  @override
-  bool? get stringify => true;
 }

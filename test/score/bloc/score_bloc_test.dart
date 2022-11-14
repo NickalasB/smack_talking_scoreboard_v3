@@ -250,6 +250,16 @@ void main() {
             roundWinner: Player(playerId: 2, score: 7, roundScore: 2),
           ),
         );
+
+        expect(
+          bloc.fromJson(testStorage.read('ScoreboardBloc')!),
+          isAScoreboardState.havingRound(
+            Round(
+              roundCount: 2,
+              roundWinner: Player(playerId: 2, score: 7, roundScore: 2),
+            ),
+          ),
+        );
       });
 
       test('Should emit correct roundWinner even if user decreases points',
@@ -305,4 +315,11 @@ void main() {
       });
     });
   });
+}
+
+final isAScoreboardState = TypeMatcher<ScoreboardState>();
+
+extension on TypeMatcher<ScoreboardState> {
+  TypeMatcher<ScoreboardState> havingRound(Round round) =>
+      isAScoreboardState.having((p0) => p0.game.round, 'round', round);
 }

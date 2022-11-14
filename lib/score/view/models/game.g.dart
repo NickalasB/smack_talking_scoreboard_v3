@@ -11,8 +11,12 @@ Game _$GameFromJson(Map<String, dynamic> json) => Game(
               ?.map((e) => Player.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      round: json['round'] == null
+          ? const Round()
+          : Round.fromJson(json['round'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$GameToJson(Game instance) => <String, dynamic>{
       'players': instance.players,
+      'round': instance.round,
     };
