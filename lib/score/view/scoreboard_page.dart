@@ -33,18 +33,28 @@ class ScoreboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final round = context.selectScoreboard.state.game.round;
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 8),
-            const Expanded(child: PlayerScore(playerId: 1)),
-            const SizedBox(height: 16),
-            const Expanded(child: PlayerScore(playerId: 2)),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 8),
+              // TODO(nibradshaw): this is just placeholder UI
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Round: ${round.roundCount}'),
+                  Text('Round Winner: Player ${round.roundWinner?.playerId}')
+                ],
+              ),
+              const SizedBox(height: 8),
+              const Expanded(child: PlayerScore(playerId: 1)),
+              const SizedBox(height: 16),
+              const Expanded(child: PlayerScore(playerId: 2)),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
@@ -69,8 +79,8 @@ class ScoreboardView extends StatelessWidget {
                   const Flexible(child: VolumeButton()),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -93,61 +103,58 @@ class PlayerScore extends StatelessWidget {
         0;
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            constraints: const BoxConstraints(minHeight: 48),
-            decoration: BoxDecoration(
-              border: Border.all(),
-            ),
-            child: Center(
-              child: Text(
-                l10n.player1(playerId),
-                style: theme.textTheme.headlineLarge?.copyWith(
-                  color: theme.primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          constraints: const BoxConstraints(minHeight: 48),
+          decoration: BoxDecoration(
+            border: Border.all(),
+          ),
+          child: Center(
+            child: Text(
+              l10n.player1(playerId),
+              style: theme.textTheme.headlineLarge?.copyWith(
+                color: theme.primaryColor,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: GestureDetector(
-              key: Key('scoreboard_gesture_player_$playerId'),
-              onTap: () => context
-                  .addScoreboardEvent(IncreaseScoreEvent(playerId: playerId)),
-              onVerticalDragEnd: (DragEndDetails details) {
-                final primaryVelocity = details.primaryVelocity;
-                if (primaryVelocity != null) {
-                  if (primaryVelocity < 0) {
-                    context.addScoreboardEvent(
-                      IncreaseScoreEvent(playerId: playerId),
-                    );
-                  }
-                  if (primaryVelocity > 0) {
-                    context.addScoreboardEvent(
-                      DecreaseScoreEvent(playerId: playerId),
-                    );
-                  }
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: GestureDetector(
+            key: Key('scoreboard_gesture_player_$playerId'),
+            onTap: () => context
+                .addScoreboardEvent(IncreaseScoreEvent(playerId: playerId)),
+            onVerticalDragEnd: (DragEndDetails details) {
+              final primaryVelocity = details.primaryVelocity;
+              if (primaryVelocity != null) {
+                if (primaryVelocity < 0) {
+                  context.addScoreboardEvent(
+                    IncreaseScoreEvent(playerId: playerId),
+                  );
                 }
-              },
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                ),
-                child: FittedBox(
-                  child: Text(
-                    score.toString(),
-                  ),
+                if (primaryVelocity > 0) {
+                  context.addScoreboardEvent(
+                    DecreaseScoreEvent(playerId: playerId),
+                  );
+                }
+              }
+            },
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border.all(),
+              ),
+              child: FittedBox(
+                child: Text(
+                  score.toString(),
                 ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
