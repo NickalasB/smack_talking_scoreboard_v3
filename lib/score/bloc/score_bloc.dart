@@ -17,6 +17,8 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     on<DecreaseScoreEvent>(_decreaseScore);
 
     on<SaveInsultEvent>(_saveInsult);
+
+    on<NextTurnEvent>(_nextTurnEvent);
   }
 
   void _increaseScore(IncreaseScoreEvent event, Emitter<ScoreboardState> emit) {
@@ -33,7 +35,10 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         state.copyWith(
           game: state.game.copyWith(
             players: [
-              currentPlayer.copyWith(score: currentScore + 1),
+              currentPlayer.copyWith(
+                score: currentScore + 1,
+                roundScore: currentPlayer.roundScore + 1,
+              ),
               ...otherPlayers,
             ],
           ),
@@ -57,7 +62,10 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
           game: state.game.copyWith(
             players: [
               ...otherPlayers,
-              currentPlayer.copyWith(score: currentScore - 1),
+              currentPlayer.copyWith(
+                score: currentScore - 1,
+                roundScore: currentPlayer.roundScore - 1,
+              ),
             ],
           ),
         ),
@@ -71,6 +79,31 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
           state.copyWith(insults: [event.insult!, ...state.insults]);
       emit(newState);
     }
+  }
+
+  void _nextTurnEvent(NextTurnEvent event, Emitter<ScoreboardState> emit) {
+    final game = state.game;
+    final players = game.players;
+    final roundHighScore = players.map((e) => e.roundScore).max;
+    final winningPlayer =
+        players.firstWhere((p) => p.roundScore == roundHighScore);
+
+    final playersWithResetRoundScores = <Player>[];
+    for (final player in game.players) {
+      playersWithResetRoundScores.add(player.copyWith(roundScore: 0));
+    }
+
+    emit(
+      state.copyWith(
+        game: game.copyWith(
+          players: playersWithResetRoundScores,
+          round: game.round.copyWith(
+            roundWinner: winningPlayer,
+            roundCount: game.round.roundCount + 1,
+          ),
+        ),
+      ),
+    );
   }
 
   @override

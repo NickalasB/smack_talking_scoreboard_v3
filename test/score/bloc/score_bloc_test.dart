@@ -13,6 +13,7 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 
 import '../../flutter_test_config.dart';
 import '../../helpers/test_helpers.dart';
