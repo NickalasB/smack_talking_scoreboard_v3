@@ -12,8 +12,8 @@ import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/speak_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
 
 class ScoreboardPage extends StatelessWidget {
@@ -59,7 +59,13 @@ class ScoreboardView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Flexible(child: SpeakButton()),
+                  Flexible(
+                    child: ChangeTurnButton(
+                      onTap: () {
+                        context.addScoreboardEvent(NextTurnEvent());
+                      },
+                    ),
+                  ),
                   const Flexible(child: VolumeButton()),
                 ],
               ),

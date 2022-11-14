@@ -97,4 +97,22 @@ void main() {
       }),
     );
   });
+
+  group('ChangeTurnButton', () {
+    testWidgets(
+      'Should add NextTurnEvent when ChangeTurn button pressed',
+      appHarness((given, when, then) async {
+        await given.pumpWidget(const ScoreboardView());
+
+        await when.userTaps(scoreboardPage.changeTurnButton);
+
+        await when.pumpAndSettle();
+
+        expect(
+          then.harness.scoreBloc.addedEvents,
+          [NextTurnEvent()],
+        );
+      }),
+    );
+  });
 }
