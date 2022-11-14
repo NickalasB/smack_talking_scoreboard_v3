@@ -60,8 +60,8 @@ void main() {
             const ScoreboardState(
               Game(
                 players: [
-                  Player(playerId: 1, score: 1),
-                  Player(playerId: 2, score: 0),
+                  Player(playerId: 1, score: 1, roundScore: 1),
+                  Player(playerId: 2, score: 0, roundScore: 0),
                 ],
               ),
             ),
@@ -183,8 +183,8 @@ void main() {
         const updatedState = ScoreboardState(
           Game(
             players: [
-              Player(playerId: 1, score: 1),
-              Player(playerId: 2, score: 0),
+              Player(playerId: 1, score: 1, roundScore: 1),
+              Player(playerId: 2, score: 0, roundScore: 0),
             ],
           ),
           insults: ['be better'],
@@ -200,6 +200,106 @@ void main() {
         expect(
           bloc.fromJson(testStorage.read('ScoreboardBloc')!),
           updatedState,
+        );
+      });
+    });
+
+    group('NextTurnEvent', () {
+      test(
+          'Should emit roundWinner based on player with highest round points, not total score',
+          () async {
+        final bloc = ScoreboardBloc()
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: const [
+                  Player(playerId: 1, score: 10),
+                  Player(playerId: 2, score: 5),
+                ],
+              ),
+            ),
+          );
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 1));
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+
+        expect(
+          bloc.state.game.players,
+          [
+            Player(playerId: 2, score: 7, roundScore: 2),
+            Player(playerId: 1, score: 11, roundScore: 1),
+          ],
+        );
+
+        bloc.add(NextTurnEvent());
+        await tick();
+        await tick();
+
+        expect(
+          bloc.state.game.round,
+          Round(
+            roundCount: 2,
+            roundWinner: Player(playerId: 2, score: 7, roundScore: 2),
+          ),
+        );
+      });
+
+      test('Should emit correct roundWinner even if user decreases points',
+          () async {
+        final bloc = ScoreboardBloc()
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: const [
+                  Player(playerId: 1, score: 10),
+                  Player(playerId: 2, score: 5),
+                ],
+              ),
+            ),
+          );
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 1));
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+
+        /// decreasing score to cancel out last increase
+        bloc.add(DecreaseScoreEvent(playerId: 2));
+        await tick();
+
+        expect(
+          bloc.state.game.players,
+          [
+            Player(playerId: 1, score: 11, roundScore: 1),
+            Player(playerId: 2, score: 7, roundScore: 2),
+          ],
+        );
+
+        bloc.add(NextTurnEvent());
+        await tick();
+        await tick();
+
+        expect(
+          bloc.state.game.round,
+          Round(
+            roundCount: 2,
+            roundWinner: Player(playerId: 2, score: 7, roundScore: 2),
+          ),
         );
       });
     });
