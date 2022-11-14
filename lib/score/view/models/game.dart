@@ -8,6 +8,7 @@ part 'game.g.dart';
 class Game extends Equatable {
   const Game({
     this.players = const [],
+    this.round = const Round(),
   });
 
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
@@ -16,14 +17,43 @@ class Game extends Equatable {
 
   Game copyWith({
     List<Player>? players,
+    Round? round,
   }) {
     return Game(
       players: players ?? this.players,
+      round: round ?? this.round,
     );
   }
 
   final List<Player> players;
+  final Round round;
 
   @override
-  List<Object?> get props => [players];
+  List<Object?> get props => [players, round];
+
+  @override
+  bool? get stringify => true;
+}
+
+class Round extends Equatable {
+  const Round({
+    this.roundCount = 1,
+    this.roundWinner,
+  });
+
+  final int roundCount;
+  final Player? roundWinner;
+
+  Round copyWith({
+    int? roundCount,
+    Player? roundWinner,
+  }) {
+    return Round(
+      roundCount: roundCount ?? this.roundCount,
+      roundWinner: roundWinner ?? this.roundWinner,
+    );
+  }
+
+  @override
+  List<Object?> get props => [roundCount, roundWinner];
 }
