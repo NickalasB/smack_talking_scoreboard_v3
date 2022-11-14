@@ -11,6 +11,10 @@ class Round extends Equatable {
     this.roundWinner,
   });
 
+  factory Round.fromJson(Map<String, dynamic> json) => _$RoundFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RoundToJson(this);
+
   final int roundCount;
   final Player? roundWinner;
 
