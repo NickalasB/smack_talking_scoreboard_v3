@@ -25,3 +25,10 @@ class SaveInsultEvent extends ScoreboardEvent {
   @override
   List<Object?> get props => [insult];
 }
+
+class NextTurnEvent extends ScoreboardEvent {
+  NextTurnEvent();
+
+  @override
+  List<Object?> get props => [];
+}

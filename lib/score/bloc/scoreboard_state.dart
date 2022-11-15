@@ -13,7 +13,8 @@ extension ScoreboardContext on BuildContext {
   ScoreboardBloc get readScoreboard => read<ScoreboardBloc>();
   void addScoreboardEvent(ScoreboardEvent event) => readScoreboard.add(event);
 
-  ScoreboardBloc get selectScoreboard => select((ScoreboardBloc b) => b);
+  ScoreboardBloc get selectScoreboard =>
+      BlocProvider.of<ScoreboardBloc>(this, listen: true);
 }
 
 @JsonSerializable()

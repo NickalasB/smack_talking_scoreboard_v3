@@ -19,11 +19,28 @@ Future<void> Function(WidgetTester) appHarness(
 
 class AppHarness extends WidgetTestHarness {
   AppHarness(super.tester);
-  final scoreBloc = FakeScoreBloc(initialScoreboardState);
+  FakeScoreBloc scoreBloc = FakeScoreBloc(initialScoreboardState);
 }
 
 extension AppGiven on WidgetTestGiven<AppHarness> {
   Future<void> pumpWidget(Widget child) async {
+    await harness.tester.pumpMaterialWidget(
+      BlocProvider<ScoreboardBloc>(
+        create: (context) => harness.scoreBloc,
+        child: Builder(
+          builder: (context) {
+            return child;
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> pumpWidgetWithState(
+    Widget child, {
+    required ScoreboardState scoreboardState,
+  }) async {
+    harness.scoreBloc = FakeScoreBloc(scoreboardState);
     await harness.tester.pumpMaterialWidget(
       BlocProvider<ScoreboardBloc>(
         create: (context) => harness.scoreBloc,

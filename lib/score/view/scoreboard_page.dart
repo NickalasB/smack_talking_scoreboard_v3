@@ -12,8 +12,8 @@ import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/speak_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
 
 class ScoreboardPage extends StatelessWidget {
@@ -33,18 +33,32 @@ class ScoreboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final round = context.selectScoreboard.state.game.round;
+    final strings = AppLocalizations.of(context);
+    final roundWinnerText = round.roundWinner != null
+        ? strings.playerNumber(round.roundWinner!.playerId)
+        : '';
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 8),
-            const Expanded(child: PlayerScore(playerId: 1)),
-            const SizedBox(height: 16),
-            const Expanded(child: PlayerScore(playerId: 2)),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 8),
+              // TODO(nibradshaw): this is just placeholder UI
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(strings.roundNumber(round.roundCount)),
+                  Text(strings.roundWinner(roundWinnerText)),
+                ],
+              ),
+              const SizedBox(height: 8),
+              const Expanded(child: PlayerScore(playerId: 1)),
+              const SizedBox(height: 16),
+              const Expanded(child: PlayerScore(playerId: 2)),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
@@ -59,12 +73,18 @@ class ScoreboardView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const Flexible(child: SpeakButton()),
+                  Flexible(
+                    child: ChangeTurnButton(
+                      onTap: () {
+                        context.addScoreboardEvent(NextTurnEvent());
+                      },
+                    ),
+                  ),
                   const Flexible(child: VolumeButton()),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -87,61 +107,58 @@ class PlayerScore extends StatelessWidget {
         0;
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            constraints: const BoxConstraints(minHeight: 48),
-            decoration: BoxDecoration(
-              border: Border.all(),
-            ),
-            child: Center(
-              child: Text(
-                l10n.player1(playerId),
-                style: theme.textTheme.headlineLarge?.copyWith(
-                  color: theme.primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          constraints: const BoxConstraints(minHeight: 48),
+          decoration: BoxDecoration(
+            border: Border.all(),
+          ),
+          child: Center(
+            child: Text(
+              l10n.playerNumber(playerId),
+              style: theme.textTheme.headlineLarge?.copyWith(
+                color: theme.primaryColor,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: GestureDetector(
-              key: Key('scoreboard_gesture_player_$playerId'),
-              onTap: () => context
-                  .addScoreboardEvent(IncreaseScoreEvent(playerId: playerId)),
-              onVerticalDragEnd: (DragEndDetails details) {
-                final primaryVelocity = details.primaryVelocity;
-                if (primaryVelocity != null) {
-                  if (primaryVelocity < 0) {
-                    context.addScoreboardEvent(
-                      IncreaseScoreEvent(playerId: playerId),
-                    );
-                  }
-                  if (primaryVelocity > 0) {
-                    context.addScoreboardEvent(
-                      DecreaseScoreEvent(playerId: playerId),
-                    );
-                  }
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: GestureDetector(
+            key: Key('scoreboard_gesture_player_$playerId'),
+            onTap: () => context
+                .addScoreboardEvent(IncreaseScoreEvent(playerId: playerId)),
+            onVerticalDragEnd: (DragEndDetails details) {
+              final primaryVelocity = details.primaryVelocity;
+              if (primaryVelocity != null) {
+                if (primaryVelocity < 0) {
+                  context.addScoreboardEvent(
+                    IncreaseScoreEvent(playerId: playerId),
+                  );
                 }
-              },
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                ),
-                child: FittedBox(
-                  child: Text(
-                    score.toString(),
-                  ),
+                if (primaryVelocity > 0) {
+                  context.addScoreboardEvent(
+                    DecreaseScoreEvent(playerId: playerId),
+                  );
+                }
+              }
+            },
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border.all(),
+              ),
+              child: FittedBox(
+                child: Text(
+                  score.toString(),
                 ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

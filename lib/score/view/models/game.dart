@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 
 part 'game.g.dart';
 
@@ -8,6 +9,7 @@ part 'game.g.dart';
 class Game extends Equatable {
   const Game({
     this.players = const [],
+    this.round = const Round(),
   });
 
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
@@ -16,14 +18,17 @@ class Game extends Equatable {
 
   Game copyWith({
     List<Player>? players,
+    Round? round,
   }) {
     return Game(
       players: players ?? this.players,
+      round: round ?? this.round,
     );
   }
 
   final List<Player> players;
+  final Round round;
 
   @override
-  List<Object?> get props => [players];
+  List<Object?> get props => [players, round];
 }

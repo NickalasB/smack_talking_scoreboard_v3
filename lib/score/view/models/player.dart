@@ -8,6 +8,7 @@ class Player extends Equatable {
   const Player({
     required this.playerId,
     this.score = 0,
+    this.roundScore = 0,
   });
 
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
@@ -17,16 +18,23 @@ class Player extends Equatable {
   Player copyWith({
     int? playerId,
     int? score,
+    int? roundScore,
   }) {
     return Player(
       playerId: playerId ?? this.playerId,
       score: score ?? this.score,
+      roundScore: roundScore ?? this.roundScore,
     );
   }
 
   final int playerId;
   final int score;
+  final int roundScore;
 
   @override
-  List<Object?> get props => [playerId, score];
+  List<Object?> get props => [
+        playerId,
+        score,
+        roundScore,
+      ];
 }
