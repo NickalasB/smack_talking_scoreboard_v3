@@ -32,3 +32,10 @@ class NextTurnEvent extends ScoreboardEvent {
   @override
   List<Object?> get props => [];
 }
+
+class ResetGameEvent extends ScoreboardEvent {
+  ResetGameEvent();
+
+  @override
+  List<Object?> get props => [];
+}

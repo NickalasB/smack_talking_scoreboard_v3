@@ -314,6 +314,50 @@ void main() {
         );
       });
     });
+
+    group('ResetGameEvent', () {
+      test('Should rest scores and rounds when ResetGameEvent added', () async {
+        final inProgressGame = Game(
+          players: const [
+            Player(playerId: 1, score: 10),
+            Player(playerId: 2, score: 5),
+          ],
+          round: Round(
+            roundWinner: Player(playerId: 1, score: 10),
+            roundCount: 10,
+          ),
+        );
+
+        final bloc = ScoreboardBloc()
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: const [
+                  Player(playerId: 1, score: 10),
+                  Player(playerId: 2, score: 5),
+                ],
+                round: Round(
+                  roundWinner: Player(playerId: 1, score: 10),
+                  roundCount: 10,
+                ),
+              ),
+            ),
+          );
+
+        expect(
+          bloc.state,
+          ScoreboardState(inProgressGame),
+        );
+
+        bloc.add(ResetGameEvent());
+        await tick();
+
+        expect(
+          bloc.state,
+          initialScoreboardState,
+        );
+      });
+    });
   });
 }
 
