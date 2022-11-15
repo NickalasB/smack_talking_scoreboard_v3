@@ -8,6 +8,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 
 import '../../harness.dart';
@@ -112,6 +116,31 @@ void main() {
           then.harness.scoreBloc.addedEvents,
           [NextTurnEvent()],
         );
+      }),
+    );
+
+    testWidgets(
+      'Should show round winner UI when game has a winner and a round value',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          const ScoreboardView(),
+          scoreboardState: const ScoreboardState(
+            Game(
+              players: [
+                Player(playerId: 1),
+                Player(playerId: 2),
+              ],
+              round: Round(
+                roundCount: 2,
+                roundWinner: Player(playerId: 2),
+              ),
+            ),
+          ),
+        );
+
+        then
+          ..findsWidget(find.text('Round: 2'))
+          ..findsWidget(find.text('Round Winner: Player 2'));
       }),
     );
   });

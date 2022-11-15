@@ -1,7 +1,7 @@
 {
   "@@locale": "en",
-  "player1": "Player {playerId}",
-  "@player1": {
+  "playerNumber": "Player {playerId}",
+  "@playerNumber": {
     "description": "Generic label for player 1",
     "placeholders": {
       "playerId": {
@@ -17,5 +17,25 @@
   "done": "DONE",
   "@done": {
     "description": "button label for when a user is finished"
+  },
+  "roundWinner": "Round Winner: {playerName}",
+  "@roundWinner": {
+    "description": "label for displaying the current winner of the previous round",
+    "placeholders": {
+      "playerName": {
+        "type": "String",
+        "example": "Jimmy"
+      }
+    }
+  },
+  "roundNumber": "Round: {roundNumber}",
+  "@roundNumber": {
+    "description": "label for displaying the current count of rounds of gameplay",
+    "placeholders": {
+      "roundNumber": {
+        "type": "int",
+        "example": "1"
+      }
+    }
   }
 }

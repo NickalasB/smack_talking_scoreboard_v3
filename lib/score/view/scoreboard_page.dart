@@ -34,6 +34,10 @@ class ScoreboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final round = context.selectScoreboard.state.game.round;
+    final strings = AppLocalizations.of(context);
+    final roundWinnerText = round.roundWinner != null
+        ? strings.playerNumber(round.roundWinner!.playerId)
+        : '';
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -46,8 +50,8 @@ class ScoreboardView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Round: ${round.roundCount}'),
-                  Text('Round Winner: Player ${round.roundWinner?.playerId}')
+                  Text(strings.roundNumber(round.roundCount)),
+                  Text(strings.roundWinner(roundWinnerText)),
                 ],
               ),
               const SizedBox(height: 8),
@@ -113,7 +117,7 @@ class PlayerScore extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              l10n.player1(playerId),
+              l10n.playerNumber(playerId),
               style: theme.textTheme.headlineLarge?.copyWith(
                 color: theme.primaryColor,
                 fontWeight: FontWeight.bold,
