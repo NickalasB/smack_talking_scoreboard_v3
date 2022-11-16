@@ -109,7 +109,12 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   }
 
   void _resetGame(ResetGameEvent event, Emitter<ScoreboardState> emit) {
-    emit(initialScoreboardState);
+    emit(
+      state.copyWith(
+        game: initialScoreboardState.game,
+        insults: state.insults,
+      ),
+    );
   }
 
   @override

@@ -316,37 +316,28 @@ void main() {
     });
 
     group('ResetGameEvent', () {
-      test('Should rest scores and rounds when ResetGameEvent added', () async {
-        final inProgressGame = Game(
-          players: const [
-            Player(playerId: 1, score: 10),
-            Player(playerId: 2, score: 5),
-          ],
-          round: Round(
-            roundWinner: Player(playerId: 1, score: 10),
-            roundCount: 10,
+      test(
+          'Should rest scores and rounds but keep insults when ResetGameEvent added',
+          () async {
+        final inProgressState = ScoreboardState(
+          Game(
+            players: const [
+              Player(playerId: 1, score: 10),
+              Player(playerId: 2, score: 5),
+            ],
+            round: Round(
+              roundWinner: Player(playerId: 1, score: 10),
+              roundCount: 10,
+            ),
           ),
+          insults: const ['I should not be deleted when resetting game'],
         );
 
-        final bloc = ScoreboardBloc()
-          ..emit(
-            ScoreboardState(
-              Game(
-                players: const [
-                  Player(playerId: 1, score: 10),
-                  Player(playerId: 2, score: 5),
-                ],
-                round: Round(
-                  roundWinner: Player(playerId: 1, score: 10),
-                  roundCount: 10,
-                ),
-              ),
-            ),
-          );
+        final bloc = ScoreboardBloc()..emit(inProgressState);
 
         expect(
           bloc.state,
-          ScoreboardState(inProgressGame),
+          inProgressState,
         );
 
         bloc.add(ResetGameEvent());
@@ -354,7 +345,9 @@ void main() {
 
         expect(
           bloc.state,
-          initialScoreboardState,
+          initialScoreboardState.copyWith(
+            insults: const ['I should not be deleted when resetting game'],
+          ),
         );
       });
     });

@@ -14,6 +14,7 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
 
 class ScoreboardPage extends StatelessWidget {
@@ -129,6 +130,46 @@ class PlayerScore extends StatelessWidget {
         Expanded(
           child: GestureDetector(
             key: Key('scoreboard_gesture_player_$playerId'),
+            onLongPress: () async {
+              return showDialog(
+                  context: context,
+                  builder: (_) {
+                    return Dialog(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Reset Game?',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const SizedBox(height: 64),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                PrimaryButton(
+                                  onPressed: () {
+                                    context
+                                        .addScoreboardEvent(ResetGameEvent());
+                                    Navigator.of(context).pop();
+                                  },
+                                  label: 'yes',
+                                ),
+                                PrimaryButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  label: 'No',
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+            },
             onTap: () => context
                 .addScoreboardEvent(IncreaseScoreEvent(playerId: playerId)),
             onVerticalDragEnd: (DragEndDetails details) {
