@@ -18,7 +18,9 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     on<SaveInsultEvent>(_saveInsult);
 
-    on<NextTurnEvent>(_nextTurnEvent);
+    on<NextTurnEvent>(_changeToNextTurn);
+
+    on<ResetGameEvent>(_resetGame);
   }
 
   void _increaseScore(IncreaseScoreEvent event, Emitter<ScoreboardState> emit) {
@@ -81,7 +83,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     }
   }
 
-  void _nextTurnEvent(NextTurnEvent event, Emitter<ScoreboardState> emit) {
+  void _changeToNextTurn(NextTurnEvent event, Emitter<ScoreboardState> emit) {
     final game = state.game;
     final players = game.players;
     final roundHighScore = players.map((e) => e.roundScore).max;
@@ -102,6 +104,15 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
             roundCount: game.round.roundCount + 1,
           ),
         ),
+      ),
+    );
+  }
+
+  void _resetGame(ResetGameEvent event, Emitter<ScoreboardState> emit) {
+    emit(
+      state.copyWith(
+        game: initialScoreboardState.game,
+        insults: state.insults,
       ),
     );
   }

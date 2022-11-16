@@ -64,6 +64,10 @@ extension AppThen on WidgetTestThen<AppHarness> {
     return expect(finder, findsOneWidget);
   }
 
+  void findsNoWidget(Finder finder) {
+    return expect(finder, findsNothing);
+  }
+
   Future<void> multiScreenGoldensMatch(
     String testName, {
     List<Device>? devices,

@@ -37,5 +37,17 @@
         "example": "1"
       }
     }
+  },
+  "resetGame": "Reset Game?",
+  "@resetGame": {
+    "description": "title for dialog allowing user to reset game"
+  },
+  "yes": "Yes",
+  "@yes": {
+    "description": "the word yes"
+  },
+  "no": "No",
+  "@no": {
+    "description": "the word no"
   }
 }

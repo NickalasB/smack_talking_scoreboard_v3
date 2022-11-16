@@ -20,4 +20,6 @@ class ScoreBoardPageObject extends PageObject {
   Finder get doneButton => find.text('DONE');
 
   Finder get changeTurnButton => find.byType(ChangeTurnButton);
+
+  Finder get resetScoreDialog => find.byKey(const Key('reset_score_dialog'));
 }

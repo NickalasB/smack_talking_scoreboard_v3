@@ -314,6 +314,43 @@ void main() {
         );
       });
     });
+
+    group('ResetGameEvent', () {
+      test(
+          'Should rest scores and rounds but keep insults when ResetGameEvent added',
+          () async {
+        final inProgressState = ScoreboardState(
+          Game(
+            players: const [
+              Player(playerId: 1, score: 10),
+              Player(playerId: 2, score: 5),
+            ],
+            round: Round(
+              roundWinner: Player(playerId: 1, score: 10),
+              roundCount: 10,
+            ),
+          ),
+          insults: const ['I should not be deleted when resetting game'],
+        );
+
+        final bloc = ScoreboardBloc()..emit(inProgressState);
+
+        expect(
+          bloc.state,
+          inProgressState,
+        );
+
+        bloc.add(ResetGameEvent());
+        await tick();
+
+        expect(
+          bloc.state,
+          initialScoreboardState.copyWith(
+            insults: const ['I should not be deleted when resetting game'],
+          ),
+        );
+      });
+    });
   });
 }
 
