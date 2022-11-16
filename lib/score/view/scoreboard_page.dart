@@ -99,7 +99,7 @@ class PlayerScore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
+    final strings = context.l10n;
     final score = context
             .select((ScoreboardBloc bloc) => bloc.state.game)
             .players
@@ -118,7 +118,7 @@ class PlayerScore extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              l10n.playerNumber(playerId),
+              strings.playerNumber(playerId),
               style: theme.textTheme.headlineLarge?.copyWith(
                 color: theme.primaryColor,
                 fontWeight: FontWeight.bold,
@@ -130,46 +130,7 @@ class PlayerScore extends StatelessWidget {
         Expanded(
           child: GestureDetector(
             key: Key('scoreboard_gesture_player_$playerId'),
-            onLongPress: () async {
-              return showDialog(
-                  context: context,
-                  builder: (_) {
-                    return Dialog(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Reset Game?',
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                            const SizedBox(height: 64),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                PrimaryButton(
-                                  onPressed: () {
-                                    context
-                                        .addScoreboardEvent(ResetGameEvent());
-                                    Navigator.of(context).pop();
-                                  },
-                                  label: 'yes',
-                                ),
-                                PrimaryButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  label: 'No',
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  });
-            },
+            onLongPress: () async => _launchResetGameDialog(context),
             onTap: () => context
                 .addScoreboardEvent(IncreaseScoreEvent(playerId: playerId)),
             onVerticalDragEnd: (DragEndDetails details) {
@@ -200,6 +161,56 @@ class PlayerScore extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Future<void> _launchResetGameDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (_) {
+        return BlocProvider.value(
+          value: context.selectScoreboard,
+          child: const _ResetGameDialog(),
+        );
+      },
+    );
+  }
+}
+
+class _ResetGameDialog extends StatelessWidget {
+  const _ResetGameDialog() : super(key: const Key('reset_score_dialog'));
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = context.l10n;
+
+    return AlertDialog(
+      contentPadding: const EdgeInsets.all(16),
+      title: Center(
+        child: Text(
+          strings.resetGame,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 32),
+        ),
+      ),
+      content: const SizedBox(height: 24),
+      actions: [
+        PrimaryButton(
+          onPressed: () {
+            context.addScoreboardEvent(ResetGameEvent());
+            Navigator.of(context).pop();
+          },
+          label: strings.yes,
+        ),
+        PrimaryButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          label: strings.no,
+        ),
+      ],
+      actionsAlignment: MainAxisAlignment.spaceEvenly,
+      actionsPadding: const EdgeInsets.only(bottom: 16),
     );
   }
 }

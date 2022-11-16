@@ -89,6 +89,59 @@ void main() {
     );
   });
 
+  group('ResetGame Dialog', () {
+    testGoldens(
+      'should launch reset game dialog when long-pressing a score',
+      appHarness((given, when, then) async {
+        await given.pumpWidget(const ScoreboardView());
+
+        await when.tester.longPress(
+          scoreboardPage.playerScore(forPlayerId: 1),
+        );
+
+        await when.pumpAndSettle();
+        then.findsWidget(scoreboardPage.resetScoreDialog);
+        await then.multiScreenGoldensMatch('reset_score_dialog');
+      }),
+    );
+
+    testWidgets(
+      'should add ResetScoreEvent when user hits Yes on reset game dialog',
+      appHarness((given, when, then) async {
+        await given.pumpWidget(const ScoreboardView());
+
+        await when.tester.longPress(
+          scoreboardPage.playerScore(forPlayerId: 1),
+        );
+
+        await when.pumpAndSettle();
+        await when.userTaps(find.text('Yes'));
+        await when.pumpAndSettle();
+
+        expect(then.harness.scoreBloc.addedEvents, [ResetGameEvent()]);
+        then.findsNoWidget(scoreboardPage.resetScoreDialog);
+      }),
+    );
+
+    testWidgets(
+      'should dismiss reset game dialog when user hit No button',
+      appHarness((given, when, then) async {
+        await given.pumpWidget(const ScoreboardView());
+
+        await when.tester.longPress(
+          scoreboardPage.playerScore(forPlayerId: 1),
+        );
+
+        await when.pumpAndSettle();
+        await when.userTaps(find.text('No'));
+        await when.pumpAndSettle();
+
+        expect(then.harness.scoreBloc.addedEvents, isEmpty);
+        then.findsNoWidget(scoreboardPage.resetScoreDialog);
+      }),
+    );
+  });
+
   group('Settings Button', () {
     testWidgets(
       'Should launch Settings Bottom sheet when clicking on settings button',
