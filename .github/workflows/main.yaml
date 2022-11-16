@@ -1,8 +1,10 @@
 name: smack_talking_scoreboard_v3
 
-on: [ pull_request ]
+on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+  pull_request:
 
 jobs:
   semantic-pull-request:
