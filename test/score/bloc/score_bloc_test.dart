@@ -36,18 +36,10 @@ void main() {
         insults: const [],
       );
 
-      expect(
-        bloc.state,
-        equals(initialState),
-      );
-
       expect(testStorage.readForKeyCalls, hasLength(1));
       expect(testStorage.writeForKeyCalls, hasLength(1));
 
-      expect(
-        bloc.fromJson(testStorage.read('ScoreboardBloc')!),
-        initialState,
-      );
+      expectStateAndHydratedState(bloc, equals(initialState));
     });
 
     group('IncreaseScoreEvent', () {
@@ -55,8 +47,8 @@ void main() {
           () async {
         final bloc = ScoreboardBloc()..add(IncreaseScoreEvent(playerId: 1));
         await tick();
-        expect(
-          bloc.state,
+        expectStateAndHydratedState(
+          bloc,
           equals(
             const ScoreboardState(
               Game(
@@ -78,8 +70,8 @@ void main() {
         await tick();
         bloc.add(DecreaseScoreEvent(playerId: 2));
         await tick();
-        expect(
-          bloc.state,
+        expectStateAndHydratedState(
+          bloc,
           equals(
             const ScoreboardState(
               Game(
@@ -98,8 +90,8 @@ void main() {
           () async {
         final bloc = ScoreboardBloc()..add(DecreaseScoreEvent(playerId: 1));
         await tick();
-        expect(
-          bloc.state,
+        expectStateAndHydratedState(
+          bloc,
           equals(
             const ScoreboardState(
               Game(
@@ -134,17 +126,9 @@ void main() {
           insults: ['be better'],
         );
 
-        expect(
-          bloc.state,
-          equals(updatedState),
-        );
-
         await tick();
 
-        expect(
-          bloc.fromJson(testStorage.read('ScoreboardBloc')!),
-          updatedState,
-        );
+        expectStateAndHydratedState(bloc, equals(updatedState));
       });
 
       test(
@@ -155,16 +139,16 @@ void main() {
 
         bloc.add(SaveInsultEvent(''));
         await tick();
-        expect(
-          bloc.state,
+        expectStateAndHydratedState(
+          bloc,
           equals(initialScoreboardState),
         );
 
         bloc.add(SaveInsultEvent(null));
         await tick();
 
-        expect(
-          bloc.state,
+        expectStateAndHydratedState(
+          bloc,
           equals(initialScoreboardState),
         );
       });
@@ -191,15 +175,10 @@ void main() {
           insults: ['be better'],
         );
 
-        expect(
-          bloc.state,
-          equals(updatedState),
-        );
-
         await tick();
 
-        expect(
-          bloc.fromJson(testStorage.read('ScoreboardBloc')!),
+        expectStateAndHydratedState(
+          bloc,
           updatedState,
         );
       });
@@ -251,8 +230,8 @@ void main() {
           ),
         );
 
-        expect(
-          bloc.fromJson(testStorage.read('ScoreboardBloc')!),
+        expectStateAndHydratedState(
+          bloc,
           isAScoreboardState.havingRound(
             Round(
               roundCount: 2,
@@ -335,18 +314,45 @@ void main() {
 
         final bloc = ScoreboardBloc()..emit(inProgressState);
 
-        expect(
-          bloc.state,
+        expectStateAndHydratedState(
+          bloc,
           inProgressState,
         );
 
         bloc.add(ResetGameEvent());
         await tick();
 
-        expect(
-          bloc.state,
+        expectStateAndHydratedState(
+          bloc,
           initialScoreboardState.copyWith(
             insults: const ['I should not be deleted when resetting game'],
+          ),
+        );
+      });
+    });
+
+    group('DeleteInsultEvent', () {
+      test('Should remove insult when DeleteInsultEvent added', () async {
+        final stateWithInsults = ScoreboardState(
+          Game(),
+          insults: const [
+            'insult1',
+            'insult2',
+          ],
+        );
+
+        final bloc = ScoreboardBloc()..emit(stateWithInsults);
+        await tick();
+
+        bloc.add(DeleteInsultEvent('insult1'));
+        await tick();
+
+        expectStateAndHydratedState(
+          bloc,
+          equals(
+            stateWithInsults.copyWith(
+              insults: const ['insult2'],
+            ),
           ),
         );
       });
@@ -359,4 +365,9 @@ final isAScoreboardState = TypeMatcher<ScoreboardState>();
 extension on TypeMatcher<ScoreboardState> {
   TypeMatcher<ScoreboardState> havingRound(Round round) =>
       isAScoreboardState.having((p0) => p0.game.round, 'round', round);
+}
+
+void expectStateAndHydratedState(ScoreboardBloc bloc, dynamic matcher) {
+  expect(bloc.state, matcher);
+  expect(bloc.fromJson(testStorage.read('ScoreboardBloc')!), matcher);
 }

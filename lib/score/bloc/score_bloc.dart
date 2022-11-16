@@ -21,6 +21,8 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     on<NextTurnEvent>(_changeToNextTurn);
 
     on<ResetGameEvent>(_resetGame);
+
+    on<DeleteInsultEvent>(_deleteInsult);
   }
 
   void _increaseScore(IncreaseScoreEvent event, Emitter<ScoreboardState> emit) {
@@ -114,6 +116,13 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         game: initialScoreboardState.game,
         insults: state.insults,
       ),
+    );
+  }
+
+  void _deleteInsult(DeleteInsultEvent event, Emitter<ScoreboardState> emit) {
+    final insults = List<String>.from(state.insults)..remove(event.insult);
+    emit(
+      state.copyWith(insults: insults),
     );
   }
 

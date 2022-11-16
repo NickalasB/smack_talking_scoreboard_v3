@@ -94,19 +94,19 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.selectScoreboard;
+    final bloc = context.readScoreboard;
     final theme = Theme.of(context);
     final l10 = context.l10n;
     final insults = bloc.state.insults;
     final insultCount = insults.length;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TextField(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: TextField(
             key: const Key('insult_text_field'),
             controller: controller,
             decoration: const InputDecoration(
@@ -114,21 +114,34 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
             ),
             style: theme.textTheme.titleLarge,
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: ListView.builder(
-                itemCount: insultCount,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Text(
-                    insults[index],
-                  );
-                },
-              ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: ListView.builder(
+              itemCount: insultCount,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final insult = insults[index];
+                return Dismissible(
+                  key: Key('insult_$index'),
+                  onDismissed: (direction) {
+                    bloc.add(
+                      DeleteInsultEvent(insult),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(insult),
+                  ),
+                );
+              },
             ),
           ),
-          PrimaryButton(
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: PrimaryButton(
             onPressed: () {
               bloc.add(SaveInsultEvent(controller.text));
 
@@ -136,8 +149,8 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
             },
             label: l10.done,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
