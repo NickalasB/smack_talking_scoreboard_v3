@@ -88,6 +88,18 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
     return tester.tap(finder);
   }
 
+  Future<void> userSwipesHorizontally(Finder finder) {
+    return tester.drag(finder, const Offset(-3000, 0));
+  }
+
+  Future<void> userDragsVertically(Finder finder, Offset offset) {
+    return tester.timedDrag(
+      finder,
+      offset,
+      const Duration(milliseconds: 750),
+    );
+  }
+
   Future<void> pumpAndSettle() {
     return tester.pumpAndSettle(const Duration(seconds: 3));
   }

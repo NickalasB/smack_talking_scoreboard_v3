@@ -55,10 +55,9 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidget(const ScoreboardView());
 
-        await when.tester.timedDrag(
+        await when.userDragsVertically(
           scoreboardPage.playerScore(forPlayerId: 1),
           const Offset(0, 300),
-          const Duration(milliseconds: 750),
         );
 
         await when.pumpAndSettle();
@@ -74,10 +73,9 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidget(const ScoreboardView());
 
-        await when.tester.timedDrag(
+        await when.userDragsVertically(
           scoreboardPage.playerScore(forPlayerId: 1),
           const Offset(0, -300),
-          const Duration(milliseconds: 750),
         );
 
         await when.pumpAndSettle();
@@ -151,6 +149,36 @@ void main() {
         await when.pumpAndSettle();
 
         then.findsWidget(scoreboardPage.settingsBottomSheet);
+      }),
+    );
+
+    testWidgets(
+      'Should add DeleteInsultEvent when user swipes insult from Settings BottomSheet',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          const ScoreboardView(),
+          scoreboardState: const ScoreboardState(
+            Game(),
+            insults: [
+              'insult1',
+              'insult2',
+            ],
+          ),
+        );
+        await when.userTaps(scoreboardPage.settingsButton);
+        await when.pumpAndSettle();
+
+        then.findsWidget(find.text('insult1'));
+
+        await when.userSwipesHorizontally(find.text('insult1'));
+        await when.pumpAndSettle();
+
+        expect(
+          then.harness.scoreBloc.addedEvents,
+          [DeleteInsultEvent('insult1')],
+        );
+
+        then.findsNoWidget(find.text('insult1'));
       }),
     );
   });

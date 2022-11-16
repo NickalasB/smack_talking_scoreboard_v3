@@ -105,7 +105,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
           child: TextField(
             key: const Key('insult_text_field'),
             controller: controller,
