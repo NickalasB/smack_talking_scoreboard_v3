@@ -39,3 +39,11 @@ class ResetGameEvent extends ScoreboardEvent {
   @override
   List<Object?> get props => [];
 }
+
+class DeleteInsultEvent extends ScoreboardEvent {
+  DeleteInsultEvent(this.insult);
+
+  final String insult;
+  @override
+  List<Object?> get props => [insult];
+}
