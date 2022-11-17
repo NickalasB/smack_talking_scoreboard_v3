@@ -130,9 +130,21 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                       DeleteInsultEvent(insult),
                     );
                   },
+                  background: deleteBackground(Alignment.centerLeft),
+                  secondaryBackground: deleteBackground(Alignment.centerRight),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(insult),
+                    child: ConstrainedBox(
+                      constraints:
+                          const BoxConstraints(minHeight: kTextTabBarHeight),
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text(
+                          insult,
+                          style: theme.textTheme.bodyLarge,
+                        ),
+                      ),
+                    ),
                   ),
                 );
               },
@@ -144,7 +156,6 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
           child: PrimaryButton(
             onPressed: () {
               bloc.add(SaveInsultEvent(controller.text));
-
               Navigator.of(context).pop(controller.text);
             },
             label: l10.done,
@@ -153,4 +164,17 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
       ],
     );
   }
+
+  Widget deleteBackground(AlignmentGeometry alignmentGeometry) => ColoredBox(
+        color: Colors.red,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Align(
+            alignment: alignmentGeometry,
+            child: const Icon(
+              Icons.delete,
+            ),
+          ),
+        ),
+      );
 }

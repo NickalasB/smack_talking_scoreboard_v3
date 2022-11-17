@@ -71,8 +71,14 @@ extension AppThen on WidgetTestThen<AppHarness> {
   Future<void> multiScreenGoldensMatch(
     String testName, {
     List<Device>? devices,
+    bool shouldSkipPumpAndSettle = false,
   }) {
-    return multiScreenGolden(tester, testName, devices: devices);
+    return multiScreenGolden(
+      tester,
+      testName,
+      devices: devices,
+      customPump: shouldSkipPumpAndSettle ? (_) async {} : null,
+    );
   }
 
   Future<void> screenMatchesGolden(Finder finder, String name) async {
@@ -88,8 +94,8 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
     return tester.tap(finder);
   }
 
-  Future<void> userSwipesHorizontally(Finder finder) {
-    return tester.drag(finder, const Offset(-3000, 0));
+  Future<void> userSwipesHorizontally(Finder finder, {double dx = -3000.00}) {
+    return tester.drag(finder, Offset(dx, 0));
   }
 
   Future<void> userDragsVertically(Finder finder, Offset offset) {
