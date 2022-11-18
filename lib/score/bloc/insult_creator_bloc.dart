@@ -10,8 +10,11 @@ class InsultCreatorBloc extends Bloc<InsultCreatorEvent, InsultCreatorState> {
     });
   }
 
-  void _createInsult(Map<int, String> insultMap, CreateInsultEvent event,
-      Emitter<InsultCreatorState> emit) {
+  void _createInsult(
+    Map<int, String> insultMap,
+    CreateInsultEvent event,
+    Emitter<InsultCreatorState> emit,
+  ) {
     insultMap.update(
       event.index,
       (value) => event.insult,

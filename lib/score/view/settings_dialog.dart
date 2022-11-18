@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
@@ -91,116 +92,118 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
     final insultCount = insults.length;
     final theme = Theme.of(context);
 
-    return Builder(builder: (context) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              child: Wrap(
-                runSpacing: 4,
-                children: inputAndPlayerList.toList(),
+    return Builder(
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                child: Wrap(
+                  runSpacing: 4,
+                  children: inputAndPlayerList.toList(),
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: ListView.builder(
-                itemCount: insultCount,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  final insult = insults[index];
-                  return Dismissible(
-                    key: Key('insult_$index'),
-                    onDismissed: (direction) {
-                      bloc.add(
-                        DeleteInsultEvent(insult),
-                      );
-                    },
-                    background: deleteBackground(Alignment.centerLeft),
-                    secondaryBackground:
-                        deleteBackground(Alignment.centerRight),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                          minHeight: kTextTabBarHeight,
-                        ),
-                        child: Align(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: Text(
-                            insult,
-                            style: theme.textTheme.bodyLarge,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: ListView.builder(
+                  itemCount: insultCount,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final insult = insults[index];
+                    return Dismissible(
+                      key: Key('insult_$index'),
+                      onDismissed: (direction) {
+                        bloc.add(
+                          DeleteInsultEvent(insult),
+                        );
+                      },
+                      background: deleteBackground(Alignment.centerLeft),
+                      secondaryBackground:
+                          deleteBackground(Alignment.centerRight),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            minHeight: kTextTabBarHeight,
+                          ),
+                          child: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(
+                              insult,
+                              style: theme.textTheme.bodyLarge,
+                            ),
                           ),
                         ),
                       ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Draggable<String>(
+                  data: 'Hi',
+                  feedback: PrimaryButton(onPressed: () {}, label: 'Hi'),
+                  childWhenDragging: PrimaryButton(
+                    onPressed: () {},
+                    label: 'Hi',
+                    isFilled: false,
+                  ),
+                  child: PrimaryButton(onPressed: () {}, label: 'Hi'),
+                ),
+                PrimaryButton(
+                  onPressed: () {
+                    setState(() {
+                      inputAndPlayerList.add(
+                        PlayerPlusTextInput(
+                          TextEditingController(),
+                          index: inputAndPlayerList.length,
+                        ),
+                      );
+                    });
+                  },
+                  label: 'Add',
+                ),
+                Draggable<String>(
+                  data: 'Low',
+                  feedback: PrimaryButton(onPressed: () {}, label: 'Low'),
+                  childWhenDragging: PrimaryButton(
+                    onPressed: () {},
+                    label: 'Low',
+                    isFilled: false,
+                  ),
+                  child: PrimaryButton(onPressed: () {}, label: 'Low'),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: PrimaryButton(
+                onPressed: () {
+                  final insultCreatorBloc =
+                      BlocProvider.of<InsultCreatorBloc>(context);
+
+                  bloc.add(
+                    SaveInsultEvent(
+                      insultCreatorBloc.state.constructedInsult,
                     ),
                   );
+                  Navigator.of(context).pop();
                 },
+                label: l10.done,
               ),
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Draggable<String>(
-                data: 'Hi',
-                feedback: PrimaryButton(onPressed: () {}, label: 'Hi'),
-                childWhenDragging: PrimaryButton(
-                  onPressed: () {},
-                  label: 'Hi',
-                  isFilled: false,
-                ),
-                child: PrimaryButton(onPressed: () {}, label: 'Hi'),
-              ),
-              PrimaryButton(
-                onPressed: () {
-                  setState(() {
-                    inputAndPlayerList.add(
-                      PlayerPlusTextInput(
-                        TextEditingController(),
-                        index: inputAndPlayerList.length,
-                      ),
-                    );
-                  });
-                },
-                label: 'Add',
-              ),
-              Draggable<String>(
-                data: 'Low',
-                feedback: PrimaryButton(onPressed: () {}, label: 'Low'),
-                childWhenDragging: PrimaryButton(
-                  onPressed: () {},
-                  label: 'Low',
-                  isFilled: false,
-                ),
-                child: PrimaryButton(onPressed: () {}, label: 'Low'),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: PrimaryButton(
-              onPressed: () {
-                final insultCreatorBloc =
-                    BlocProvider.of<InsultCreatorBloc>(context);
-
-                bloc.add(
-                  SaveInsultEvent(
-                    insultCreatorBloc.state.constructedInsult,
-                  ),
-                );
-                Navigator.of(context).pop();
-              },
-              label: l10.done,
-            ),
-          ),
-        ],
-      );
-    });
+          ],
+        );
+      },
+    );
   }
 
   Widget deleteBackground(AlignmentGeometry alignmentGeometry) => ColoredBox(
@@ -291,6 +294,10 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
                     ),
                   ),
                 );
+              },
+              onWillAccept: (date) {
+                HapticFeedback.heavyImpact();
+                return true;
               },
               onAccept: (String data) {
                 setState(() {
