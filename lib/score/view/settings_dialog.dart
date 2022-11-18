@@ -5,6 +5,7 @@ import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/dismissible_insult_list.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
 class SettingsDialog extends StatefulWidget {
@@ -88,9 +89,6 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
   Widget build(BuildContext context) {
     final bloc = context.readScoreboard;
     final l10 = context.l10n;
-    final insults = bloc.state.insults;
-    final insultCount = insults.length;
-    final theme = Theme.of(context);
 
     return Builder(
       builder: (context) {
@@ -107,44 +105,11 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                 ),
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: ListView.builder(
-                  itemCount: insultCount,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    final insult = insults[index];
-                    return Dismissible(
-                      key: Key('insult_$index'),
-                      onDismissed: (direction) {
-                        bloc.add(
-                          DeleteInsultEvent(insult),
-                        );
-                      },
-                      background: deleteBackground(Alignment.centerLeft),
-                      secondaryBackground:
-                          deleteBackground(Alignment.centerRight),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            minHeight: kTextTabBarHeight,
-                          ),
-                          child: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              insult,
-                              style: theme.textTheme.bodyLarge,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+            const Divider(thickness: 2),
+            const Expanded(
+              child: DismissibleInsultList(),
             ),
+            const Divider(thickness: 2),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -205,19 +170,6 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
       },
     );
   }
-
-  Widget deleteBackground(AlignmentGeometry alignmentGeometry) => ColoredBox(
-        color: Colors.red,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Align(
-            alignment: alignmentGeometry,
-            child: const Icon(
-              Icons.delete,
-            ),
-          ),
-        ),
-      );
 }
 
 class PlayerPlusTextInput extends StatefulWidget {
@@ -300,10 +252,8 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
                 return true;
               },
               onAccept: (String data) {
-                setState(() {
-                  draggedText = data;
-                  createInsultEvent();
-                });
+                draggedText = data;
+                createInsultEvent();
               },
             ),
           ),
