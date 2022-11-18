@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
@@ -92,6 +91,10 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
 
     return Builder(
       builder: (context) {
+        final insultCreatorBloc = context.selectInsultCreator;
+        final constructedInsult = insultCreatorBloc.state.constructedInsult;
+
+        final isValidInsult = constructedInsult.trim() != 'Hi/Low';
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -151,17 +154,12 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: PrimaryButton(
-                onPressed: () {
-                  final insultCreatorBloc =
-                      BlocProvider.of<InsultCreatorBloc>(context);
-
-                  bloc.add(
-                    SaveInsultEvent(
-                      insultCreatorBloc.state.constructedInsult,
-                    ),
-                  );
-                  Navigator.of(context).pop();
-                },
+                onPressed: isValidInsult
+                    ? () {
+                        bloc.add(SaveInsultEvent(constructedInsult));
+                        Navigator.of(context).pop();
+                      }
+                    : null,
                 label: l10.done,
               ),
             ),
@@ -187,7 +185,7 @@ class PlayerPlusTextInput extends StatefulWidget {
 }
 
 class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
-  String? draggedText;
+  String draggedText = 'Hi/Low';
   late String fullInsultInfo;
   final focusNode = FocusNode()..requestFocus();
 
@@ -198,7 +196,7 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
   }
 
   void createInsultEvent() {
-    final insultCreatorBloc = BlocProvider.of<InsultCreatorBloc>(context);
+    final insultCreatorBloc = context.readInsultCreator;
     fullInsultInfo = '$draggedText ${widget.controller.text}';
     insultCreatorBloc.add(
       CreateInsultEvent(
@@ -238,8 +236,8 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
                   widthFactor: 1,
                   child: Center(
                     child: Text(
-                      draggedText ?? 'Hi/Low',
-                      style: draggedText != null
+                      draggedText,
+                      style: draggedText != 'Hi/Low'
                           ? theme.textTheme.titleLarge
                           : theme.textTheme.titleLarge
                               ?.copyWith(color: theme.disabledColor),

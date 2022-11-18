@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class InsultCreatorBloc extends Bloc<InsultCreatorEvent, InsultCreatorState> {
@@ -43,4 +44,11 @@ class InsultCreatorState {
   InsultCreatorState(this.constructedInsult);
 
   String constructedInsult;
+}
+
+extension InsultCreatorContext on BuildContext {
+  InsultCreatorBloc get readInsultCreator => read<InsultCreatorBloc>();
+
+  InsultCreatorBloc get selectInsultCreator =>
+      BlocProvider.of<InsultCreatorBloc>(this, listen: true);
 }
