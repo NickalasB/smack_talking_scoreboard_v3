@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
-import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
-import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/settings_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/circular_button.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
 class SettingsButton extends StatelessWidget {
   const SettingsButton(
@@ -22,28 +20,14 @@ class SettingsButton extends StatelessWidget {
         showModalBottomSheet<String?>(
           context: context,
           isScrollControlled: true,
-          builder: (context) => BlocProvider<ScoreboardBloc>.value(
-            value: bloc,
-            child: Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              child: SizedBox(
-                height: 340,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: const [
-                    BottomSheetHeader(
-                      key: Key('settings_bottom_sheet'),
-                    ),
-                    Flexible(
-                      child: BottomSheetContent(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+          builder: (context) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: bloc),
+              BlocProvider<InsultCreatorBloc>(
+                create: (context) => InsultCreatorBloc(),
+              )
+            ],
+            child: const SettingsDialog(),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -53,128 +37,4 @@ class SettingsButton extends StatelessWidget {
       child: const Icon(Icons.settings),
     );
   }
-}
-
-class BottomSheetHeader extends StatelessWidget {
-  const BottomSheetHeader({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Text(
-            l10n.addYourOwnSmackTalk,
-            style:
-                Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 28),
-          ),
-        ),
-        const Divider(thickness: 2),
-      ],
-    );
-  }
-}
-
-class BottomSheetContent extends StatefulWidget {
-  const BottomSheetContent({
-    super.key,
-  });
-
-  @override
-  State<BottomSheetContent> createState() => _BottomSheetContentState();
-}
-
-class _BottomSheetContentState extends State<BottomSheetContent> {
-  late final controller = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    final bloc = context.readScoreboard;
-    final theme = Theme.of(context);
-    final l10 = context.l10n;
-    final insults = bloc.state.insults;
-    final insultCount = insults.length;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-          child: TextField(
-            key: const Key('insult_text_field'),
-            controller: controller,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-            ),
-            style: theme.textTheme.titleLarge,
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: ListView.builder(
-              itemCount: insultCount,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                final insult = insults[index];
-                return Dismissible(
-                  key: Key('insult_$index'),
-                  onDismissed: (direction) {
-                    bloc.add(
-                      DeleteInsultEvent(insult),
-                    );
-                  },
-                  background: deleteBackground(Alignment.centerLeft),
-                  secondaryBackground: deleteBackground(Alignment.centerRight),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: ConstrainedBox(
-                      constraints:
-                          const BoxConstraints(minHeight: kTextTabBarHeight),
-                      child: Align(
-                        alignment: AlignmentDirectional.centerStart,
-                        child: Text(
-                          insult,
-                          style: theme.textTheme.bodyLarge,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: PrimaryButton(
-            onPressed: () {
-              bloc.add(SaveInsultEvent(controller.text));
-              Navigator.of(context).pop(controller.text);
-            },
-            label: l10.done,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget deleteBackground(AlignmentGeometry alignmentGeometry) => ColoredBox(
-        color: Colors.red,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Align(
-            alignment: alignmentGeometry,
-            child: const Icon(
-              Icons.delete,
-            ),
-          ),
-        ),
-      );
 }

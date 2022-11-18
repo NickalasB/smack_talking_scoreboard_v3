@@ -26,7 +26,7 @@ class PrimaryButton extends StatelessWidget {
       child: Text(
         label,
         style: theme.textTheme.titleLarge?.copyWith(
-          color: theme.canvasColor,
+          color: isFilled ? theme.canvasColor : theme.primaryColor,
         ),
       ),
     );
