@@ -94,7 +94,8 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
         final insultCreatorBloc = context.selectInsultCreator;
         final constructedInsult = insultCreatorBloc.state.constructedInsult;
 
-        final isValidInsult = constructedInsult.trim() != 'Hi/Low';
+        final isValidInsult = constructedInsult.trim().isNotEmpty &&
+            !constructedInsult.contains(r'$invalid');
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,

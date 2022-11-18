@@ -22,7 +22,11 @@ class InsultCreatorBloc extends Bloc<InsultCreatorEvent, InsultCreatorState> {
       ifAbsent: () => event.insult,
     );
 
-    final fullInsultPhrase = List<String>.from(insultMap.values).join(' ');
+    final fullInsultPhrase = List<String>.from(insultMap.values)
+        .join(' ')
+        .replaceAll('Hi/Low', r'$invalid$')
+        .replaceAll('Hi', r'$Hi$')
+        .replaceAll('Low', r'$Low$');
 
     emit(InsultCreatorState(fullInsultPhrase));
   }
