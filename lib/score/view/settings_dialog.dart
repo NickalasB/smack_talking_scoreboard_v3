@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/dismissible_insult_list.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
-
-import '../bloc/scoreboard_events.dart';
-import 'dismissible_insult_list.dart';
 
 class SettingsDialog extends StatefulWidget {
   const SettingsDialog({super.key});
