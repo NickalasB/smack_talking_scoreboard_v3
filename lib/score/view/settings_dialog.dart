@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
-import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/dismissible_insult_list.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
+
+import '../bloc/scoreboard_events.dart';
+import 'dismissible_insult_list.dart';
 
 class SettingsDialog extends StatefulWidget {
   const SettingsDialog({super.key});
@@ -24,13 +25,12 @@ class _SettingsDialogState extends State<SettingsDialog> {
       child: SizedBox(
         height: 500,
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: const [
             BottomSheetHeader(
               key: Key('settings_bottom_sheet'),
             ),
-            Flexible(
+            Expanded(
               child: BottomSheetContent(),
             ),
           ],
@@ -48,7 +48,6 @@ class BottomSheetHeader extends StatelessWidget {
     final l10n = context.l10n;
 
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
         const SizedBox(height: 16),
         Padding(
@@ -97,23 +96,21 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
         final isValidInsult = constructedInsult.trim().isNotEmpty &&
             !constructedInsult.contains(r'$invalid');
         return Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
+            Flexible(
+              fit: FlexFit.tight,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                child: Wrap(
-                  runSpacing: 4,
-                  children: inputAndPlayerList.toList(),
+                child: SingleChildScrollView(
+                  child: Wrap(
+                    runSpacing: 4,
+                    children: inputAndPlayerList.toList(),
+                  ),
                 ),
               ),
             ),
-            const Divider(thickness: 2),
-            const Expanded(
-              child: DismissibleInsultList(),
-            ),
-            const Divider(thickness: 2),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
@@ -152,6 +149,11 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                 ),
               ],
             ),
+            const Divider(thickness: 2),
+            const Expanded(
+              child: DismissibleInsultList(),
+            ),
+            const Divider(thickness: 2),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: PrimaryButton(
@@ -270,6 +272,9 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
                 controller: widget.controller,
                 decoration: const InputDecoration(
                   contentPadding: EdgeInsets.zero,
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
                 ),
                 style: theme.textTheme.titleLarge,
               ),
