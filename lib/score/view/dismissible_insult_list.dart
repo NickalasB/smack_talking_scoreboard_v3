@@ -33,7 +33,8 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
                 ]
               : [
                   // TODO(nibradshaw): l10n
-                  Text('Custom Insults', style: theme.textTheme.titleMedium),
+                  Text('Custom Insults', style: theme.textTheme.titleLarge),
+                  const SizedBox(height: 8),
                   ...insults.map((e) {
                     final insult = e;
                     return Dismissible(
