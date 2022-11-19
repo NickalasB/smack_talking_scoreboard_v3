@@ -55,9 +55,17 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
                           ),
                           child: Align(
                             alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              insult,
-                              style: theme.textTheme.bodyLarge,
+                            child: Row(
+                              children: [
+                                const Text('•'),
+                                const SizedBox(width: 2),
+                                Flexible(
+                                  child: Text(
+                                    insult,
+                                    style: theme.textTheme.bodyLarge,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
