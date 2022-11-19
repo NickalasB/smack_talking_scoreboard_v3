@@ -7,6 +7,8 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/dismissible_insult_list.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
+const defaultHiLowText = 'HI/LOW';
+
 class SettingsDialog extends StatefulWidget {
   const SettingsDialog({super.key});
 
@@ -114,14 +116,14 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Draggable<String>(
-                  data: 'Hi',
-                  feedback: PrimaryButton(onPressed: () {}, label: 'Hi'),
+                  data: 'HI',
+                  feedback: PrimaryButton(onPressed: () {}, label: 'HI'),
                   childWhenDragging: PrimaryButton(
                     onPressed: () {},
-                    label: 'Hi',
+                    label: 'HI',
                     isFilled: false,
                   ),
-                  child: PrimaryButton(onPressed: () {}, label: 'Hi'),
+                  child: PrimaryButton(onPressed: () {}, label: 'HI'),
                 ),
                 PrimaryButton(
                   onPressed: () {
@@ -137,14 +139,14 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                   label: 'Add',
                 ),
                 Draggable<String>(
-                  data: 'Low',
-                  feedback: PrimaryButton(onPressed: () {}, label: 'Low'),
+                  data: 'LOW',
+                  feedback: PrimaryButton(onPressed: () {}, label: 'LOW'),
                   childWhenDragging: PrimaryButton(
                     onPressed: () {},
-                    label: 'Low',
+                    label: 'LOW',
                     isFilled: false,
                   ),
-                  child: PrimaryButton(onPressed: () {}, label: 'Low'),
+                  child: PrimaryButton(onPressed: () {}, label: 'LOW'),
                 ),
               ],
             ),
@@ -187,7 +189,7 @@ class PlayerPlusTextInput extends StatefulWidget {
 }
 
 class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
-  String draggedText = 'Hi/Low';
+  String draggedText = defaultHiLowText;
   late String fullInsultInfo;
   final focusNode = FocusNode()..requestFocus();
 
@@ -199,7 +201,8 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
 
   void createInsultEvent() {
     final insultCreatorBloc = context.readInsultCreator;
-    fullInsultInfo = '$draggedText ${widget.controller.text}';
+    final formattedDraggedText = '\$$draggedText\$';
+    fullInsultInfo = '$formattedDraggedText ${widget.controller.text}';
     insultCreatorBloc.add(
       CreateInsultEvent(
         fullInsultInfo,
@@ -239,7 +242,7 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
                   child: Center(
                     child: Text(
                       draggedText,
-                      style: draggedText != 'Hi/Low'
+                      style: draggedText != defaultHiLowText
                           ? theme.textTheme.titleLarge
                           : theme.textTheme.titleLarge
                               ?.copyWith(color: theme.disabledColor),

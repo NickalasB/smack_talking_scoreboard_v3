@@ -2,8 +2,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+const inValidKey = r'$invalid$';
+const hiLowKey = r'$HI/LOW$';
+
 class InsultCreatorBloc extends Bloc<InsultCreatorEvent, InsultCreatorState> {
-  InsultCreatorBloc() : super(InsultCreatorState('')) {
+  InsultCreatorBloc() : super(const InsultCreatorState('')) {
     final insultMap = <int, String>{};
 
     on<CreateInsultEvent>((event, emit) {
@@ -24,9 +27,7 @@ class InsultCreatorBloc extends Bloc<InsultCreatorEvent, InsultCreatorState> {
 
     final fullInsultPhrase = List<String>.from(insultMap.values)
         .join(' ')
-        .replaceAll('Hi/Low', r'$invalid$')
-        .replaceAll('Hi', r'$Hi$')
-        .replaceAll('Low', r'$Low$');
+        .replaceAll(hiLowKey, inValidKey);
 
     emit(InsultCreatorState(fullInsultPhrase));
   }
@@ -44,10 +45,13 @@ class CreateInsultEvent extends InsultCreatorEvent {
   List<Object?> get props => [insult];
 }
 
-class InsultCreatorState {
-  InsultCreatorState(this.constructedInsult);
+class InsultCreatorState extends Equatable {
+  const InsultCreatorState(this.constructedInsult);
 
-  String constructedInsult;
+  final String constructedInsult;
+
+  @override
+  List<Object?> get props => [constructedInsult];
 }
 
 extension InsultCreatorContext on BuildContext {
