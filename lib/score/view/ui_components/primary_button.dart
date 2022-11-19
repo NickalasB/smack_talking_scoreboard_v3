@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     super.key,
-    required this.onPressed,
+    this.onPressed,
     required this.label,
     this.isFilled = true,
   });

@@ -117,17 +117,9 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Draggable<String>(
-                  key: const Key('hi_draggable'),
-                  data: defaultHiText,
-                  feedback:
-                      PrimaryButton(onPressed: () {}, label: defaultHiText),
-                  childWhenDragging: PrimaryButton(
-                    onPressed: () {},
-                    label: defaultHiText,
-                    isFilled: false,
-                  ),
-                  child: PrimaryButton(onPressed: () {}, label: defaultHiText),
+                const DraggableHiLowScore(
+                  key: Key('hi_draggable'),
+                  label: defaultHiText,
                 ),
                 PrimaryButton(
                   key: const Key('add_more_insult_text_button'),
@@ -141,19 +133,11 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                       );
                     });
                   },
-                  label: 'Add', // TODO(me): l10n
+                  label: l10.add,
                 ),
-                Draggable<String>(
-                  key: const Key('low_draggable'),
-                  data: defaultLowText,
-                  feedback:
-                      PrimaryButton(onPressed: () {}, label: defaultLowText),
-                  childWhenDragging: PrimaryButton(
-                    onPressed: () {},
-                    label: defaultLowText,
-                    isFilled: false,
-                  ),
-                  child: PrimaryButton(onPressed: () {}, label: defaultLowText),
+                const DraggableHiLowScore(
+                  key: Key('low_draggable'),
+                  label: defaultLowText,
                 ),
               ],
             ),
@@ -293,6 +277,35 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class DraggableHiLowScore extends StatelessWidget {
+  const DraggableHiLowScore({
+    required Key key,
+    required this.label,
+  }) : super(key: key);
+
+  final String label;
+  @override
+  Widget build(BuildContext context) {
+    return Draggable<String>(
+      key: key,
+      data: label,
+      feedback: PrimaryButton(
+        onPressed: () {}, // coverage:ignore-line
+        label: label,
+      ),
+      childWhenDragging: PrimaryButton(
+        onPressed: () {}, // coverage:ignore-line
+        label: label,
+        isFilled: false,
+      ),
+      child: PrimaryButton(
+        onPressed: () {}, // coverage:ignore-line
+        label: label,
+      ),
     );
   }
 }

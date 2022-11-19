@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 
@@ -24,16 +25,21 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
           children: insults.isEmpty
               ? [
                   Center(
-                    child: Text(
-                      'No custom insults yet... idiot', // TODO(nibradshaw): l10n
-                      style: theme.textTheme.headlineLarge,
-                      textAlign: TextAlign.center,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        context.l10n.emptyInsultsHint,
+                        style: theme.textTheme.titleMedium,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   )
                 ]
               : [
-                  // TODO(nibradshaw): l10n
-                  Text('Custom Insults', style: theme.textTheme.titleLarge),
+                  Text(
+                    context.l10n.customInsults,
+                    style: theme.textTheme.titleLarge,
+                  ),
                   const SizedBox(height: 8),
                   ...insults.map((e) {
                     final insult = e;
