@@ -15,11 +15,22 @@ class ScoreBoardPageObject extends PageObject {
   Finder get settingsBottomSheet =>
       find.byKey(const Key('settings_bottom_sheet'));
 
-  Finder get insultTextField => find.byKey(const Key('insult_text_field'));
-
-  Finder get doneButton => find.text('DONE');
+  Finder insultTextField({int at = 0}) =>
+      find.byKey(Key('insult_text_field_$at'));
 
   Finder get changeTurnButton => find.byType(ChangeTurnButton);
 
   Finder get resetScoreDialog => find.byKey(const Key('reset_score_dialog'));
+
+  Finder get doneButton => find.byKey(const Key('done_button'));
+
+  Finder get addMoreInsultButton =>
+      find.byKey(const Key('add_more_insult_text_button'));
+
+  Finder hiLowDragTarget({int at = 0}) =>
+      find.byKey(Key('hi_low_drag_target_$at'));
+
+  Finder get hiDraggable => find.byKey(const Key('hi_draggable'));
+
+  Finder get lowDraggable => find.byKey(const Key('low_draggable'));
 }

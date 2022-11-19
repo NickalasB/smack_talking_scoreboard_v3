@@ -106,6 +106,20 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
     );
   }
 
+  Future<void> userDragsWidgetTo({
+    required Finder draggable,
+    required Finder target,
+  }) async {
+    final firstLocation = tester.getCenter(draggable);
+    final secondLocation = tester.getCenter(target);
+
+    final gesture = await tester.startGesture(firstLocation);
+    await gesture.moveTo(secondLocation);
+
+    await gesture.up();
+    await pumpAndSettle();
+  }
+
   Future<void> pumpAndSettle() {
     return tester.pumpAndSettle(const Duration(seconds: 3));
   }

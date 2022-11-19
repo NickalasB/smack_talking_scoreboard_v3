@@ -8,6 +8,8 @@ import 'package:smack_talking_scoreboard_v3/score/view/dismissible_insult_list.d
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
 const defaultHiLowText = 'HI/LOW';
+const defaultHiText = 'HI';
+const defaultLowText = 'LOW';
 
 class SettingsDialog extends StatefulWidget {
   const SettingsDialog({super.key});
@@ -116,16 +118,19 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Draggable<String>(
-                  data: 'HI',
-                  feedback: PrimaryButton(onPressed: () {}, label: 'HI'),
+                  key: const Key('hi_draggable'),
+                  data: defaultHiText,
+                  feedback:
+                      PrimaryButton(onPressed: () {}, label: defaultHiText),
                   childWhenDragging: PrimaryButton(
                     onPressed: () {},
-                    label: 'HI',
+                    label: defaultHiText,
                     isFilled: false,
                   ),
-                  child: PrimaryButton(onPressed: () {}, label: 'HI'),
+                  child: PrimaryButton(onPressed: () {}, label: defaultHiText),
                 ),
                 PrimaryButton(
+                  key: const Key('add_more_insult_text_button'),
                   onPressed: () {
                     setState(() {
                       inputAndPlayerList.add(
@@ -136,17 +141,19 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                       );
                     });
                   },
-                  label: 'Add',
+                  label: 'Add', // TODO(me): l10n
                 ),
                 Draggable<String>(
-                  data: 'LOW',
-                  feedback: PrimaryButton(onPressed: () {}, label: 'LOW'),
+                  key: const Key('low_draggable'),
+                  data: defaultLowText,
+                  feedback:
+                      PrimaryButton(onPressed: () {}, label: defaultLowText),
                   childWhenDragging: PrimaryButton(
                     onPressed: () {},
-                    label: 'LOW',
+                    label: defaultLowText,
                     isFilled: false,
                   ),
-                  child: PrimaryButton(onPressed: () {}, label: 'LOW'),
+                  child: PrimaryButton(onPressed: () {}, label: defaultLowText),
                 ),
               ],
             ),
@@ -158,6 +165,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: PrimaryButton(
+                key: const Key('done_button'),
                 onPressed: isValidInsult
                     ? () {
                         bloc.add(SaveInsultEvent(constructedInsult));
@@ -231,6 +239,7 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
             height: kTextTabBarHeight,
             width: kTextTabBarHeight,
             child: DragTarget<String>(
+              key: Key('hi_low_drag_target_${widget.index}'),
               builder: (
                 BuildContext context,
                 List<dynamic> accepted,
@@ -269,7 +278,7 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
               child: TextField(
                 focusNode: focusNode,
                 showCursor: true,
-                key: const Key('insult_text_field'),
+                key: Key('insult_text_field_${widget.index}'),
                 maxLines: null,
                 controller: widget.controller,
                 decoration: const InputDecoration(
