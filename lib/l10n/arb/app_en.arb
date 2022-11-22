@@ -49,5 +49,17 @@
   "no": "No",
   "@no": {
     "description": "the word no"
+  },
+  "add": "ADD",
+  "@add": {
+    "description": "add, as in 'add this widget to this thing'"
+  },
+  "emptyInsultsHint": "Click and drag the \"HI\" and \"LOW\" buttons to the\n\"HI/LOW\" box above, to create custom insults.\n\nLike this... [Low scorer] you are terrible. [Hi scorer] you are amazing",
+  "@emptyInsultsHint": {
+    "description": "A hint telling users how to add insults"
+  },
+  "customInsults": "Custom Insults",
+  "@customInsults": {
+    "description": "Title for custom insults column"
   }
 }
