@@ -42,7 +42,7 @@ class CreateInsultEvent extends InsultCreatorEvent {
   final int index;
 
   @override
-  List<Object?> get props => [insult];
+  List<Object?> get props => [insult, index];
 }
 
 class InsultCreatorState extends Equatable {

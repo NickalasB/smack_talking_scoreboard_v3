@@ -54,4 +54,25 @@ void main() {
       });
     });
   });
+
+  group('CreateInsultEvent', () {
+    test('Should have value-type equality', () {
+      final createInsultEvent1 = CreateInsultEvent('anything1', index: 1);
+
+      expect(
+        createInsultEvent1,
+        equals(CreateInsultEvent('anything1', index: 1)),
+      );
+
+      expect(
+        createInsultEvent1,
+        isNot(CreateInsultEvent('anything2', index: 1)),
+      );
+
+      expect(
+        createInsultEvent1,
+        isNot(CreateInsultEvent('anything1', index: 2)),
+      );
+    });
+  });
 }
