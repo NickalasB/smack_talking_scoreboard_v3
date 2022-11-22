@@ -1,3 +1,5 @@
+// ignore_for_file:use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
@@ -118,7 +120,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 const DraggableHiLowScore(
-                  key: Key('hi_draggable'),
+                  draggableKey: Key('hi_draggable'),
                   label: defaultHiText,
                 ),
                 PrimaryButton(
@@ -136,7 +138,7 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                   label: l10.add,
                 ),
                 const DraggableHiLowScore(
-                  key: Key('low_draggable'),
+                  draggableKey: Key('low_draggable'),
                   label: defaultLowText,
                 ),
               ],
@@ -283,15 +285,16 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
 
 class DraggableHiLowScore extends StatelessWidget {
   const DraggableHiLowScore({
-    required Key key,
+    required this.draggableKey,
     required this.label,
-  }) : super(key: key);
+  });
 
   final String label;
+  final Key draggableKey;
   @override
   Widget build(BuildContext context) {
     return Draggable<String>(
-      key: key,
+      key: draggableKey,
       data: label,
       feedback: PrimaryButton(
         onPressed: () {}, // coverage:ignore-line
