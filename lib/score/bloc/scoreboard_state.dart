@@ -47,8 +47,8 @@ class ScoreboardState extends Equatable {
 ScoreboardState get initialScoreboardState => const ScoreboardState(
       Game(
         players: [
-          Player(playerId: 1),
-          Player(playerId: 2),
+          Player(playerId: 1, playerName: 'Player1'),
+          Player(playerId: 2, playerName: 'Player2'),
         ],
       ),
     );

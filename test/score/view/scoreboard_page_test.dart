@@ -10,12 +10,12 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 
 import '../../harness.dart';
 import '../../helpers/pump_material_widget.dart';
+import '../../helpers/test_helpers.dart';
 import 'scoreboard_page_objects.dart';
 
 final scoreboardPage = ScoreBoardPageObject();
@@ -259,15 +259,15 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ScoreboardView(),
-          scoreboardState: const ScoreboardState(
+          scoreboardState: ScoreboardState(
             Game(
               players: [
-                Player(playerId: 1),
-                Player(playerId: 2),
+                testPlayer1,
+                testPlayer2,
               ],
               round: Round(
                 roundCount: 2,
-                roundWinner: Player(playerId: 2),
+                roundWinner: testPlayer2,
               ),
             ),
           ),

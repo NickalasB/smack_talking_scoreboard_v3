@@ -2,10 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
 
 import '../../harness.dart';
+import '../../helpers/test_helpers.dart';
 import 'scoreboard_page_objects.dart';
 
 final scoreboardPage = ScoreBoardPageObject();
@@ -18,11 +18,11 @@ void main() {
         await given.pumpWidget(SettingsButton(given.harness.scoreBloc));
 
         await given.scoreBoardState(
-          const ScoreboardState(
+           ScoreboardState(
             Game(
-              players: [Player(playerId: 1), Player(playerId: 2)],
+              players: [testPlayer1, testPlayer2],
             ),
-            insults: ['you are lame Player1', 'Bad job Player2'],
+            insults: const ['you are lame Player1', 'Bad job Player2'],
           ),
         );
 

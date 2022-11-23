@@ -11,6 +11,9 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
+const hiPlayerInsultKey = r'$HI$';
+const lowPlayerInsultKey = r'$LOW$';
+
 class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   ScoreboardBloc(this.tts) : super(initialScoreboardState) {
     on<IncreaseScoreEvent>(_increaseScore);
@@ -106,8 +109,8 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     if (insults.isNotEmpty) {
       final insultWithPlayerNamesInserted = (insults..shuffle())
           .first
-          .replaceAll(r'$HI$', 'Player${winningPlayer.playerId}')
-          .replaceAll(r'$LOW$', 'Player${losingPlayer.playerId}');
+          .replaceAll(hiPlayerInsultKey, winningPlayer.playerName)
+          .replaceAll(lowPlayerInsultKey, losingPlayer.playerName);
 
       tts.speak(insultWithPlayerNamesInserted);
     }
