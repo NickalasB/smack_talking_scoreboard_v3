@@ -16,13 +16,14 @@ import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 
 import '../../flutter_test_config.dart';
+import '../../helpers/fake_tts.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
   group('HydratedScoreBloc', () {
     test('initial state is Game with Player1 and Player2 with scores of zero',
         () {
-      final bloc = ScoreboardBloc();
+      final bloc = ScoreboardBloc(FakeTts());
       expect(testStorage.readForKeyCalls, ['ScoreboardBloc']);
       expect(testStorage.writeForKeyCalls, ['ScoreboardBloc']);
 
@@ -45,7 +46,8 @@ void main() {
     group('IncreaseScoreEvent', () {
       test('should increase score by 1 when IncreaseScoreEvent added',
           () async {
-        final bloc = ScoreboardBloc()..add(IncreaseScoreEvent(playerId: 1));
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(IncreaseScoreEvent(playerId: 1));
         await tick();
         expectStateAndHydratedState(
           bloc,
@@ -66,7 +68,8 @@ void main() {
     group('DecreaseScoreEvent', () {
       test('should decrease score by 1 when DecreaseScoreEvent added',
           () async {
-        final bloc = ScoreboardBloc()..add(IncreaseScoreEvent(playerId: 2));
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(IncreaseScoreEvent(playerId: 2));
         await tick();
         bloc.add(DecreaseScoreEvent(playerId: 2));
         await tick();
@@ -88,7 +91,8 @@ void main() {
       test(
           'should not decrease score by 1 when DecreaseScoreEvent added if score is zero',
           () async {
-        final bloc = ScoreboardBloc()..add(DecreaseScoreEvent(playerId: 1));
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(DecreaseScoreEvent(playerId: 1));
         await tick();
         expectStateAndHydratedState(
           bloc,
@@ -110,7 +114,7 @@ void main() {
       test(
           'should emit state with new insult when SaveInsultEvent added with valid text',
           () async {
-        final bloc = ScoreboardBloc();
+        final bloc = ScoreboardBloc(FakeTts());
         await tick();
 
         bloc.add(SaveInsultEvent('be better'));
@@ -134,7 +138,7 @@ void main() {
       test(
           'should NOT emit state with new insult when SaveInsultEvent added with empty or null text',
           () async {
-        final bloc = ScoreboardBloc();
+        final bloc = ScoreboardBloc(FakeTts());
         await tick();
 
         bloc.add(SaveInsultEvent(''));
@@ -156,7 +160,7 @@ void main() {
       test(
           'should emit proper state with insults and scores when both are update',
           () async {
-        final bloc = ScoreboardBloc();
+        final bloc = ScoreboardBloc(FakeTts());
         await tick();
 
         bloc
@@ -188,7 +192,7 @@ void main() {
       test(
           'Should emit roundWinner based on player with highest round points, not total score',
           () async {
-        final bloc = ScoreboardBloc()
+        final bloc = ScoreboardBloc(FakeTts())
           ..emit(
             ScoreboardState(
               Game(
@@ -243,7 +247,7 @@ void main() {
 
       test('Should emit correct roundWinner even if user decreases points',
           () async {
-        final bloc = ScoreboardBloc()
+        final bloc = ScoreboardBloc(FakeTts())
           ..emit(
             ScoreboardState(
               Game(
@@ -312,7 +316,7 @@ void main() {
           insults: const ['I should not be deleted when resetting game'],
         );
 
-        final bloc = ScoreboardBloc()..emit(inProgressState);
+        final bloc = ScoreboardBloc(FakeTts())..emit(inProgressState);
 
         expectStateAndHydratedState(
           bloc,
@@ -341,7 +345,7 @@ void main() {
           ],
         );
 
-        final bloc = ScoreboardBloc()..emit(stateWithInsults);
+        final bloc = ScoreboardBloc(FakeTts())..emit(stateWithInsults);
         await tick();
 
         bloc.add(DeleteInsultEvent('insult1'));

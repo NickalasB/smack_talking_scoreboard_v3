@@ -9,9 +9,10 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
+import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
-  ScoreboardBloc() : super(initialScoreboardState) {
+  ScoreboardBloc(this.tts) : super(initialScoreboardState) {
     on<IncreaseScoreEvent>(_increaseScore);
 
     on<DecreaseScoreEvent>(_decreaseScore);
@@ -24,6 +25,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     on<DeleteInsultEvent>(_deleteInsult);
   }
+  final Tts tts;
 
   void _increaseScore(IncreaseScoreEvent event, Emitter<ScoreboardState> emit) {
     final players = List<Player>.from(state.game.players);
