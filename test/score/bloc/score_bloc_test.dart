@@ -12,25 +12,25 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 
 import '../../flutter_test_config.dart';
+import '../../helpers/fake_tts.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
   group('HydratedScoreBloc', () {
     test('initial state is Game with Player1 and Player2 with scores of zero',
         () {
-      final bloc = ScoreboardBloc();
+      final bloc = ScoreboardBloc(FakeTts());
       expect(testStorage.readForKeyCalls, ['ScoreboardBloc']);
       expect(testStorage.writeForKeyCalls, ['ScoreboardBloc']);
 
       final initialState = ScoreboardState(
         Game(
-          players: const [
-            Player(playerId: 1, score: 0),
-            Player(playerId: 2, score: 0),
+          players: [
+            testPlayer1.copyWith(playerName: 'Player1', score: 0),
+            testPlayer2.copyWith(playerName: 'Player2', score: 0),
           ],
         ),
         insults: const [],
@@ -45,16 +45,17 @@ void main() {
     group('IncreaseScoreEvent', () {
       test('should increase score by 1 when IncreaseScoreEvent added',
           () async {
-        final bloc = ScoreboardBloc()..add(IncreaseScoreEvent(playerId: 1));
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(IncreaseScoreEvent(playerId: 1));
         await tick();
         expectStateAndHydratedState(
           bloc,
           equals(
-            const ScoreboardState(
+            ScoreboardState(
               Game(
                 players: [
-                  Player(playerId: 1, score: 1, roundScore: 1),
-                  Player(playerId: 2, score: 0, roundScore: 0),
+                  testPlayer1.copyWith(score: 1, roundScore: 1),
+                  testPlayer2.copyWith(score: 0, roundScore: 0),
                 ],
               ),
             ),
@@ -66,18 +67,19 @@ void main() {
     group('DecreaseScoreEvent', () {
       test('should decrease score by 1 when DecreaseScoreEvent added',
           () async {
-        final bloc = ScoreboardBloc()..add(IncreaseScoreEvent(playerId: 2));
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(IncreaseScoreEvent(playerId: 2));
         await tick();
         bloc.add(DecreaseScoreEvent(playerId: 2));
         await tick();
         expectStateAndHydratedState(
           bloc,
           equals(
-            const ScoreboardState(
+            ScoreboardState(
               Game(
                 players: [
-                  Player(playerId: 1, score: 0),
-                  Player(playerId: 2, score: 0),
+                  testPlayer1.copyWith(score: 0),
+                  testPlayer2.copyWith(score: 0),
                 ],
               ),
             ),
@@ -88,16 +90,17 @@ void main() {
       test(
           'should not decrease score by 1 when DecreaseScoreEvent added if score is zero',
           () async {
-        final bloc = ScoreboardBloc()..add(DecreaseScoreEvent(playerId: 1));
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(DecreaseScoreEvent(playerId: 1));
         await tick();
         expectStateAndHydratedState(
           bloc,
           equals(
-            const ScoreboardState(
+            ScoreboardState(
               Game(
                 players: [
-                  Player(playerId: 1, score: 0),
-                  Player(playerId: 2, score: 0),
+                  testPlayer1.copyWith(score: 0),
+                  testPlayer2.copyWith(score: 0),
                 ],
               ),
             ),
@@ -110,20 +113,20 @@ void main() {
       test(
           'should emit state with new insult when SaveInsultEvent added with valid text',
           () async {
-        final bloc = ScoreboardBloc();
+        final bloc = ScoreboardBloc(FakeTts());
         await tick();
 
         bloc.add(SaveInsultEvent('be better'));
         await tick();
 
-        const updatedState = ScoreboardState(
+        final updatedState = ScoreboardState(
           Game(
             players: [
-              Player(playerId: 1, score: 0),
-              Player(playerId: 2, score: 0),
+              testPlayer1.copyWith(score: 0),
+              testPlayer2.copyWith(score: 0),
             ],
           ),
-          insults: ['be better'],
+          insults: const ['be better'],
         );
 
         await tick();
@@ -134,7 +137,7 @@ void main() {
       test(
           'should NOT emit state with new insult when SaveInsultEvent added with empty or null text',
           () async {
-        final bloc = ScoreboardBloc();
+        final bloc = ScoreboardBloc(FakeTts());
         await tick();
 
         bloc.add(SaveInsultEvent(''));
@@ -156,7 +159,7 @@ void main() {
       test(
           'should emit proper state with insults and scores when both are update',
           () async {
-        final bloc = ScoreboardBloc();
+        final bloc = ScoreboardBloc(FakeTts());
         await tick();
 
         bloc
@@ -165,14 +168,14 @@ void main() {
         await tick();
         await tick();
 
-        const updatedState = ScoreboardState(
+        final updatedState = ScoreboardState(
           Game(
             players: [
-              Player(playerId: 1, score: 1, roundScore: 1),
-              Player(playerId: 2, score: 0, roundScore: 0),
+              testPlayer1.copyWith(score: 1, roundScore: 1),
+              testPlayer2.copyWith(score: 0, roundScore: 0),
             ],
           ),
-          insults: ['be better'],
+          insults: const ['be better'],
         );
 
         await tick();
@@ -188,13 +191,13 @@ void main() {
       test(
           'Should emit roundWinner based on player with highest round points, not total score',
           () async {
-        final bloc = ScoreboardBloc()
+        final bloc = ScoreboardBloc(FakeTts())
           ..emit(
             ScoreboardState(
               Game(
-                players: const [
-                  Player(playerId: 1, score: 10),
-                  Player(playerId: 2, score: 5),
+                players: [
+                  testPlayer1.copyWith(score: 10),
+                  testPlayer2.copyWith(score: 5),
                 ],
               ),
             ),
@@ -213,8 +216,8 @@ void main() {
         expect(
           bloc.state.game.players,
           [
-            Player(playerId: 2, score: 7, roundScore: 2),
-            Player(playerId: 1, score: 11, roundScore: 1),
+            testPlayer2.copyWith(score: 7, roundScore: 2),
+            testPlayer1.copyWith(score: 11, roundScore: 1),
           ],
         );
 
@@ -226,7 +229,7 @@ void main() {
           bloc.state.game.round,
           Round(
             roundCount: 2,
-            roundWinner: Player(playerId: 2, score: 7, roundScore: 2),
+            roundWinner: testPlayer2.copyWith(score: 7, roundScore: 2),
           ),
         );
 
@@ -235,7 +238,7 @@ void main() {
           isAScoreboardState.havingRound(
             Round(
               roundCount: 2,
-              roundWinner: Player(playerId: 2, score: 7, roundScore: 2),
+              roundWinner: testPlayer2.copyWith(score: 7, roundScore: 2),
             ),
           ),
         );
@@ -243,13 +246,13 @@ void main() {
 
       test('Should emit correct roundWinner even if user decreases points',
           () async {
-        final bloc = ScoreboardBloc()
+        final bloc = ScoreboardBloc(FakeTts())
           ..emit(
             ScoreboardState(
               Game(
-                players: const [
-                  Player(playerId: 1, score: 10),
-                  Player(playerId: 2, score: 5),
+                players: [
+                  testPlayer1.copyWith(score: 10),
+                  testPlayer2.copyWith(score: 5),
                 ],
               ),
             ),
@@ -275,8 +278,8 @@ void main() {
         expect(
           bloc.state.game.players,
           [
-            Player(playerId: 1, score: 11, roundScore: 1),
-            Player(playerId: 2, score: 7, roundScore: 2),
+            testPlayer1.copyWith(score: 11, roundScore: 1),
+            testPlayer2.copyWith(score: 7, roundScore: 2),
           ],
         );
 
@@ -288,8 +291,62 @@ void main() {
           bloc.state.game.round,
           Round(
             roundCount: 2,
-            roundWinner: Player(playerId: 2, score: 7, roundScore: 2),
+            roundWinner: testPlayer2.copyWith(score: 7, roundScore: 2),
           ),
+        );
+      });
+
+      test(
+          'Should call tts.speak with correctly modified insult when NextTurnEvent added',
+          () async {
+        final fakeTts = FakeTts();
+        final bloc = ScoreboardBloc(fakeTts)
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 10),
+                  testPlayer2.copyWith(score: 5),
+                ],
+              ),
+              insults: const [r'$HI$ you are good. $LOW$ you are bad.'],
+            ),
+          );
+        await tick();
+
+        bloc.add(NextTurnEvent());
+        await tick();
+
+        expect(
+          fakeTts.fakeTsEvents,
+          [FakeSpeakEvent('Player1 you are good. Player2 you are bad.')],
+        );
+      });
+
+      test(
+          'Should not call tts.speak if insults are empty when NextTurnEvent added',
+          () async {
+        final fakeTts = FakeTts();
+        final bloc = ScoreboardBloc(fakeTts)
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 10),
+                  testPlayer2.copyWith(score: 5),
+                ],
+              ),
+              insults: const [],
+            ),
+          );
+        await tick();
+
+        bloc.add(NextTurnEvent());
+        await tick();
+
+        expect(
+          fakeTts.fakeTsEvents,
+          isEmpty,
         );
       });
     });
@@ -300,19 +357,19 @@ void main() {
           () async {
         final inProgressState = ScoreboardState(
           Game(
-            players: const [
-              Player(playerId: 1, score: 10),
-              Player(playerId: 2, score: 5),
+            players: [
+              testPlayer1.copyWith(score: 10),
+              testPlayer2.copyWith(score: 5),
             ],
             round: Round(
-              roundWinner: Player(playerId: 1, score: 10),
+              roundWinner: testPlayer1.copyWith(score: 10),
               roundCount: 10,
             ),
           ),
           insults: const ['I should not be deleted when resetting game'],
         );
 
-        final bloc = ScoreboardBloc()..emit(inProgressState);
+        final bloc = ScoreboardBloc(FakeTts())..emit(inProgressState);
 
         expectStateAndHydratedState(
           bloc,
@@ -341,7 +398,7 @@ void main() {
           ],
         );
 
-        final bloc = ScoreboardBloc()..emit(stateWithInsults);
+        final bloc = ScoreboardBloc(FakeTts())..emit(stateWithInsults);
         await tick();
 
         bloc.add(DeleteInsultEvent('insult1'));

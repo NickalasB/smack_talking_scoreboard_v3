@@ -9,9 +9,13 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
+import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
+
+const hiPlayerInsultKey = r'$HI$';
+const lowPlayerInsultKey = r'$LOW$';
 
 class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
-  ScoreboardBloc() : super(initialScoreboardState) {
+  ScoreboardBloc(this.tts) : super(initialScoreboardState) {
     on<IncreaseScoreEvent>(_increaseScore);
 
     on<DecreaseScoreEvent>(_decreaseScore);
@@ -24,6 +28,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     on<DeleteInsultEvent>(_deleteInsult);
   }
+  final Tts tts;
 
   void _increaseScore(IncreaseScoreEvent event, Emitter<ScoreboardState> emit) {
     final players = List<Player>.from(state.game.players);
@@ -92,9 +97,22 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     final winningPlayer =
         players.firstWhere((p) => p.roundScore == roundHighScore);
 
+    final losingPlayer =
+        players.firstWhere((element) => element != winningPlayer);
+
     final playersWithResetRoundScores = <Player>[];
     for (final player in game.players) {
       playersWithResetRoundScores.add(player.copyWith(roundScore: 0));
+    }
+
+    final insults = List<String>.from(state.insults);
+    if (insults.isNotEmpty) {
+      final insultWithPlayerNamesInserted = (insults..shuffle())
+          .first
+          .replaceAll(hiPlayerInsultKey, winningPlayer.playerName)
+          .replaceAll(lowPlayerInsultKey, losingPlayer.playerName);
+
+      tts.speak(insultWithPlayerNamesInserted);
     }
 
     emit(

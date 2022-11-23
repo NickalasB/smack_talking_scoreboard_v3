@@ -7,6 +7,7 @@ part 'player.g.dart';
 class Player extends Equatable {
   const Player({
     required this.playerId,
+    required this.playerName,
     this.score = 0,
     this.roundScore = 0,
   });
@@ -17,23 +18,27 @@ class Player extends Equatable {
 
   Player copyWith({
     int? playerId,
+    String? playerName,
     int? score,
     int? roundScore,
   }) {
     return Player(
       playerId: playerId ?? this.playerId,
+      playerName: playerName ?? this.playerName,
       score: score ?? this.score,
       roundScore: roundScore ?? this.roundScore,
     );
   }
 
   final int playerId;
+  final String playerName;
   final int score;
   final int roundScore;
 
   @override
   List<Object?> get props => [
         playerId,
+        playerName,
         score,
         roundScore,
       ];

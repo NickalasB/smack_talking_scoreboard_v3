@@ -1,6 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zonkeyinventions.smack_talking_scoreboard_v3">
-   <application
+
+    <queries>
+        <intent>
+            <action android:name="TextToSpeech.Engine.INTENT_ACTION_TTS_SERVICE" />
+        </intent>
+    </queries>
+
+    <application
         android:label="${appName}"
         android:icon="@mipmap/ic_launcher">
         <activity
