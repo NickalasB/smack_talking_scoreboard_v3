@@ -10,6 +10,14 @@
       }
     }
   },
+  "insult": "{value, select, 0 {\\$LOW\\$. Are your eyes even open while you're playing?} 1 {My favorite book; How not to play this game. By \\$LOW\\$} 2 {A little practice probably wouldn't kill you \\$LOW\\$.} 3 {Swipe up to increase the score. Swipe left on \\$LOW\\$, because nobody wants to date a loser.} 4 {Don't give up \\$LOW\\$. Wait let me double check the score. Oh no you should just give up actually.} 5 {I'm having deja vu. Oh wait, it's just \\$LOW\\$ still being terrible.} 6 {Hey look everybody... \\$LOW\\$ has literally just stopped trying} 7 {This is why the machines are gonna take over \\$LOW\\$. Because you can't make it happen here.} 8 {News flash. \\$LOW\\$ You suck} 9 {\\$LOW\\$, you should quit your dayjob and dedicate your life to being less terrible} 10 {Bad job \\$LOW\\$} 11 {That was the saddest thing I have ever seen \\$LOW\\$} 12 {Are you embarrassed \\$LOW\\$? You should be} 13 {This game isn't for everyone. Cough, cough \\$LOW\\$} 14 {\\$LOW\\$, congratulations on your nomination into the hall of losers} 15 {Everyone in this room is now dumber after watching \\$LOW\\$} 16 {We should rename this game to: \\$LOW\\$ sucks at life} 17 {Those who can. Do. Those who can't. Are named \\$LOW\\$} 18 {Things to add to your bucket list \\$LOW\\$. Doing much much better at this game.} 19 {\\$LOW\\$.How bad you are doing at this game is a crime in some countries} 20 {Words escape me \\$LOW\\$. Oh wait. No they don't. You are garbage.} 21 {It is physically painful to watch you play this game \\$LOW\\$} 22 {\\$LOW\\$ this reminds me of the time you invested your life savings into laserdisc stock}, other{}}}",
+  "@insult": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
   "addYourOwnSmackTalk": "Add Your Own Smack Talk!",
   "@addYourOwnSmackTalk": {
     "description": "title for settings bottom sheet"
