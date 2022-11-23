@@ -296,6 +296,60 @@ void main() {
           ),
         );
       });
+
+      test(
+          'Should call tts.speak with correctly modified insult when NextTurnEvent added',
+          () async {
+        final fakeTts = FakeTts();
+        final bloc = ScoreboardBloc(fakeTts)
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: const [
+                  Player(playerId: 1, score: 10),
+                  Player(playerId: 2, score: 5),
+                ],
+              ),
+              insults: const [r'$HI$ you are good. $LOW$ you are bad.'],
+            ),
+          );
+        await tick();
+
+        bloc.add(NextTurnEvent());
+        await tick();
+
+        expect(
+          fakeTts.fakeTsEvents,
+          [FakeSpeakEvent('Player1 you are good. Player2 you are bad.')],
+        );
+      });
+
+      test(
+          'Should not call tts.speak if insults are empty when NextTurnEvent added',
+          () async {
+        final fakeTts = FakeTts();
+        final bloc = ScoreboardBloc(fakeTts)
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: const [
+                  Player(playerId: 1, score: 10),
+                  Player(playerId: 2, score: 5),
+                ],
+              ),
+              insults: const [],
+            ),
+          );
+        await tick();
+
+        bloc.add(NextTurnEvent());
+        await tick();
+
+        expect(
+          fakeTts.fakeTsEvents,
+          isEmpty,
+        );
+      });
     });
 
     group('ResetGameEvent', () {

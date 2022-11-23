@@ -94,9 +94,22 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     final winningPlayer =
         players.firstWhere((p) => p.roundScore == roundHighScore);
 
+    final losingPlayer =
+        players.firstWhere((element) => element != winningPlayer);
+
     final playersWithResetRoundScores = <Player>[];
     for (final player in game.players) {
       playersWithResetRoundScores.add(player.copyWith(roundScore: 0));
+    }
+
+    final insults = List<String>.from(state.insults);
+    if (insults.isNotEmpty) {
+      final insultWithPlayerNamesInserted = (insults..shuffle())
+          .first
+          .replaceAll(r'$HI$', 'Player${winningPlayer.playerId}')
+          .replaceAll(r'$LOW$', 'Player${losingPlayer.playerId}');
+
+      tts.speak(insultWithPlayerNamesInserted);
     }
 
     emit(
