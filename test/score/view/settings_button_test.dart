@@ -18,7 +18,7 @@ void main() {
         await given.pumpWidget(SettingsButton(given.harness.scoreBloc));
 
         await given.scoreBoardState(
-           ScoreboardState(
+          ScoreboardState(
             Game(
               players: [testPlayer1, testPlayer2],
             ),

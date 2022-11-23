@@ -6,9 +6,14 @@
 // https://opensource.org/licenses/MIT.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
+
+import '../../score/bloc/score_bloc.dart';
+import '../../text_to_speech/tts.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -28,7 +33,10 @@ class App extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
       ],
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const ScoreboardPage(),
+      home: BlocProvider(
+        create: (_) => ScoreboardBloc(TtsImplementation(FlutterTts())),
+        child: const ScoreboardPage(),
+      ),
     );
   }
 }
