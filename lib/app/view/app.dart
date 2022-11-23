@@ -10,10 +10,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
-
-import '../../score/bloc/score_bloc.dart';
-import '../../text_to_speech/tts.dart';
+import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
