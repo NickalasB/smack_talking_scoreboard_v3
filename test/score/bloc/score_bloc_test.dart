@@ -42,6 +42,95 @@ void main() {
       expectStateAndHydratedState(bloc, equals(initialState));
     });
 
+    group('StartGameEvent', () {
+      test('should start game with default insults', () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(
+            StartGameEvent(defaultInsults: const ['default1', 'default2']),
+          );
+        await tick();
+
+        expectStateAndHydratedState(
+          bloc,
+          equals(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1,
+                  testPlayer2,
+                ],
+              ),
+              insults: const ['default1', 'default2'],
+            ),
+          ),
+        );
+      });
+
+      test('should start game with default insults and user saved insults',
+          () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(
+            SaveInsultEvent('userSavedInsult'),
+          );
+        await tick();
+
+        bloc.add(
+            StartGameEvent(defaultInsults: const ['default1', 'default2']));
+        await tick();
+
+        expectStateAndHydratedState(
+          bloc,
+          equals(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1,
+                  testPlayer2,
+                ],
+              ),
+              insults: const ['userSavedInsult', 'default1', 'default2'],
+            ),
+          ),
+        );
+      });
+
+      test(
+          'should start a 2nd NEW game with only one instance default insults plus user saved insults',
+          () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(
+            SaveInsultEvent('userSavedInsult'),
+          );
+        await tick();
+
+        bloc.add(
+            StartGameEvent(defaultInsults: const ['default1', 'default2']));
+        await tick();
+
+        bloc.add(ResetGameEvent());
+        await tick();
+
+        bloc.add(
+            StartGameEvent(defaultInsults: const ['default1', 'default2']));
+        await tick();
+
+        expectStateAndHydratedState(
+          bloc,
+          equals(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1,
+                  testPlayer2,
+                ],
+              ),
+              insults: const ['userSavedInsult', 'default1', 'default2'],
+            ),
+          ),
+        );
+      });
+    });
+
     group('IncreaseScoreEvent', () {
       test('should increase score by 1 when IncreaseScoreEvent added',
           () async {

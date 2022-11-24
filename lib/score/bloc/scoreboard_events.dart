@@ -2,6 +2,14 @@ import 'package:equatable/equatable.dart';
 
 abstract class ScoreboardEvent extends Equatable {}
 
+class StartGameEvent extends ScoreboardEvent {
+  StartGameEvent({required this.defaultInsults});
+  final List<String> defaultInsults;
+
+  @override
+  List<Object?> get props => [defaultInsults];
+}
+
 class IncreaseScoreEvent extends ScoreboardEvent {
   IncreaseScoreEvent({required this.playerId});
   final int playerId;
