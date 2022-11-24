@@ -5,8 +5,10 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:smack_talking_scoreboard_v3/app/app.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
@@ -14,7 +16,6 @@ import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 
 import '../../harness.dart';
-import '../../helpers/pump_material_widget.dart';
 import '../../helpers/test_helpers.dart';
 import 'scoreboard_page_objects.dart';
 
@@ -25,16 +26,34 @@ void main() {
     testGoldens(
       'Should look correct',
       appHarness((given, when, then) async {
-        await given.pumpWidget(const ScoreboardView());
+        await given.pumpWidget(const ScoreboardPage());
 
         await then.multiScreenGoldensMatch('scoreboard_page');
       }),
     );
 
-    testWidgets('renders ScoreboardView', (tester) async {
-      await tester.pumpMaterialWidget(const ScoreboardPage());
-      expect(find.byType(ScoreboardView), findsOneWidget);
-    });
+    testWidgets(
+      'renders ScoreboardView',
+      appHarness((given, when, then) async {
+        await given.pumpWidget(const ScoreboardPage());
+        expect(find.byType(ScoreboardView), findsOneWidget);
+      }),
+    );
+
+    /// This needs to be more of an integration test since I am creating a fake
+    /// ScoreBloc for other tests
+    testWidgets(
+      'Should add StartGameEvent when ScoreboardPage created',
+      appHarness((given, when, then) async {
+        await given.harness.tester.pumpWidget(const App());
+
+        await when.userTaps(scoreboardPage.settingsButton);
+
+        await when.pumpAndSettle();
+
+        then.findsWidgets(find.byType(Dismissible), widgetCount: 23);
+      }),
+    );
   });
 
   group('ScoreboardView', () {
