@@ -32,7 +32,7 @@ class ScoreboardPage extends StatelessWidget {
             StartGameEvent(
               defaultInsults: localizedDefaultInsults(
                 context,
-                insultListLength: 22,
+                maxDefaultInsultIndex: 22,
               ),
             ),
           );

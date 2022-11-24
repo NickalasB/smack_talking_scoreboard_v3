@@ -21,7 +21,7 @@ void main() {
       );
 
       expect(
-        localizedDefaultInsults(ctx, insultListLength: 22),
+        localizedDefaultInsults(ctx, maxDefaultInsultIndex: 22),
         [
           r"$LOW$. Are your eyes even open while you're playing?",
           r'My favorite book; How not to play this game. By $LOW$',

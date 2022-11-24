@@ -66,6 +66,10 @@ extension AppThen on WidgetTestThen<AppHarness> {
     return expect(finder, findsOneWidget);
   }
 
+  void findsWidgets(Finder finder, {required int widgetCount}) {
+    return expect(finder, findsNWidgets(widgetCount));
+  }
+
   void findsNoWidget(Finder finder) {
     return expect(finder, findsNothing);
   }
