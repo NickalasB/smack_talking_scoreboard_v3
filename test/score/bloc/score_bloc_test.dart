@@ -132,6 +132,40 @@ void main() {
           ),
         );
       });
+
+      test(
+          'should allow deleting of default insults and start new game with modified default insults',
+          () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(
+            StartGameEvent(defaultInsults: const ['default1', 'default2']),
+          );
+        await tick();
+
+        bloc.add(
+          DeleteInsultEvent('default1'),
+        );
+        await tick();
+
+        bloc.add(
+          StartGameEvent(defaultInsults: const ['default1', 'default2']),
+        );
+
+        expectStateAndHydratedState(
+          bloc,
+          equals(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1,
+                  testPlayer2,
+                ],
+              ),
+              insults: const ['default2'],
+            ),
+          ),
+        );
+      });
     });
 
     group('IncreaseScoreEvent', () {

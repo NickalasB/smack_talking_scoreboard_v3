@@ -37,11 +37,19 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         .where((insult) => !event.defaultInsults.contains(insult))
         .toList();
 
+    final userModifiedDefaultInsults = event.defaultInsults
+        .where((insult) => state.insults.contains(insult))
+        .toList();
+
+    final correctDefaultInsultsToUse = userModifiedDefaultInsults.isNotEmpty
+        ? userModifiedDefaultInsults
+        : event.defaultInsults;
+
     return emit(
       state.copyWith(
         insults: [
           ...userAddedInsultsOnly,
-          ...event.defaultInsults,
+          ...correctDefaultInsultsToUse,
         ],
       ),
     );
