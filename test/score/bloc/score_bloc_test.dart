@@ -75,7 +75,8 @@ void main() {
         await tick();
 
         bloc.add(
-            StartGameEvent(defaultInsults: const ['default1', 'default2']));
+          StartGameEvent(defaultInsults: const ['default1', 'default2']),
+        );
         await tick();
 
         expectStateAndHydratedState(
@@ -104,14 +105,16 @@ void main() {
         await tick();
 
         bloc.add(
-            StartGameEvent(defaultInsults: const ['default1', 'default2']));
+          StartGameEvent(defaultInsults: const ['default1', 'default2']),
+        );
         await tick();
 
         bloc.add(ResetGameEvent());
         await tick();
 
         bloc.add(
-            StartGameEvent(defaultInsults: const ['default1', 'default2']));
+          StartGameEvent(defaultInsults: const ['default1', 'default2']),
+        );
         await tick();
 
         expectStateAndHydratedState(
