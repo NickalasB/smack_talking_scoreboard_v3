@@ -47,6 +47,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     return emit(
       state.copyWith(
+        game: state.game.copyWith(players: [event.player1, event.player2]),
         insults: [
           ...userAddedInsultsOnly,
           ...correctDefaultInsultsToUse,

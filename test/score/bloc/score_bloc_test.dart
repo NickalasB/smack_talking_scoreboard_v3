@@ -46,7 +46,11 @@ void main() {
       test('should start game with default insults', () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..add(
-            StartGameEvent(defaultInsults: const ['default1', 'default2']),
+            StartGameEvent(
+              player1: testPlayer1,
+              player2: testPlayer2,
+              defaultInsults: const ['default1', 'default2'],
+            ),
           );
         await tick();
 
@@ -75,7 +79,11 @@ void main() {
         await tick();
 
         bloc.add(
-          StartGameEvent(defaultInsults: const ['default1', 'default2']),
+          StartGameEvent(
+            player1: testPlayer1,
+            player2: testPlayer2,
+            defaultInsults: const ['default1', 'default2'],
+          ),
         );
         await tick();
 
@@ -105,7 +113,11 @@ void main() {
         await tick();
 
         bloc.add(
-          StartGameEvent(defaultInsults: const ['default1', 'default2']),
+          StartGameEvent(
+            player1: testPlayer1,
+            player2: testPlayer2,
+            defaultInsults: const ['default1', 'default2'],
+          ),
         );
         await tick();
 
@@ -113,7 +125,11 @@ void main() {
         await tick();
 
         bloc.add(
-          StartGameEvent(defaultInsults: const ['default1', 'default2']),
+          StartGameEvent(
+            player1: testPlayer1,
+            player2: testPlayer2,
+            defaultInsults: const ['default1', 'default2'],
+          ),
         );
         await tick();
 
@@ -138,7 +154,11 @@ void main() {
           () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..add(
-            StartGameEvent(defaultInsults: const ['default1', 'default2']),
+            StartGameEvent(
+              player1: testPlayer1,
+              player2: testPlayer2,
+              defaultInsults: const ['default1', 'default2'],
+            ),
           );
         await tick();
 
@@ -148,7 +168,11 @@ void main() {
         await tick();
 
         bloc.add(
-          StartGameEvent(defaultInsults: const ['default1', 'default2']),
+          StartGameEvent(
+            player1: testPlayer1,
+            player2: testPlayer2,
+            defaultInsults: const ['default1', 'default2'],
+          ),
         );
 
         expectStateAndHydratedState(
