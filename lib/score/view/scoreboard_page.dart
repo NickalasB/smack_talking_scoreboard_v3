@@ -15,6 +15,7 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
@@ -47,7 +48,9 @@ class ScoreboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final round = context.selectScoreboard.state.game.round;
+    final game = context.selectScoreboard.state.game;
+    final round = game.round;
+    final players = game.players;
     final strings = AppLocalizations.of(context);
     final roundWinnerText = round.roundWinner != null
         ? strings.playerNumber(round.roundWinner!.playerId)
@@ -69,9 +72,9 @@ class ScoreboardView extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              const Expanded(child: PlayerScore(playerId: 1)),
+              Expanded(child: PlayerScore(player: players.first)),
               const SizedBox(height: 16),
-              const Expanded(child: PlayerScore(playerId: 2)),
+              Expanded(child: PlayerScore(player: players[1])),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -106,9 +109,9 @@ class ScoreboardView extends StatelessWidget {
 }
 
 class PlayerScore extends StatelessWidget {
-  const PlayerScore({super.key, required this.playerId});
+  const PlayerScore({super.key, required this.player});
 
-  final int playerId;
+  final Player player;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +119,7 @@ class PlayerScore extends StatelessWidget {
     final score = context
             .select((ScoreboardBloc bloc) => bloc.state.game)
             .players
-            .firstWhereOrNull((p) => p.playerId == playerId)
+            .firstWhereOrNull((p) => p.playerId == player.playerId)
             ?.score ??
         0;
     final theme = Theme.of(context);
@@ -131,7 +134,7 @@ class PlayerScore extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              strings.playerNumber(playerId),
+              player.playerName,
               style: theme.textTheme.headlineLarge?.copyWith(
                 color: theme.primaryColor,
                 fontWeight: FontWeight.bold,
@@ -142,21 +145,21 @@ class PlayerScore extends StatelessWidget {
         const SizedBox(height: 8),
         Expanded(
           child: GestureDetector(
-            key: Key('scoreboard_gesture_player_$playerId'),
+            key: Key('scoreboard_gesture_player_${player.playerId}'),
             onLongPress: () async => _launchResetGameDialog(context),
-            onTap: () => context
-                .addScoreboardEvent(IncreaseScoreEvent(playerId: playerId)),
+            onTap: () => context.addScoreboardEvent(
+                IncreaseScoreEvent(playerId: player.playerId)),
             onVerticalDragEnd: (DragEndDetails details) {
               final primaryVelocity = details.primaryVelocity;
               if (primaryVelocity != null) {
                 if (primaryVelocity < 0) {
                   context.addScoreboardEvent(
-                    IncreaseScoreEvent(playerId: playerId),
+                    IncreaseScoreEvent(playerId: player.playerId),
                   );
                 }
                 if (primaryVelocity > 0) {
                   context.addScoreboardEvent(
-                    DecreaseScoreEvent(playerId: playerId),
+                    DecreaseScoreEvent(playerId: player.playerId),
                   );
                 }
               }

@@ -29,8 +29,8 @@ void main() {
       final initialState = ScoreboardState(
         Game(
           players: [
-            testPlayer1.copyWith(playerName: 'Player1', score: 0),
-            testPlayer2.copyWith(playerName: 'Player2', score: 0),
+            testPlayer1.copyWith(playerName: 'Player 1', score: 0),
+            testPlayer2.copyWith(playerName: 'Player 2', score: 0),
           ],
         ),
         insults: const [],
@@ -445,7 +445,7 @@ void main() {
 
         expect(
           fakeTts.fakeTsEvents,
-          [FakeSpeakEvent('Player1 you are good. Player2 you are bad.')],
+          [FakeSpeakEvent('Player 1 you are good. Player 2 you are bad.')],
         );
       });
 
