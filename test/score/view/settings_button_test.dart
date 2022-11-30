@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
 
 import '../../harness.dart';
@@ -19,7 +18,7 @@ void main() {
 
         await given.scoreBoardState(
           ScoreboardState(
-            Game(
+            initialScoreboardState.game.copyWith(
               players: [testPlayer1, testPlayer2],
             ),
             insults: const ['you are lame Player1', 'Bad job Player2'],
