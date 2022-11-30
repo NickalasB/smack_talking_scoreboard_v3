@@ -12,6 +12,7 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/game_point_params.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 
 import '../../flutter_test_config.dart';
@@ -32,6 +33,7 @@ void main() {
             testPlayer1.copyWith(playerName: 'Player 1', score: 0),
             testPlayer2.copyWith(playerName: 'Player 2', score: 0),
           ],
+          gamePointParams: _initialPointParams,
         ),
         insults: const [],
       );
@@ -63,6 +65,7 @@ void main() {
                   testPlayer1,
                   testPlayer2,
                 ],
+                gamePointParams: _initialPointParams,
               ),
               insults: const ['default1', 'default2'],
             ),
@@ -96,6 +99,7 @@ void main() {
                   testPlayer1,
                   testPlayer2,
                 ],
+                gamePointParams: _initialPointParams,
               ),
               insults: const ['userSavedInsult', 'default1', 'default2'],
             ),
@@ -142,6 +146,7 @@ void main() {
                   testPlayer1,
                   testPlayer2,
                 ],
+                gamePointParams: _initialPointParams,
               ),
               insults: const ['userSavedInsult', 'default1', 'default2'],
             ),
@@ -184,6 +189,7 @@ void main() {
                   testPlayer1,
                   testPlayer2,
                 ],
+                gamePointParams: _initialPointParams,
               ),
               insults: const ['default2'],
             ),
@@ -207,6 +213,7 @@ void main() {
                   testPlayer1.copyWith(score: 1, roundScore: 1),
                   testPlayer2.copyWith(score: 0, roundScore: 0),
                 ],
+                gamePointParams: _initialPointParams,
               ),
             ),
           ),
@@ -231,6 +238,7 @@ void main() {
                   testPlayer1.copyWith(score: 0),
                   testPlayer2.copyWith(score: 0),
                 ],
+                gamePointParams: _initialPointParams,
               ),
             ),
           ),
@@ -252,6 +260,7 @@ void main() {
                   testPlayer1.copyWith(score: 0),
                   testPlayer2.copyWith(score: 0),
                 ],
+                gamePointParams: _initialPointParams,
               ),
             ),
           ),
@@ -275,6 +284,7 @@ void main() {
               testPlayer1.copyWith(score: 0),
               testPlayer2.copyWith(score: 0),
             ],
+            gamePointParams: _initialPointParams,
           ),
           insults: const ['be better'],
         );
@@ -324,6 +334,7 @@ void main() {
               testPlayer1.copyWith(score: 1, roundScore: 1),
               testPlayer2.copyWith(score: 0, roundScore: 0),
             ],
+            gamePointParams: _initialPointParams,
           ),
           insults: const ['be better'],
         );
@@ -349,6 +360,7 @@ void main() {
                   testPlayer1.copyWith(score: 10),
                   testPlayer2.copyWith(score: 5),
                 ],
+                gamePointParams: _initialPointParams,
               ),
             ),
           );
@@ -404,6 +416,7 @@ void main() {
                   testPlayer1.copyWith(score: 10),
                   testPlayer2.copyWith(score: 5),
                 ],
+                gamePointParams: _initialPointParams,
               ),
             ),
           );
@@ -458,6 +471,7 @@ void main() {
                   testPlayer1.copyWith(score: 10),
                   testPlayer2.copyWith(score: 5),
                 ],
+                gamePointParams: _initialPointParams,
               ),
               insults: const [r'$HI$ you are good. $LOW$ you are bad.'],
             ),
@@ -485,6 +499,7 @@ void main() {
                   testPlayer1.copyWith(score: 10),
                   testPlayer2.copyWith(score: 5),
                 ],
+                gamePointParams: _initialPointParams,
               ),
               insults: const [],
             ),
@@ -511,6 +526,7 @@ void main() {
               testPlayer1.copyWith(score: 10),
               testPlayer2.copyWith(score: 5),
             ],
+            gamePointParams: _initialPointParams,
             round: Round(
               roundWinner: testPlayer1.copyWith(score: 10),
               roundCount: 10,
@@ -541,7 +557,9 @@ void main() {
     group('DeleteInsultEvent', () {
       test('Should remove insult when DeleteInsultEvent added', () async {
         final stateWithInsults = ScoreboardState(
-          Game(),
+          Game(
+            gamePointParams: _initialPointParams,
+          ),
           insults: const [
             'insult1',
             'insult2',
@@ -578,3 +596,9 @@ void expectStateAndHydratedState(ScoreboardBloc bloc, dynamic matcher) {
   expect(bloc.state, matcher);
   expect(bloc.fromJson(testStorage.read('ScoreboardBloc')!), matcher);
 }
+
+final _initialPointParams = GamePointParams(
+  winningScore: 21,
+  pointsPerScore: 1,
+  winByMargin: 1,
+);
