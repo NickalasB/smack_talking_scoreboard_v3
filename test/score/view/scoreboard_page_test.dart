@@ -8,7 +8,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:smack_talking_scoreboard_v3/app/app.dart';
+import 'package:smack_talking_scoreboard_v3/app/view/app.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
@@ -176,8 +176,7 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ScoreboardView(),
-          scoreboardState: const ScoreboardState(
-            Game(),
+          scoreboardState: initialScoreboardState.copyWith(
             insults: [
               'insult1',
               'insult2',
@@ -206,8 +205,7 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ScoreboardView(),
-          scoreboardState: const ScoreboardState(
-            Game(),
+          scoreboardState: initialScoreboardState.copyWith(
             insults: [
               'insult1',
             ],
@@ -233,8 +231,7 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ScoreboardView(),
-          scoreboardState: const ScoreboardState(
-            Game(),
+          scoreboardState: initialScoreboardState.copyWith(
             insults: [
               'insult1',
             ],
@@ -278,8 +275,8 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ScoreboardView(),
-          scoreboardState: ScoreboardState(
-            Game(
+          scoreboardState: initialScoreboardState.copyWith(
+            game: Game(
               players: [
                 testPlayer1,
                 testPlayer2,
@@ -288,6 +285,7 @@ void main() {
                 roundCount: 2,
                 roundWinner: testPlayer2,
               ),
+              gamePointParams: initialScoreboardState.game.gamePointParams,
             ),
           ),
         );

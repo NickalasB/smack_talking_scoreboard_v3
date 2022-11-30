@@ -7,13 +7,13 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smack_talking_scoreboard_v3/app/app.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
+import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
 
 void main() {
   group('App', () {
-    testWidgets('renders ScoreboardPage', (tester) async {
+    testWidgets('should render HomePage', (tester) async {
       await tester.pumpWidget(const App());
-      expect(find.byType(ScoreboardPage), findsOneWidget);
+      expect(find.byType(HomePage), findsOneWidget);
     });
   });
 }

@@ -8,8 +8,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:smack_talking_scoreboard_v3/l10n/default_insult_l10n_retriever.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
@@ -19,27 +17,13 @@ import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
-import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 class ScoreboardPage extends StatelessWidget {
   const ScoreboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) {
-        return ScoreboardBloc(TtsImplementation(FlutterTts()))
-          ..add(
-            StartGameEvent(
-              defaultInsults: localizedDefaultInsults(
-                context,
-                maxDefaultInsultIndex: 22,
-              ),
-            ),
-          );
-      },
-      child: const ScoreboardView(),
-    );
+    return const ScoreboardView();
   }
 }
 
