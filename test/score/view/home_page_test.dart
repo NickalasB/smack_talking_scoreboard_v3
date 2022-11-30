@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
@@ -24,6 +25,20 @@ void main() {
     );
 
     group('StartGameForm', () {
+      testGoldens(
+        'Should look right',
+        appHarness((given, when, then) async {
+          await given.pumpWidget(const StartGameForm());
+
+          await then.multiScreenGoldensMatch(
+            'start_game_form',
+            devices: [
+              Device.phone,
+            ],
+          );
+        }),
+      );
+
       testWidgets(
         "Should add StartGameEvent when hitting Let's go button with all valid form data",
         appHarness((given, when, then) async {
@@ -42,6 +57,24 @@ void main() {
                 .havingPlayer1(const Player(playerName: 'User 1', playerId: 1))
                 .havingPlayer2(const Player(playerName: 'User 2', playerId: 2)),
           ]);
+        }),
+      );
+
+      testWidgets(
+        "Should display error text for each empty textInput when when hitting Let's go button",
+        appHarness((given, when, then) async {
+          await given.pumpWidget(const StartGameForm());
+
+          await when.userTaps(homePage.letsGoButton);
+
+          await when.pumpAndSettle();
+
+          then.findsWidgets(
+            find.text('Fill this out... dummy!'),
+            widgetCount: 5,
+          );
+
+          expect(then.harness.scoreBloc.addedEvents, isEmpty);
         }),
       );
     });
