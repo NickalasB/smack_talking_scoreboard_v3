@@ -38,7 +38,8 @@ void main() {
         game1,
         isNot(
           game1.copyWith(
-              gamePointParams: initialPointParams.copyWith(winningScore: 5)),
+            gamePointParams: initialPointParams.copyWith(winningScore: 5),
+          ),
         ),
       );
     });

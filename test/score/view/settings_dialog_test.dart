@@ -9,8 +9,6 @@ import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_but
 import '../../harness.dart';
 import 'scoreboard_page_objects.dart';
 
-final scoreboardPage = ScoreBoardPageObject();
-
 void main() {
   testWidgets(
     'Should disable Done button when no insults have been added',

@@ -5,6 +5,8 @@ import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
 import 'package:smack_talking_scoreboard_v3/score/score.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 
+final scoreboardPage = ScoreBoardPageObject();
+
 class ScoreBoardPageObject extends PageObject {
   ScoreBoardPageObject() : super(find.byType(ScoreboardPage));
 
@@ -35,6 +37,8 @@ class ScoreBoardPageObject extends PageObject {
 
   Finder get lowDraggable => find.byKey(const Key('low_draggable'));
 }
+
+final homePage = HomePageObjects();
 
 class HomePageObjects extends PageObject {
   HomePageObjects() : super(find.byType(HomePage));

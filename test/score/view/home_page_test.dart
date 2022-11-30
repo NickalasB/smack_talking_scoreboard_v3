@@ -7,8 +7,6 @@ import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import '../../harness.dart';
 import 'scoreboard_page_objects.dart';
 
-final homePage = HomePageObjects();
-
 void main() {
   group('HomePage', () {
     testWidgets(

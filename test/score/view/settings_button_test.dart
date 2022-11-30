@@ -7,8 +7,6 @@ import '../../harness.dart';
 import '../../helpers/test_helpers.dart';
 import 'scoreboard_page_objects.dart';
 
-final scoreboardPage = ScoreBoardPageObject();
-
 void main() {
   group('Settings Button', () {
     testGoldens(

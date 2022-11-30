@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:smack_talking_scoreboard_v3/l10n/default_insult_l10n_retriever.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
-
-import '../../l10n/default_insult_l10n_retriever.dart';
-import '../../score/bloc/scoreboard_events.dart';
-import '../../score/view/scoreboard_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -15,34 +14,36 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final strings = context.l10n;
 
-    return Builder(builder: (context) {
-      return Scaffold(
-        body: Center(
-          child: PrimaryButton(
-            key: const Key('get_started_button'),
-            label: strings.getStarted,
-            onPressed: () async {
-              await showDialog<void>(
-                context: context,
-                builder: (_) {
-                  return AlertDialog(
-                    contentPadding: const EdgeInsets.all(16),
-                    title: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(strings.pickYourPoison),
-                        const Divider(thickness: 2),
-                      ],
-                    ),
-                    content: const StartGameForm(),
-                  );
-                },
-              );
-            },
+    return Builder(
+      builder: (context) {
+        return Scaffold(
+          body: Center(
+            child: PrimaryButton(
+              key: const Key('get_started_button'),
+              label: strings.getStarted,
+              onPressed: () async {
+                await showDialog<void>(
+                  context: context,
+                  builder: (_) {
+                    return AlertDialog(
+                      contentPadding: const EdgeInsets.all(16),
+                      title: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(strings.pickYourPoison),
+                          const Divider(thickness: 2),
+                        ],
+                      ),
+                      content: const StartGameForm(),
+                    );
+                  },
+                );
+              },
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
 

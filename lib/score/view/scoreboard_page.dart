@@ -99,7 +99,6 @@ class PlayerScore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final strings = context.l10n;
     final score = context
             .select((ScoreboardBloc bloc) => bloc.state.game)
             .players
@@ -132,7 +131,8 @@ class PlayerScore extends StatelessWidget {
             key: Key('scoreboard_gesture_player_${player.playerId}'),
             onLongPress: () async => _launchResetGameDialog(context),
             onTap: () => context.addScoreboardEvent(
-                IncreaseScoreEvent(playerId: player.playerId)),
+              IncreaseScoreEvent(playerId: player.playerId),
+            ),
             onVerticalDragEnd: (DragEndDetails details) {
               final primaryVelocity = details.primaryVelocity;
               if (primaryVelocity != null) {
