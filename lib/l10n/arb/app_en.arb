@@ -2,7 +2,7 @@
   "@@locale": "en",
   "playerNumber": "Player {playerId}",
   "@playerNumber": {
-    "description": "Generic label for player 1",
+    "description": "Generic label for player",
     "placeholders": {
       "playerId": {
         "type": "int",
