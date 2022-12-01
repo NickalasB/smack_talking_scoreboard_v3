@@ -28,6 +28,8 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     on<NextTurnEvent>(_changeToNextTurn);
 
+    on<ToggleInsultVolumeEvent>(_toggleInsultVolume);
+
     on<ResetGameEvent>(_resetGame);
 
     on<DeleteInsultEvent>(_deleteInsult);
@@ -166,6 +168,19 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
             roundCount: game.round.roundCount + 1,
           ),
         ),
+      ),
+    );
+  }
+
+  void _toggleInsultVolume(
+    ToggleInsultVolumeEvent event,
+    Emitter<ScoreboardState> emit,
+  ) {
+    final newAreInsultsEnabled = !state.areInsultsEnabled;
+    tts.setVolume(newAreInsultsEnabled ? 1 : 0);
+    emit(
+      state.copyWith(
+        areInsultsEnabled: newAreInsultsEnabled,
       ),
     );
   }

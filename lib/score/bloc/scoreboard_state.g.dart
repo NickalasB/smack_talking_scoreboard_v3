@@ -13,10 +13,12 @@ ScoreboardState _$ScoreboardStateFromJson(Map<String, dynamic> json) =>
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      areInsultsEnabled: json['areInsultsEnabled'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$ScoreboardStateToJson(ScoreboardState instance) =>
     <String, dynamic>{
       'game': instance.game,
       'insults': instance.insults,
+      'areInsultsEnabled': instance.areInsultsEnabled,
     };

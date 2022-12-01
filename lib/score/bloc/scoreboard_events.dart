@@ -84,3 +84,10 @@ class DeleteInsultEvent extends ScoreboardEvent {
   @override
   List<Object?> get props => [insult];
 }
+
+class ToggleInsultVolumeEvent extends ScoreboardEvent {
+  ToggleInsultVolumeEvent();
+
+  @override
+  List<Object?> get props => [];
+}

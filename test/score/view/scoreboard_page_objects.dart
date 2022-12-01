@@ -15,6 +15,8 @@ class ScoreBoardPageObject extends PageObject {
 
   Finder get settingsButton => find.byKey(const Key('settings_button'));
 
+  Finder get volume => find.byKey(const Key('volume_button'));
+
   Finder get settingsBottomSheet =>
       find.byKey(const Key('settings_bottom_sheet'));
 
