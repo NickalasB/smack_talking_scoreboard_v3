@@ -5,10 +5,8 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
-import 'package:smack_talking_scoreboard_v3/app/app.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
@@ -18,8 +16,6 @@ import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 import '../../harness.dart';
 import '../../helpers/test_helpers.dart';
 import 'scoreboard_page_objects.dart';
-
-final scoreboardPage = ScoreBoardPageObject();
 
 void main() {
   group('ScoreboardPage', () {
@@ -37,21 +33,6 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidget(const ScoreboardPage());
         expect(find.byType(ScoreboardView), findsOneWidget);
-      }),
-    );
-
-    /// This needs to be more of an integration test since I am creating a fake
-    /// ScoreBloc for other tests
-    testWidgets(
-      'Should add StartGameEvent when ScoreboardPage created',
-      appHarness((given, when, then) async {
-        await given.harness.tester.pumpWidget(const App());
-
-        await when.userTaps(scoreboardPage.settingsButton);
-
-        await when.pumpAndSettle();
-
-        then.findsWidgets(find.byType(Dismissible), widgetCount: 23);
       }),
     );
   });
@@ -176,8 +157,7 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ScoreboardView(),
-          scoreboardState: const ScoreboardState(
-            Game(),
+          scoreboardState: initialScoreboardState.copyWith(
             insults: [
               'insult1',
               'insult2',
@@ -206,8 +186,7 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ScoreboardView(),
-          scoreboardState: const ScoreboardState(
-            Game(),
+          scoreboardState: initialScoreboardState.copyWith(
             insults: [
               'insult1',
             ],
@@ -233,8 +212,7 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ScoreboardView(),
-          scoreboardState: const ScoreboardState(
-            Game(),
+          scoreboardState: initialScoreboardState.copyWith(
             insults: [
               'insult1',
             ],
@@ -278,8 +256,8 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ScoreboardView(),
-          scoreboardState: ScoreboardState(
-            Game(
+          scoreboardState: initialScoreboardState.copyWith(
+            game: Game(
               players: [
                 testPlayer1,
                 testPlayer2,
@@ -288,6 +266,7 @@ void main() {
                 roundCount: 2,
                 roundWinner: testPlayer2,
               ),
+              gamePointParams: initialScoreboardState.game.gamePointParams,
             ),
           ),
         );

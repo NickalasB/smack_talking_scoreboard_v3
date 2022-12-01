@@ -55,6 +55,34 @@ $ open coverage/index.html
 
 ---
 
+## Generating toJson and fromJson values
+
+This project uses the [`json_serializable`](https://pub.dev/packages/json_serializable) library to easily generate to/fromJson methods that are in turn, used to power the [HydratedBlocs](https://pub.dev/packages/hydrated_bloc).
+
+To generate those methods:
+1. Annotate a class with `@JsonSerializable()`
+2. Ensure the class has a `fromJson` factory constructor and a `toJson` method;
+3. Below your imports in the class, include `part '[class_file_name].g.dart`
+4. Generate the needed code by calling `flutter pub run build_runner build`
+Example:
+```
+import 'package:json_annotation/json_annotation.dart';
+
+part 'foo.g.dart';
+
+class Foo  {
+  const Foo(this.bar);
+
+  final int bar;
+  
+  factory Foo.fromJson(Map<String, dynamic> json) => _$FooFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FooToJson(this);
+  
+  }
+```
+
+
 ## Working with Translations 🌐
 
 This project relies on [flutter_localizations][flutter_localizations_link] and follows the [official internationalization guide for Flutter][internationalization_link].

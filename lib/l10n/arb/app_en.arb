@@ -2,7 +2,7 @@
   "@@locale": "en",
   "playerNumber": "Player {playerId}",
   "@playerNumber": {
-    "description": "Generic label for player 1",
+    "description": "Generic label for player",
     "placeholders": {
       "playerId": {
         "type": "int",
@@ -69,5 +69,41 @@
   "customInsults": "Custom Insults",
   "@customInsults": {
     "description": "Title for custom insults column"
+  },
+  "pickYourPoison": "Pick Your Poison",
+  "@pickYourPoison": {
+    "description": "Title for start game form"
+  },
+  "getStarted": "Get Started",
+  "@getStarted": {
+    "description": "label for launching start game form"
+  },
+  "player1Hint": "Team 1/Player 1 Name",
+  "@player1Hint": {
+    "description": "hint for player 1 text input"
+  },
+  "player2Hint": "Team 2/Player 2 Name",
+  "@player2Hint": {
+    "description": "hint for player 2 text input"
+  },
+  "winningScoreHint": "Winning Score",
+  "@winningScoreHint": {
+    "description": "hint for winning score text input"
+  },
+  "pointsPerScoreHint": "Points per Score",
+  "@pointsPerScoreHint": {
+    "description": "hint for points per score text input"
+  },
+  "winByMarginHint": "Win by Margin",
+  "@winByMarginHint": {
+    "description": "hint for win by margin text input"
+  },
+  "letsGo": "Let's Go",
+  "@letsGo": {
+    "description": "label for start game button"
+  },
+  "defaultFormError": "Fill this out... dummy!",
+  "@defaultFormError": {
+    "description": "default error message on invalid text input"
   }
 }

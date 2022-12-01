@@ -4,5 +4,5 @@ Future<void> tick() {
   return Future.microtask(() {});
 }
 
-Player get testPlayer1 => const Player(playerId: 1, playerName: 'Player1');
-Player get testPlayer2 => const Player(playerId: 2, playerName: 'Player2');
+Player get testPlayer1 => const Player(playerId: 1, playerName: 'Player 1');
+Player get testPlayer2 => const Player(playerId: 2, playerName: 'Player 2');

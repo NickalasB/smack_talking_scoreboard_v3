@@ -47,6 +47,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     return emit(
       state.copyWith(
+        game: state.game.copyWith(players: [event.player1, event.player2]),
         insults: [
           ...userAddedInsultsOnly,
           ...correctDefaultInsultsToUse,
@@ -61,21 +62,22 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     final currentPlayer =
         players.singleWhereOrNull((p) => p.playerId == event.playerId);
 
-    final otherPlayers = players..remove(currentPlayer);
-
     if (currentPlayer != null) {
       final currentScore = currentPlayer.score;
+
+      final updatedPlayers = players
+        ..remove(currentPlayer)
+        ..add(
+          currentPlayer.copyWith(
+            score: currentScore + 1,
+            roundScore: currentPlayer.roundScore + 1,
+          ),
+        )
+        ..sort((a, b) => a.playerId.compareTo(b.playerId));
+
       return emit(
         state.copyWith(
-          game: state.game.copyWith(
-            players: [
-              currentPlayer.copyWith(
-                score: currentScore + 1,
-                roundScore: currentPlayer.roundScore + 1,
-              ),
-              ...otherPlayers,
-            ],
-          ),
+          game: state.game.copyWith(players: updatedPlayers),
         ),
       );
     }
@@ -87,20 +89,23 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     final currentPlayer =
         players.singleWhereOrNull((p) => p.playerId == event.playerId);
 
-    final otherPlayers = players..remove(currentPlayer);
-
     if (currentPlayer != null && currentPlayer.score >= 1) {
       final currentScore = currentPlayer.score;
+
+      final updatedPlayers = players
+        ..remove(currentPlayer)
+        ..add(
+          currentPlayer.copyWith(
+            score: currentScore - 1,
+            roundScore: currentPlayer.roundScore - 1,
+          ),
+        )
+        ..sort((a, b) => a.playerId.compareTo(b.playerId));
+
       return emit(
         state.copyWith(
           game: state.game.copyWith(
-            players: [
-              ...otherPlayers,
-              currentPlayer.copyWith(
-                score: currentScore - 1,
-                roundScore: currentPlayer.roundScore - 1,
-              ),
-            ],
+            players: updatedPlayers,
           ),
         ),
       );

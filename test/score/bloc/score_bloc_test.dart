@@ -12,6 +12,7 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/game_point_params.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 
 import '../../flutter_test_config.dart';
@@ -29,9 +30,10 @@ void main() {
       final initialState = ScoreboardState(
         Game(
           players: [
-            testPlayer1.copyWith(playerName: 'Player1', score: 0),
-            testPlayer2.copyWith(playerName: 'Player2', score: 0),
+            testPlayer1.copyWith(playerName: 'Player 1', score: 0),
+            testPlayer2.copyWith(playerName: 'Player 2', score: 0),
           ],
+          gamePointParams: _initialPointParams,
         ),
         insults: const [],
       );
@@ -46,7 +48,11 @@ void main() {
       test('should start game with default insults', () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..add(
-            StartGameEvent(defaultInsults: const ['default1', 'default2']),
+            StartGameEvent(
+              player1: testPlayer1,
+              player2: testPlayer2,
+              defaultInsults: const ['default1', 'default2'],
+            ),
           );
         await tick();
 
@@ -59,6 +65,7 @@ void main() {
                   testPlayer1,
                   testPlayer2,
                 ],
+                gamePointParams: _initialPointParams,
               ),
               insults: const ['default1', 'default2'],
             ),
@@ -75,7 +82,11 @@ void main() {
         await tick();
 
         bloc.add(
-          StartGameEvent(defaultInsults: const ['default1', 'default2']),
+          StartGameEvent(
+            player1: testPlayer1,
+            player2: testPlayer2,
+            defaultInsults: const ['default1', 'default2'],
+          ),
         );
         await tick();
 
@@ -88,6 +99,7 @@ void main() {
                   testPlayer1,
                   testPlayer2,
                 ],
+                gamePointParams: _initialPointParams,
               ),
               insults: const ['userSavedInsult', 'default1', 'default2'],
             ),
@@ -105,7 +117,11 @@ void main() {
         await tick();
 
         bloc.add(
-          StartGameEvent(defaultInsults: const ['default1', 'default2']),
+          StartGameEvent(
+            player1: testPlayer1,
+            player2: testPlayer2,
+            defaultInsults: const ['default1', 'default2'],
+          ),
         );
         await tick();
 
@@ -113,7 +129,11 @@ void main() {
         await tick();
 
         bloc.add(
-          StartGameEvent(defaultInsults: const ['default1', 'default2']),
+          StartGameEvent(
+            player1: testPlayer1,
+            player2: testPlayer2,
+            defaultInsults: const ['default1', 'default2'],
+          ),
         );
         await tick();
 
@@ -126,6 +146,7 @@ void main() {
                   testPlayer1,
                   testPlayer2,
                 ],
+                gamePointParams: _initialPointParams,
               ),
               insults: const ['userSavedInsult', 'default1', 'default2'],
             ),
@@ -138,7 +159,11 @@ void main() {
           () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..add(
-            StartGameEvent(defaultInsults: const ['default1', 'default2']),
+            StartGameEvent(
+              player1: testPlayer1,
+              player2: testPlayer2,
+              defaultInsults: const ['default1', 'default2'],
+            ),
           );
         await tick();
 
@@ -148,7 +173,11 @@ void main() {
         await tick();
 
         bloc.add(
-          StartGameEvent(defaultInsults: const ['default1', 'default2']),
+          StartGameEvent(
+            player1: testPlayer1,
+            player2: testPlayer2,
+            defaultInsults: const ['default1', 'default2'],
+          ),
         );
 
         expectStateAndHydratedState(
@@ -160,6 +189,7 @@ void main() {
                   testPlayer1,
                   testPlayer2,
                 ],
+                gamePointParams: _initialPointParams,
               ),
               insults: const ['default2'],
             ),
@@ -183,6 +213,29 @@ void main() {
                   testPlayer1.copyWith(score: 1, roundScore: 1),
                   testPlayer2.copyWith(score: 0, roundScore: 0),
                 ],
+                gamePointParams: _initialPointParams,
+              ),
+            ),
+          ),
+        );
+      });
+
+      test(
+          'should emit players in correct order when score increased on player 2',
+          () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+        expectStateAndHydratedState(
+          bloc,
+          equals(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 0, roundScore: 0),
+                  testPlayer2.copyWith(score: 1, roundScore: 1),
+                ],
+                gamePointParams: _initialPointParams,
               ),
             ),
           ),
@@ -207,6 +260,31 @@ void main() {
                   testPlayer1.copyWith(score: 0),
                   testPlayer2.copyWith(score: 0),
                 ],
+                gamePointParams: _initialPointParams,
+              ),
+            ),
+          ),
+        );
+      });
+
+      test(
+          'should emit players in correct order when score decreased on player 2',
+          () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+        bloc.add(DecreaseScoreEvent(playerId: 2));
+        await tick();
+        expectStateAndHydratedState(
+          bloc,
+          equals(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 0),
+                  testPlayer2.copyWith(score: 0),
+                ],
+                gamePointParams: _initialPointParams,
               ),
             ),
           ),
@@ -228,6 +306,7 @@ void main() {
                   testPlayer1.copyWith(score: 0),
                   testPlayer2.copyWith(score: 0),
                 ],
+                gamePointParams: _initialPointParams,
               ),
             ),
           ),
@@ -251,6 +330,7 @@ void main() {
               testPlayer1.copyWith(score: 0),
               testPlayer2.copyWith(score: 0),
             ],
+            gamePointParams: _initialPointParams,
           ),
           insults: const ['be better'],
         );
@@ -300,6 +380,7 @@ void main() {
               testPlayer1.copyWith(score: 1, roundScore: 1),
               testPlayer2.copyWith(score: 0, roundScore: 0),
             ],
+            gamePointParams: _initialPointParams,
           ),
           insults: const ['be better'],
         );
@@ -325,6 +406,7 @@ void main() {
                   testPlayer1.copyWith(score: 10),
                   testPlayer2.copyWith(score: 5),
                 ],
+                gamePointParams: _initialPointParams,
               ),
             ),
           );
@@ -342,8 +424,8 @@ void main() {
         expect(
           bloc.state.game.players,
           [
-            testPlayer2.copyWith(score: 7, roundScore: 2),
             testPlayer1.copyWith(score: 11, roundScore: 1),
+            testPlayer2.copyWith(score: 7, roundScore: 2),
           ],
         );
 
@@ -380,6 +462,7 @@ void main() {
                   testPlayer1.copyWith(score: 10),
                   testPlayer2.copyWith(score: 5),
                 ],
+                gamePointParams: _initialPointParams,
               ),
             ),
           );
@@ -434,6 +517,7 @@ void main() {
                   testPlayer1.copyWith(score: 10),
                   testPlayer2.copyWith(score: 5),
                 ],
+                gamePointParams: _initialPointParams,
               ),
               insults: const [r'$HI$ you are good. $LOW$ you are bad.'],
             ),
@@ -445,7 +529,7 @@ void main() {
 
         expect(
           fakeTts.fakeTsEvents,
-          [FakeSpeakEvent('Player1 you are good. Player2 you are bad.')],
+          [FakeSpeakEvent('Player 1 you are good. Player 2 you are bad.')],
         );
       });
 
@@ -461,6 +545,7 @@ void main() {
                   testPlayer1.copyWith(score: 10),
                   testPlayer2.copyWith(score: 5),
                 ],
+                gamePointParams: _initialPointParams,
               ),
               insults: const [],
             ),
@@ -487,6 +572,7 @@ void main() {
               testPlayer1.copyWith(score: 10),
               testPlayer2.copyWith(score: 5),
             ],
+            gamePointParams: _initialPointParams,
             round: Round(
               roundWinner: testPlayer1.copyWith(score: 10),
               roundCount: 10,
@@ -517,7 +603,9 @@ void main() {
     group('DeleteInsultEvent', () {
       test('Should remove insult when DeleteInsultEvent added', () async {
         final stateWithInsults = ScoreboardState(
-          Game(),
+          Game(
+            gamePointParams: _initialPointParams,
+          ),
           insults: const [
             'insult1',
             'insult2',
@@ -554,3 +642,9 @@ void expectStateAndHydratedState(ScoreboardBloc bloc, dynamic matcher) {
   expect(bloc.state, matcher);
   expect(bloc.fromJson(testStorage.read('ScoreboardBloc')!), matcher);
 }
+
+final _initialPointParams = GamePointParams(
+  winningScore: 21,
+  pointsPerScore: 1,
+  winByMargin: 1,
+);
