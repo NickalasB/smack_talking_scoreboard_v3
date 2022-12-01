@@ -14,20 +14,8 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidget(const VolumeButton());
 
-        then.findsWidget(
-          find.byWidgetPredicate(
-            (widget) => widget is Icon && widget.icon == Icons.volume_up,
-          ),
-        );
-
         await when.userTaps(scoreboardPage.volume);
         expect(then.harness.scoreBloc.addedEvents, [ToggleInsultVolumeEvent()]);
-
-        // then.findsWidget(
-        //   find.byWidgetPredicate(
-        //     (widget) => widget is Icon && widget.icon == Icons.volume_off,
-        //   ),
-        // );
       }),
     );
 
