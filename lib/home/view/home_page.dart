@@ -171,7 +171,7 @@ class _GameFormField extends StatelessWidget {
         }
         return null;
       },
-      keyboardType: TextInputType.number,
+      keyboardType: keyboardType,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         hintText: hintText,

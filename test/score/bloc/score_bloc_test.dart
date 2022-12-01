@@ -424,8 +424,8 @@ void main() {
         expect(
           bloc.state.game.players,
           [
-            testPlayer2.copyWith(score: 7, roundScore: 2),
             testPlayer1.copyWith(score: 11, roundScore: 1),
+            testPlayer2.copyWith(score: 7, roundScore: 2),
           ],
         );
 
