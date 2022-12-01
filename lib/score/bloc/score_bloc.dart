@@ -35,7 +35,9 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   final Tts tts;
 
   void _loadDefaultInsults(
-      LoadDefaultInsultsEvent event, Emitter<ScoreboardState> emit) {
+    LoadDefaultInsultsEvent event,
+    Emitter<ScoreboardState> emit,
+  ) {
     final userAddedInsultsOnly = state.insults
         .where((insult) => !event.defaultInsults.contains(insult))
         .toList();

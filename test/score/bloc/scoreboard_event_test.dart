@@ -12,19 +12,11 @@ void main() {
       final originalStartGameEvent = StartGameEvent(
         player1: testPlayer1,
         player2: testPlayer2,
-        defaultInsults: const ['default1'],
       );
 
       expect(
         originalStartGameEvent,
         equals(originalStartGameEvent.copyWith()),
-      );
-
-      expect(
-        originalStartGameEvent,
-        isNot(
-          originalStartGameEvent.copyWith(defaultInsults: const ['default2']),
-        ),
       );
 
       expect(
