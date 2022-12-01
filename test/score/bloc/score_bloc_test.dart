@@ -219,10 +219,56 @@ void main() {
           ),
         );
       });
+
+      test(
+          'should emit players in correct order when score increased on player 2',
+          () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+        expectStateAndHydratedState(
+          bloc,
+          equals(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 0, roundScore: 0),
+                  testPlayer2.copyWith(score: 1, roundScore: 1),
+                ],
+                gamePointParams: _initialPointParams,
+              ),
+            ),
+          ),
+        );
+      });
     });
 
     group('DecreaseScoreEvent', () {
       test('should decrease score by 1 when DecreaseScoreEvent added',
+          () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+        bloc.add(DecreaseScoreEvent(playerId: 2));
+        await tick();
+        expectStateAndHydratedState(
+          bloc,
+          equals(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 0),
+                  testPlayer2.copyWith(score: 0),
+                ],
+                gamePointParams: _initialPointParams,
+              ),
+            ),
+          ),
+        );
+      });
+
+      test(
+          'should emit players in correct order when score decreased on player 2',
           () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..add(IncreaseScoreEvent(playerId: 2));
