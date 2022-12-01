@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/game_point_params.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 
 abstract class ScoreboardEvent extends Equatable {}
@@ -18,17 +19,21 @@ class StartGameEvent extends ScoreboardEvent {
   StartGameEvent({
     required this.player1,
     required this.player2,
+    required this.gamePointParams,
   });
   final Player player1;
   final Player player2;
+  final GamePointParams gamePointParams;
 
   StartGameEvent copyWith({
     Player? player1,
     Player? player2,
+    GamePointParams? gamePointParams,
   }) {
     return StartGameEvent(
       player1: player1 ?? this.player1,
       player2: player2 ?? this.player2,
+      gamePointParams: gamePointParams ?? this.gamePointParams,
     );
   }
 
@@ -36,6 +41,7 @@ class StartGameEvent extends ScoreboardEvent {
   List<Object?> get props => [
         player1,
         player2,
+        gamePointParams,
       ];
 }
 
