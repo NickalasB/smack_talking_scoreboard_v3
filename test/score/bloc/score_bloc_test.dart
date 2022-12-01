@@ -13,6 +13,7 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game_point_params.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 
 import '../../flutter_test_config.dart';
@@ -44,13 +45,11 @@ void main() {
       expectStateAndHydratedState(bloc, equals(initialState));
     });
 
-    group('StartGameEvent', () {
-      test('should start game with default insults', () async {
+    group('LoadDefaultInsultsEvent', () {
+      test('should add default insults', () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..add(
-            StartGameEvent(
-              player1: testPlayer1,
-              player2: testPlayer2,
+            LoadDefaultInsultsEvent(
               defaultInsults: const ['default1', 'default2'],
             ),
           );
@@ -59,22 +58,14 @@ void main() {
         expectStateAndHydratedState(
           bloc,
           equals(
-            ScoreboardState(
-              Game(
-                players: [
-                  testPlayer1,
-                  testPlayer2,
-                ],
-                gamePointParams: _initialPointParams,
-              ),
+            initialScoreboardState.copyWith(
               insults: const ['default1', 'default2'],
             ),
           ),
         );
       });
 
-      test('should start game with default insults and user saved insults',
-          () async {
+      test('should include user saved insults', () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..add(
             SaveInsultEvent('userSavedInsult'),
@@ -82,9 +73,7 @@ void main() {
         await tick();
 
         bloc.add(
-          StartGameEvent(
-            player1: testPlayer1,
-            player2: testPlayer2,
+          LoadDefaultInsultsEvent(
             defaultInsults: const ['default1', 'default2'],
           ),
         );
@@ -93,14 +82,7 @@ void main() {
         expectStateAndHydratedState(
           bloc,
           equals(
-            ScoreboardState(
-              Game(
-                players: [
-                  testPlayer1,
-                  testPlayer2,
-                ],
-                gamePointParams: _initialPointParams,
-              ),
+            initialScoreboardState.copyWith(
               insults: const ['userSavedInsult', 'default1', 'default2'],
             ),
           ),
@@ -108,7 +90,7 @@ void main() {
       });
 
       test(
-          'should start a 2nd NEW game with only one instance default insults plus user saved insults',
+          'should only one include one instance of default insults plus user saved insults when added more than once',
           () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..add(
@@ -117,9 +99,7 @@ void main() {
         await tick();
 
         bloc.add(
-          StartGameEvent(
-            player1: testPlayer1,
-            player2: testPlayer2,
+          LoadDefaultInsultsEvent(
             defaultInsults: const ['default1', 'default2'],
           ),
         );
@@ -129,9 +109,7 @@ void main() {
         await tick();
 
         bloc.add(
-          StartGameEvent(
-            player1: testPlayer1,
-            player2: testPlayer2,
+          LoadDefaultInsultsEvent(
             defaultInsults: const ['default1', 'default2'],
           ),
         );
@@ -140,14 +118,7 @@ void main() {
         expectStateAndHydratedState(
           bloc,
           equals(
-            ScoreboardState(
-              Game(
-                players: [
-                  testPlayer1,
-                  testPlayer2,
-                ],
-                gamePointParams: _initialPointParams,
-              ),
+            initialScoreboardState.copyWith(
               insults: const ['userSavedInsult', 'default1', 'default2'],
             ),
           ),
@@ -155,13 +126,11 @@ void main() {
       });
 
       test(
-          'should allow deleting of default insults and start new game with modified default insults',
+          'should allow deleting of default insults only load modified default insults',
           () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..add(
-            StartGameEvent(
-              player1: testPlayer1,
-              player2: testPlayer2,
+            LoadDefaultInsultsEvent(
               defaultInsults: const ['default1', 'default2'],
             ),
           );
@@ -173,9 +142,7 @@ void main() {
         await tick();
 
         bloc.add(
-          StartGameEvent(
-            player1: testPlayer1,
-            player2: testPlayer2,
+          LoadDefaultInsultsEvent(
             defaultInsults: const ['default1', 'default2'],
           ),
         );
@@ -183,15 +150,35 @@ void main() {
         expectStateAndHydratedState(
           bloc,
           equals(
-            ScoreboardState(
-              Game(
-                players: [
-                  testPlayer1,
-                  testPlayer2,
-                ],
-                gamePointParams: _initialPointParams,
-              ),
+            initialScoreboardState.copyWith(
               insults: const ['default2'],
+            ),
+          ),
+        );
+      });
+    });
+
+    group('StartGameEvent', () {
+      test('should emit game with players from event', () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(
+            StartGameEvent(
+              player1: Player(playerId: 111, playerName: 'Foo'),
+              player2: Player(playerId: 222, playerName: 'Bar'),
+            ),
+          );
+        await tick();
+
+        expectStateAndHydratedState(
+          bloc,
+          equals(
+            initialScoreboardState.copyWith(
+              game: initialScoreboardState.game.copyWith(
+                players: [
+                  Player(playerId: 111, playerName: 'Foo'),
+                  Player(playerId: 222, playerName: 'Bar'),
+                ],
+              ),
             ),
           ),
         );

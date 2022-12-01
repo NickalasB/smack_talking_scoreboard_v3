@@ -16,6 +16,8 @@ const lowPlayerInsultKey = r'$LOW$';
 
 class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   ScoreboardBloc(this.tts) : super(initialScoreboardState) {
+    on<LoadDefaultInsultsEvent>(_loadDefaultInsults);
+
     on<StartGameEvent>(_startGame);
 
     on<IncreaseScoreEvent>(_increaseScore);
@@ -32,7 +34,10 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   }
   final Tts tts;
 
-  void _startGame(StartGameEvent event, Emitter<ScoreboardState> emit) {
+  void _loadDefaultInsults(
+    LoadDefaultInsultsEvent event,
+    Emitter<ScoreboardState> emit,
+  ) {
     final userAddedInsultsOnly = state.insults
         .where((insult) => !event.defaultInsults.contains(insult))
         .toList();
@@ -47,11 +52,18 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     return emit(
       state.copyWith(
-        game: state.game.copyWith(players: [event.player1, event.player2]),
         insults: [
           ...userAddedInsultsOnly,
           ...correctDefaultInsultsToUse,
         ],
+      ),
+    );
+  }
+
+  void _startGame(StartGameEvent event, Emitter<ScoreboardState> emit) {
+    return emit(
+      state.copyWith(
+        game: state.game.copyWith(players: [event.player1, event.player2]),
       ),
     );
   }

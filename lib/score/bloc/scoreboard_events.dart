@@ -3,23 +3,30 @@ import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 
 abstract class ScoreboardEvent extends Equatable {}
 
+class LoadDefaultInsultsEvent extends ScoreboardEvent {
+  LoadDefaultInsultsEvent({
+    required this.defaultInsults,
+  });
+
+  final List<String> defaultInsults;
+
+  @override
+  List<Object?> get props => [defaultInsults];
+}
+
 class StartGameEvent extends ScoreboardEvent {
   StartGameEvent({
-    required this.defaultInsults,
     required this.player1,
     required this.player2,
   });
-  final List<String> defaultInsults;
   final Player player1;
   final Player player2;
 
   StartGameEvent copyWith({
-    List<String>? defaultInsults,
     Player? player1,
     Player? player2,
   }) {
     return StartGameEvent(
-      defaultInsults: defaultInsults ?? this.defaultInsults,
       player1: player1 ?? this.player1,
       player2: player2 ?? this.player2,
     );
@@ -27,7 +34,6 @@ class StartGameEvent extends ScoreboardEvent {
 
   @override
   List<Object?> get props => [
-        defaultInsults,
         player1,
         player2,
       ];

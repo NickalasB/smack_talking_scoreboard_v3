@@ -7,24 +7,42 @@ import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
+  group('LoadDefaultInsultsEvent', () {
+    test('Should have value-type equality', () {
+      final initialEvent = LoadDefaultInsultsEvent(
+        defaultInsults: const ['default1', 'default2'],
+      );
+
+      expect(
+        initialEvent,
+        equals(
+          LoadDefaultInsultsEvent(
+            defaultInsults: const ['default1', 'default2'],
+          ),
+        ),
+      );
+
+      expect(
+        initialEvent,
+        isNot(
+          LoadDefaultInsultsEvent(
+            defaultInsults: const ['default3', 'default4'],
+          ),
+        ),
+      );
+    });
+  });
+
   group('StartGameEvent', () {
     test('Should have value-type equality', () {
       final originalStartGameEvent = StartGameEvent(
         player1: testPlayer1,
         player2: testPlayer2,
-        defaultInsults: const ['default1'],
       );
 
       expect(
         originalStartGameEvent,
         equals(originalStartGameEvent.copyWith()),
-      );
-
-      expect(
-        originalStartGameEvent,
-        isNot(
-          originalStartGameEvent.copyWith(defaultInsults: const ['default2']),
-        ),
       );
 
       expect(
