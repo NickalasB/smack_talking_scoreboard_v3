@@ -562,6 +562,25 @@ void main() {
       });
     });
 
+    group('ToggleInsultVolumeEvent', () {
+      test('Should emit state with opposite areInsultsEnabled param', () async {
+        final bloc = ScoreboardBloc(FakeTts());
+        await tick();
+
+        expect(bloc.state.areInsultsEnabled, isTrue);
+
+        bloc.add(ToggleInsultVolumeEvent());
+        await tick();
+
+        expect(bloc.state.areInsultsEnabled, isFalse);
+
+        bloc.add(ToggleInsultVolumeEvent());
+        await tick();
+
+        expect(bloc.state.areInsultsEnabled, isTrue);
+      });
+    });
+
     group('ResetGameEvent', () {
       test(
           'Should rest scores and rounds but keep insults when ResetGameEvent added',

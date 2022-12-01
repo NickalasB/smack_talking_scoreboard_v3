@@ -20,7 +20,11 @@ extension ScoreboardContext on BuildContext {
 
 @JsonSerializable()
 class ScoreboardState extends Equatable {
-  const ScoreboardState(this.game, {this.insults = const []});
+  const ScoreboardState(
+    this.game, {
+    this.insults = const [],
+    this.areInsultsEnabled = true,
+  });
 
   factory ScoreboardState.fromJson(Map<String, dynamic> json) {
     return _$ScoreboardStateFromJson(json);
@@ -31,18 +35,21 @@ class ScoreboardState extends Equatable {
   ScoreboardState copyWith({
     Game? game,
     List<String>? insults,
+    bool? areInsultsEnabled,
   }) {
     return ScoreboardState(
       game ?? this.game,
       insults: insults ?? this.insults,
+      areInsultsEnabled: areInsultsEnabled ?? this.areInsultsEnabled,
     );
   }
 
   final Game game;
   final List<String> insults;
+  final bool areInsultsEnabled;
 
   @override
-  List<Object?> get props => [game, insults];
+  List<Object?> get props => [game, insults, areInsultsEnabled];
 }
 
 ScoreboardState get initialScoreboardState => const ScoreboardState(

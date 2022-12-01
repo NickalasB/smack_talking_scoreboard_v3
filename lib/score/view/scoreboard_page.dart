@@ -63,15 +63,8 @@ class ScoreboardView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(
-                    child: BlocProvider<ScoreboardBloc>.value(
-                      value: context.readScoreboard,
-                      child: Builder(
-                        builder: (_) {
-                          return SettingsButton(
-                            context.readScoreboard,
-                          );
-                        },
-                      ),
+                    child: SettingsButton(
+                      context.readScoreboard,
                     ),
                   ),
                   Flexible(
