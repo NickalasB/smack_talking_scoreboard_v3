@@ -159,12 +159,18 @@ void main() {
     });
 
     group('StartGameEvent', () {
-      test('should emit game with players from event', () async {
+      test('should emit game with players and GamePointParams from event',
+          () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..add(
             StartGameEvent(
               player1: Player(playerId: 111, playerName: 'Foo'),
               player2: Player(playerId: 222, playerName: 'Bar'),
+              gamePointParams: GamePointParams(
+                winningScore: 1,
+                pointsPerScore: 2,
+                winByMargin: 3,
+              ),
             ),
           );
         await tick();
@@ -178,6 +184,11 @@ void main() {
                   Player(playerId: 111, playerName: 'Foo'),
                   Player(playerId: 222, playerName: 'Bar'),
                 ],
+                gamePointParams: GamePointParams(
+                  winningScore: 1,
+                  pointsPerScore: 2,
+                  winByMargin: 3,
+                ),
               ),
             ),
           ),
@@ -186,7 +197,8 @@ void main() {
     });
 
     group('IncreaseScoreEvent', () {
-      test('should increase score by 1 when IncreaseScoreEvent added',
+      test(
+          'should default to increase score by 1 when IncreaseScoreEvent added',
           () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..add(IncreaseScoreEvent(playerId: 1));
@@ -201,6 +213,43 @@ void main() {
                   testPlayer2.copyWith(score: 0, roundScore: 0),
                 ],
                 gamePointParams: _initialPointParams,
+              ),
+            ),
+          ),
+        );
+      });
+
+      test(
+          'should increase score by gamePointParams.pointsPerScore when IncreaseScoreEvent added',
+          () async {
+        const pointsPerScore = 100;
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(
+            StartGameEvent(
+              player1: initialScoreboardState.game.players.first,
+              player2: initialScoreboardState.game.players[1],
+              gamePointParams: GamePointParams(
+                winningScore: 21,
+                pointsPerScore: pointsPerScore,
+              ),
+            ),
+          )
+          ..add(IncreaseScoreEvent(playerId: 1));
+        await tick();
+        await tick();
+        expectStateAndHydratedState(
+          bloc,
+          equals(
+            initialScoreboardState.copyWith(
+              game: initialScoreboardState.game.copyWith(
+                players: [
+                  testPlayer1.copyWith(score: 100, roundScore: 100),
+                  testPlayer2.copyWith(score: 0, roundScore: 0),
+                ],
+                gamePointParams: GamePointParams(
+                  winningScore: 21,
+                  pointsPerScore: pointsPerScore,
+                ),
               ),
             ),
           ),

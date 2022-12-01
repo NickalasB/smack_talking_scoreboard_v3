@@ -3,6 +3,7 @@ import 'package:smack_talking_scoreboard_v3/l10n/default_insult_l10n_retriever.d
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/game_point_params.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
@@ -141,6 +142,12 @@ class _StartGameFormState extends State<StartGameForm> {
                       player2: Player(
                         playerId: 2,
                         playerName: player2Controller.text,
+                      ),
+                      gamePointParams: GamePointParams(
+                        winningScore: int.parse(winningScoreController.text),
+                        pointsPerScore:
+                            int.parse(pointsPerScoreController.text),
+                        winByMargin: int.parse(winByMarginController.text),
                       ),
                     ),
                   );

@@ -65,7 +65,10 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   void _startGame(StartGameEvent event, Emitter<ScoreboardState> emit) {
     return emit(
       state.copyWith(
-        game: state.game.copyWith(players: [event.player1, event.player2]),
+        game: state.game.copyWith(
+          players: [event.player1, event.player2],
+          gamePointParams: event.gamePointParams,
+        ),
       ),
     );
   }
@@ -83,8 +86,9 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         ..remove(currentPlayer)
         ..add(
           currentPlayer.copyWith(
-            score: currentScore + 1,
-            roundScore: currentPlayer.roundScore + 1,
+            score: currentScore + state.game.gamePointParams.pointsPerScore,
+            roundScore: currentPlayer.roundScore +
+                state.game.gamePointParams.pointsPerScore,
           ),
         )
         ..sort((a, b) => a.playerId.compareTo(b.playerId));
@@ -110,8 +114,9 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         ..remove(currentPlayer)
         ..add(
           currentPlayer.copyWith(
-            score: currentScore - 1,
-            roundScore: currentPlayer.roundScore - 1,
+            score: currentScore - state.game.gamePointParams.pointsPerScore,
+            roundScore: currentPlayer.roundScore -
+                state.game.gamePointParams.pointsPerScore,
           ),
         )
         ..sort((a, b) => a.playerId.compareTo(b.playerId));
