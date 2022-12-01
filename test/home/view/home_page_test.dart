@@ -9,15 +9,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smack_talking_scoreboard_v3/app/view/app.dart';
 
-import 'harness.dart';
-import 'score/view/scoreboard_page_objects.dart';
+import '../../harness.dart';
+import '../../score/view/scoreboard_page_objects.dart';
 
 void main() {
-  group('DefaultInsults', () {
+  group('IntegrationTest', () {
     /// This needs to be more of an integration test since I am creating a fake
     /// ScoreBloc for other tests
     testWidgets(
-      'Should properly populate correct number of default insults when game created',
+      'Should navigate to ScoreboardPage and properly populate correct number of default insults when game created',
       appHarness((given, when, then) async {
         await given.harness.tester.pumpWidget(const App());
 
