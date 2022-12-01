@@ -564,7 +564,9 @@ void main() {
 
     group('ToggleInsultVolumeEvent', () {
       test('Should emit state with opposite areInsultsEnabled param', () async {
-        final bloc = ScoreboardBloc(FakeTts());
+        final fakeTts = FakeTts();
+
+        final bloc = ScoreboardBloc(fakeTts);
         await tick();
 
         expect(bloc.state.areInsultsEnabled, isTrue);
@@ -572,11 +574,12 @@ void main() {
         bloc.add(ToggleInsultVolumeEvent());
         await tick();
 
+        expect(fakeTts.fakeTsEvents, [FakeSetVolumeEvent(0)]);
         expect(bloc.state.areInsultsEnabled, isFalse);
 
         bloc.add(ToggleInsultVolumeEvent());
         await tick();
-
+        expect(fakeTts.fakeTsEvents[1], FakeSetVolumeEvent(1));
         expect(bloc.state.areInsultsEnabled, isTrue);
       });
     });
