@@ -7,8 +7,26 @@ import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    context.addScoreboardEvent(
+      LoadDefaultInsultsEvent(
+        defaultInsults: localizedDefaultInsults(
+          context,
+          maxDefaultInsultIndex: 22,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,10 +134,6 @@ class _StartGameFormState extends State<StartGameForm> {
                 if (_formKey.currentState!.validate()) {
                   context.readScoreboard.add(
                     StartGameEvent(
-                      defaultInsults: localizedDefaultInsults(
-                        context,
-                        maxDefaultInsultIndex: 22,
-                      ),
                       player1: Player(
                         playerId: 1,
                         playerName: player1Controller.text,
