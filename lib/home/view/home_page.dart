@@ -145,6 +145,16 @@ class _StartGameFormState extends State<StartGameForm> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    player1Controller.dispose();
+    player2Controller.dispose();
+    winningScoreController.dispose();
+    pointsPerScoreController.dispose();
+    winByMarginController.dispose();
+    super.dispose();
+  }
 }
 
 class _GameFormField extends StatelessWidget {
