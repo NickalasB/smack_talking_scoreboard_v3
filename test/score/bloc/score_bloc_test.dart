@@ -280,7 +280,8 @@ void main() {
     });
 
     group('DecreaseScoreEvent', () {
-      test('should decrease score by 1 when DecreaseScoreEvent added',
+      test(
+          'should default to decrease score by 1 when DecreaseScoreEvent added',
           () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..add(IncreaseScoreEvent(playerId: 2));
@@ -297,6 +298,43 @@ void main() {
                   testPlayer2.copyWith(score: 0),
                 ],
                 gamePointParams: _initialPointParams,
+              ),
+            ),
+          ),
+        );
+      });
+
+      test(
+          'should decrease score by gamePointParams.pointsPerScore when DecreaseScoreEvent added',
+          () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..add(
+            StartGameEvent(
+              player1: initialScoreboardState.game.players.first,
+              player2: initialScoreboardState.game.players[1],
+              gamePointParams: GamePointParams(
+                winningScore: 21,
+                pointsPerScore: 500,
+              ),
+            ),
+          )
+          ..add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+        bloc.add(DecreaseScoreEvent(playerId: 2));
+        await tick();
+        expectStateAndHydratedState(
+          bloc,
+          equals(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 0),
+                  testPlayer2.copyWith(score: 500, roundScore: 500),
+                ],
+                gamePointParams: GamePointParams(
+                  winningScore: 21,
+                  pointsPerScore: 500,
+                ),
               ),
             ),
           ),
