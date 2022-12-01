@@ -133,8 +133,6 @@ class _StartGameFormState extends State<StartGameForm> {
                   navigator.push(
                     MaterialPageRoute<void>(
                       builder: (context) {
-                        print('Nick route');
-
                         return const ScoreboardPage();
                       },
                     ),
