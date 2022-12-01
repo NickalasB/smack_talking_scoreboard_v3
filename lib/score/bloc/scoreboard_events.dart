@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/game_point_params.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
-
-import '../view/models/game_point_params.dart';
 
 abstract class ScoreboardEvent extends Equatable {}
 
