@@ -15,8 +15,10 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
+
+import 'game_winner_dialog.dart';
+import 'reset_game_dialog.dart';
 
 class ScoreboardPage extends StatelessWidget {
   const ScoreboardPage({super.key});
@@ -39,6 +41,15 @@ class ScoreboardView extends StatelessWidget {
     final roundWinnerText = round.roundWinner != null
         ? strings.playerNumber(round.roundWinner!.playerId)
         : '';
+
+    final gameWinner = context.selectScoreboard.state.game.gameWinner;
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      if (gameWinner != null) {
+        await _showWinnerDialog(context, gameWinner);
+      }
+    });
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -69,9 +80,9 @@ class ScoreboardView extends StatelessWidget {
                   ),
                   Flexible(
                     child: ChangeTurnButton(
-                      onTap: () {
-                        context.addScoreboardEvent(NextTurnEvent());
-                      },
+                      onTap: context.isGameOver
+                          ? null
+                          : () => context.addScoreboardEvent(NextTurnEvent()),
                     ),
                   ),
                   const Flexible(child: VolumeButton()),
@@ -83,6 +94,17 @@ class ScoreboardView extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _showWinnerDialog(
+    BuildContext context, Player winningPlayer) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return GameWinnerDialog(winningPlayer);
+    },
+  );
 }
 
 class PlayerScore extends StatelessWidget {
@@ -160,54 +182,16 @@ class PlayerScore extends StatelessWidget {
       ],
     );
   }
-
-  Future<void> _launchResetGameDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (_) {
-        return BlocProvider.value(
-          value: context.selectScoreboard,
-          child: const _ResetGameDialog(),
-        );
-      },
-    );
-  }
 }
 
-class _ResetGameDialog extends StatelessWidget {
-  const _ResetGameDialog() : super(key: const Key('reset_score_dialog'));
-
-  @override
-  Widget build(BuildContext context) {
-    final strings = context.l10n;
-
-    return AlertDialog(
-      contentPadding: const EdgeInsets.all(16),
-      title: Center(
-        child: Text(
-          strings.resetGame,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 32),
-        ),
-      ),
-      content: const SizedBox(height: 24),
-      actions: [
-        PrimaryButton(
-          onPressed: () {
-            context.addScoreboardEvent(ResetGameEvent());
-            Navigator.of(context).pop();
-          },
-          label: strings.yes,
-        ),
-        PrimaryButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          label: strings.no,
-        ),
-      ],
-      actionsAlignment: MainAxisAlignment.spaceEvenly,
-      actionsPadding: const EdgeInsets.only(bottom: 16),
-    );
-  }
+Future<void> _launchResetGameDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (_) {
+      return BlocProvider.value(
+        value: context.selectScoreboard,
+        child: const ResetGameDialog(),
+      );
+    },
+  );
 }
