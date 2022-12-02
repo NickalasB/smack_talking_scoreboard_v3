@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
@@ -247,6 +248,24 @@ void main() {
         expect(
           then.harness.scoreBloc.addedEvents,
           [NextTurnEvent()],
+        );
+      }),
+    );
+
+    testWidgets(
+      'Should disable ChangeTurn button when gameWinner is not null',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          const ScoreboardView(),
+          scoreboardState: initialScoreboardState.copyWith(
+            game: initialScoreboardState.game.copyWith(gameWinner: testPlayer1),
+          ),
+        );
+
+        then.findsWidget(
+          find.byWidgetPredicate(
+            (widget) => widget is ChangeTurnButton && widget.onTap == null,
+          ),
         );
       }),
     );
