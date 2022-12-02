@@ -194,6 +194,33 @@ void main() {
           ),
         );
       });
+
+      test('should rest gameWinner when adding StartGameEvent', () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..emit(
+            initialScoreboardState.copyWith(
+              game:
+                  initialScoreboardState.game.copyWith(gameWinner: testPlayer1),
+            ),
+          );
+
+        expect(bloc.state.game.gameWinner, testPlayer1);
+
+        bloc.add(
+          StartGameEvent(
+            player1: Player(playerId: 111, playerName: 'Foo'),
+            player2: Player(playerId: 222, playerName: 'Bar'),
+            gamePointParams: GamePointParams(
+              winningScore: 1,
+              pointsPerScore: 2,
+              winByMargin: 3,
+            ),
+          ),
+        );
+        await tick();
+
+        expect(bloc.state.game.gameWinner, isNull);
+      });
     });
 
     group('IncreaseScoreEvent', () {
@@ -731,7 +758,7 @@ void main() {
 
     group('ResetGameEvent', () {
       test(
-          'Should rest scores and rounds but keep insults when ResetGameEvent added',
+          'Should rest scores and rounds but keep insults and gamePointParams when ResetGameEvent added',
           () async {
         final inProgressState = ScoreboardState(
           Game(
@@ -739,7 +766,7 @@ void main() {
               testPlayer1.copyWith(score: 10),
               testPlayer2.copyWith(score: 5),
             ],
-            gamePointParams: _initialPointParams,
+            gamePointParams: GamePointParams(winningScore: 100),
             round: Round(
               roundWinner: testPlayer1.copyWith(score: 10),
               roundCount: 10,
@@ -762,6 +789,11 @@ void main() {
           bloc,
           initialScoreboardState.copyWith(
             insults: const ['I should not be deleted when resetting game'],
+            game: initialScoreboardState.game.copyWith(
+              gamePointParams: GamePointParams(
+                winningScore: 100,
+              ),
+            ),
           ),
         );
       });
@@ -806,7 +838,10 @@ extension on TypeMatcher<ScoreboardState> {
 
   TypeMatcher<ScoreboardState> havingGameWinner(Player? player) =>
       isAScoreboardState.having(
-          (p0) => p0.game.gameWinner, 'gameWinner', player);
+        (p0) => p0.game.gameWinner,
+        'gameWinner',
+        player,
+      );
 }
 
 void expectStateAndHydratedState(ScoreboardBloc bloc, dynamic matcher) {

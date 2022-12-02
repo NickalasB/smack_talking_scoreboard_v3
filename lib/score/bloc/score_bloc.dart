@@ -68,6 +68,8 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         game: state.game.copyWith(
           players: [event.player1, event.player2],
           gamePointParams: event.gamePointParams,
+          // ignore:avoid_redundant_argument_values
+          gameWinner: null,
         ),
       ),
     );
@@ -204,7 +206,9 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   void _resetGame(ResetGameEvent event, Emitter<ScoreboardState> emit) {
     emit(
       state.copyWith(
-        game: initialScoreboardState.game,
+        game: initialScoreboardState.game.copyWith(
+          gamePointParams: state.game.gamePointParams,
+        ),
         insults: state.insults,
       ),
     );

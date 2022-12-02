@@ -29,7 +29,7 @@ class Game extends Equatable {
       players: players ?? this.players,
       round: round ?? this.round,
       gamePointParams: gamePointParams ?? this.gamePointParams,
-      gameWinner: gameWinner ?? this.gameWinner,
+      gameWinner: gameWinner,
     );
   }
 
