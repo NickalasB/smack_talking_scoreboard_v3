@@ -22,6 +22,7 @@ void main() {
         players: [testPlayer1],
         round: initialRound,
         gamePointParams: initialPointParams,
+        gameWinner: null,
       );
 
       expect(game1, equals(game1.copyWith()));
@@ -39,6 +40,14 @@ void main() {
         isNot(
           game1.copyWith(
             gamePointParams: initialPointParams.copyWith(winningScore: 5),
+          ),
+        ),
+      );
+      expect(
+        game1,
+        isNot(
+          game1.copyWith(
+            gameWinner: testPlayer1,
           ),
         ),
       );

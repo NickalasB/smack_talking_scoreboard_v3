@@ -16,10 +16,14 @@ Game _$GameFromJson(Map<String, dynamic> json) => Game(
           : Round.fromJson(json['round'] as Map<String, dynamic>),
       gamePointParams: GamePointParams.fromJson(
           json['gamePointParams'] as Map<String, dynamic>),
+      gameWinner: json['gameWinner'] == null
+          ? null
+          : Player.fromJson(json['gameWinner'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$GameToJson(Game instance) => <String, dynamic>{
       'players': instance.players,
       'round': instance.round,
       'gamePointParams': instance.gamePointParams,
+      'gameWinner': instance.gameWinner,
     };
