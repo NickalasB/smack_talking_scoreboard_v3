@@ -130,6 +130,10 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
     return tester.pumpAndSettle(const Duration(seconds: 3));
   }
 
+  Future<void> pump() {
+    return tester.pump();
+  }
+
   Future<void> userTypes(String text, Finder finder) {
     return tester.enterText(finder, text);
   }

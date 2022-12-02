@@ -40,13 +40,28 @@ void main() {
 
   group('ScoreboardView', () {
     testWidgets(
-      'should add IncreaseScoreEvent when add button tapped',
+      'should add IncreaseScoreEvent when tapping on player score',
       appHarness((given, when, then) async {
         await given.pumpWidget(const ScoreboardView());
         await when.userTaps(scoreboardPage.playerScore(forPlayerId: 1));
         expect(
           then.harness.scoreBloc.addedEvents,
           [IncreaseScoreEvent(playerId: 1)],
+        );
+      }),
+    );
+
+    testWidgets(
+      'should NOT add IncreaseScoreEvent tapping on playerScore if gameWinner is not null',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          const ScoreboardView(),
+          scoreboardState: _stateWithAGameWinner,
+        );
+        await when.userTaps(scoreboardPage.playerScore(forPlayerId: 1));
+        expect(
+          then.harness.scoreBloc.addedEvents,
+          isEmpty,
         );
       }),
     );
@@ -70,6 +85,27 @@ void main() {
     );
 
     testWidgets(
+      'should NOT add DecreaseScoreEvent when swiping down on player score if gameWinner is not null',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          const ScoreboardView(),
+          scoreboardState: _stateWithAGameWinner,
+        );
+
+        await when.userDragsVertically(
+          scoreboardPage.playerScore(forPlayerId: 1),
+          const Offset(0, 300),
+        );
+
+        await when.pump();
+        expect(
+          then.harness.scoreBloc.addedEvents,
+          isEmpty,
+        );
+      }),
+    );
+
+    testWidgets(
       'should add IncreaseScoreEvent when swiping up on player score',
       appHarness((given, when, then) async {
         await given.pumpWidget(const ScoreboardView());
@@ -83,6 +119,27 @@ void main() {
         expect(
           then.harness.scoreBloc.addedEvents,
           [IncreaseScoreEvent(playerId: 1)],
+        );
+      }),
+    );
+
+    testWidgets(
+      'should NOT add IncreaseScoreEvent when swiping up on player score if gameWinner is not null',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          const ScoreboardView(),
+          scoreboardState: _stateWithAGameWinner,
+        );
+
+        await when.userDragsVertically(
+          scoreboardPage.playerScore(forPlayerId: 1),
+          const Offset(0, -300),
+        );
+
+        await when.pump();
+        expect(
+          then.harness.scoreBloc.addedEvents,
+          isEmpty,
         );
       }),
     );
@@ -257,9 +314,7 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ScoreboardView(),
-          scoreboardState: initialScoreboardState.copyWith(
-            game: initialScoreboardState.game.copyWith(gameWinner: testPlayer1),
-          ),
+          scoreboardState: _stateWithAGameWinner,
         );
 
         then.findsWidget(
@@ -297,3 +352,7 @@ void main() {
     );
   });
 }
+
+ScoreboardState _stateWithAGameWinner = initialScoreboardState.copyWith(
+  game: initialScoreboardState.game.copyWith(gameWinner: testPlayer1),
+);

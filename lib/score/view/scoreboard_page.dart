@@ -123,24 +123,28 @@ class PlayerScore extends StatelessWidget {
           child: GestureDetector(
             key: Key('scoreboard_gesture_player_${player.playerId}'),
             onLongPress: () async => _launchResetGameDialog(context),
-            onTap: () => context.addScoreboardEvent(
-              IncreaseScoreEvent(playerId: player.playerId),
-            ),
-            onVerticalDragEnd: (DragEndDetails details) {
-              final primaryVelocity = details.primaryVelocity;
-              if (primaryVelocity != null) {
-                if (primaryVelocity < 0) {
-                  context.addScoreboardEvent(
-                    IncreaseScoreEvent(playerId: player.playerId),
-                  );
-                }
-                if (primaryVelocity > 0) {
-                  context.addScoreboardEvent(
-                    DecreaseScoreEvent(playerId: player.playerId),
-                  );
-                }
-              }
-            },
+            onTap: context.isGameOver
+                ? null
+                : () => context.addScoreboardEvent(
+                      IncreaseScoreEvent(playerId: player.playerId),
+                    ),
+            onVerticalDragEnd: context.isGameOver
+                ? null
+                : (DragEndDetails details) {
+                    final primaryVelocity = details.primaryVelocity;
+                    if (primaryVelocity != null) {
+                      if (primaryVelocity < 0) {
+                        context.addScoreboardEvent(
+                          IncreaseScoreEvent(playerId: player.playerId),
+                        );
+                      }
+                      if (primaryVelocity > 0) {
+                        context.addScoreboardEvent(
+                          DecreaseScoreEvent(playerId: player.playerId),
+                        );
+                      }
+                    }
+                  },
             child: DecoratedBox(
               decoration: BoxDecoration(
                 border: Border.all(),
