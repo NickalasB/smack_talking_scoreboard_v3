@@ -634,6 +634,77 @@ void main() {
           isEmpty,
         );
       });
+
+      test('Should emit gameWinner based on player with winningScore',
+          () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 20),
+                  testPlayer2.copyWith(score: 20),
+                ],
+                gamePointParams: GamePointParams(winningScore: 21),
+              ),
+            ),
+          );
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 1));
+        await tick();
+
+        bloc.add(NextTurnEvent());
+        await tick();
+
+        expectStateAndHydratedState(
+          bloc,
+          isAScoreboardState.havingGameWinner(testPlayer1.copyWith(score: 21)),
+        );
+      });
+
+      test(
+          'Should emit gameWinner based on player with winningScore and winByMargin',
+          () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 20),
+                  testPlayer2.copyWith(score: 20),
+                ],
+                gamePointParams: GamePointParams(
+                  winningScore: 21,
+                  winByMargin: 2,
+                ),
+              ),
+            ),
+          );
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 1));
+        await tick();
+
+        bloc.add(NextTurnEvent());
+        await tick();
+
+        expectStateAndHydratedState(
+          bloc,
+          isAScoreboardState.havingGameWinner(null),
+        );
+
+        bloc.add(IncreaseScoreEvent(playerId: 1));
+        await tick();
+
+        bloc.add(NextTurnEvent());
+        await tick();
+
+        expectStateAndHydratedState(
+          bloc,
+          isAScoreboardState.havingGameWinner(testPlayer1.copyWith(score: 22)),
+        );
+      });
     });
 
     group('ToggleInsultVolumeEvent', () {
@@ -732,6 +803,10 @@ final isAScoreboardState = TypeMatcher<ScoreboardState>();
 extension on TypeMatcher<ScoreboardState> {
   TypeMatcher<ScoreboardState> havingRound(Round round) =>
       isAScoreboardState.having((p0) => p0.game.round, 'round', round);
+
+  TypeMatcher<ScoreboardState> havingGameWinner(Player? player) =>
+      isAScoreboardState.having(
+          (p0) => p0.game.gameWinner, 'gameWinner', player);
 }
 
 void expectStateAndHydratedState(ScoreboardBloc bloc, dynamic matcher) {

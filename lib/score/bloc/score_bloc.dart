@@ -164,6 +164,16 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
       tts.speak(insultWithPlayerNamesInserted);
     }
 
+    final scores = players.map((e) => e.score);
+    final highScoreSatisfiesWinByMargin =
+        scores.max - scores.min >= game.gamePointParams.winByMargin;
+
+    final gameWinnerOrNull = playersWithResetRoundScores.firstWhereOrNull(
+      (player) =>
+          player.score >= game.gamePointParams.winningScore &&
+          highScoreSatisfiesWinByMargin,
+    );
+
     emit(
       state.copyWith(
         game: game.copyWith(
@@ -172,6 +182,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
             roundWinner: winningPlayer,
             roundCount: game.round.roundCount + 1,
           ),
+          gameWinner: gameWinnerOrNull,
         ),
       ),
     );
