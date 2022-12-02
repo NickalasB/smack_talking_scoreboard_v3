@@ -167,13 +167,11 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     }
 
     final scores = players.map((e) => e.score);
-    final highScoreSatisfiesWinByMargin =
-        scores.max - scores.min >= game.gamePointParams.winByMargin;
 
     final gameWinnerOrNull = playersWithResetRoundScores.firstWhereOrNull(
       (player) =>
           player.score >= game.gamePointParams.winningScore &&
-          highScoreSatisfiesWinByMargin,
+          player.score - scores.min >= game.gamePointParams.winByMargin,
     );
 
     emit(

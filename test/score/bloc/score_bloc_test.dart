@@ -195,7 +195,7 @@ void main() {
         );
       });
 
-      test('should rest gameWinner when adding StartGameEvent', () async {
+      test('should reset gameWinner when adding StartGameEvent', () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..emit(
             initialScoreboardState.copyWith(
@@ -691,7 +691,7 @@ void main() {
       });
 
       test(
-          'Should emit gameWinner based on player with winningScore and winByMargin',
+          'Should emit gameWinner based on player with highest score and satisfied winByMargin',
           () async {
         final bloc = ScoreboardBloc(FakeTts())
           ..emit(
@@ -710,6 +710,12 @@ void main() {
           );
         await tick();
 
+        bloc.add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+
+        bloc.add(NextTurnEvent());
+        await tick();
+
         bloc.add(IncreaseScoreEvent(playerId: 1));
         await tick();
 
@@ -721,7 +727,10 @@ void main() {
           isAScoreboardState.havingGameWinner(null),
         );
 
-        bloc.add(IncreaseScoreEvent(playerId: 1));
+        bloc.add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 2));
         await tick();
 
         bloc.add(NextTurnEvent());
@@ -729,7 +738,7 @@ void main() {
 
         expectStateAndHydratedState(
           bloc,
-          isAScoreboardState.havingGameWinner(testPlayer1.copyWith(score: 22)),
+          isAScoreboardState.havingGameWinner(testPlayer2.copyWith(score: 23)),
         );
       });
     });
