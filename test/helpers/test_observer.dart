@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 
 typedef OnObservation = void Function(
-    Route<dynamic>? route, Route<dynamic>? previousRoute);
+  Route<dynamic>? route,
+  Route<dynamic>? previousRoute,
+);
 
 /// A trivial observer for testing the navigator.
 class TestObserver extends NavigatorObserver {
@@ -41,7 +43,9 @@ class TestObserver extends NavigatorObserver {
 
   @override
   void didStartUserGesture(
-      Route<dynamic> route, Route<dynamic>? previousRoute) {
+    Route<dynamic> route,
+    Route<dynamic>? previousRoute,
+  ) {
     onStartUserGesture?.call(route, previousRoute);
   }
 }
