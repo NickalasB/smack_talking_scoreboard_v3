@@ -43,7 +43,7 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
         title: Column(
           children: [
             Text(
-              '${widget.winningPlayer.playerName} WINS!!',
+              strings.playerWins(widget.winningPlayer.playerName),
               textAlign: TextAlign.center,
               style: textTheme.titleLarge?.copyWith(fontSize: 32),
             ),
@@ -53,7 +53,7 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
         content: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16),
           child: Text(
-            'Wanna go again, but actually try this time, ${losingPlayer.playerName}?',
+            strings.winnerDialogBody(losingPlayer.playerName),
             style: textTheme.titleLarge,
             textAlign: TextAlign.center,
           ),
