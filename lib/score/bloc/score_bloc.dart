@@ -141,6 +141,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     }
   }
 
+  // TODO(me): handle tie game case + hitting button twice emits wrong player
   void _changeToNextTurn(NextTurnEvent event, Emitter<ScoreboardState> emit) {
     final game = state.game;
     final players = game.players;
