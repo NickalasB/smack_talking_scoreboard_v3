@@ -46,7 +46,11 @@ class ScoreboardView extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       if (gameWinner != null) {
-        await _showWinnerDialog(context, gameWinner);
+        await _launchGameWinnerDialog(
+          context,
+          gameWinner,
+          scoreboardBloc: context.readScoreboard,
+        );
       }
     });
 
@@ -96,13 +100,19 @@ class ScoreboardView extends StatelessWidget {
   }
 }
 
-Future<void> _showWinnerDialog(
-    BuildContext context, Player winningPlayer) async {
+Future<void> _launchGameWinnerDialog(
+  BuildContext context,
+  Player winningPlayer, {
+  required ScoreboardBloc scoreboardBloc,
+}) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false,
     builder: (context) {
-      return GameWinnerDialog(winningPlayer);
+      return BlocProvider.value(
+        value: scoreboardBloc,
+        child: GameWinnerDialog(winningPlayer),
+      );
     },
   );
 }

@@ -27,6 +27,8 @@ class ScoreBoardPageObject extends PageObject {
 
   Finder get resetScoreDialog => find.byKey(const Key('reset_score_dialog'));
 
+  Finder get gameWinnerDialog => find.byKey(const Key('game_winner_dialog'));
+
   Finder get doneButton => find.byKey(const Key('done_button'));
 
   Finder get addMoreInsultButton =>
