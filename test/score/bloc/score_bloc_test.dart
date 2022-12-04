@@ -105,7 +105,7 @@ void main() {
         );
         await tick();
 
-        bloc.add(ResetGameEvent());
+        bloc.add(ResetGameEvent(shouldKeepNames: false));
         await tick();
 
         bloc.add(
@@ -791,7 +791,7 @@ void main() {
           inProgressState,
         );
 
-        bloc.add(ResetGameEvent());
+        bloc.add(ResetGameEvent(shouldKeepNames: false));
         await tick();
 
         expectStateAndHydratedState(

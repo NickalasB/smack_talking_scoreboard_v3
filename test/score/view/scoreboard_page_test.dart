@@ -174,7 +174,10 @@ void main() {
         await when.userTaps(find.text('Yes'));
         await when.pumpAndSettle();
 
-        expect(then.harness.scoreBloc.addedEvents, [ResetGameEvent()]);
+        expect(
+          then.harness.scoreBloc.addedEvents,
+          [ResetGameEvent(shouldKeepNames: false)],
+        );
         then.findsNoWidget(scoreboardPage.resetScoreDialog);
       }),
     );

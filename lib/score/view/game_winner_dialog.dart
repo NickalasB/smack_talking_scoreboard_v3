@@ -60,15 +60,19 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
         ),
         actions: [
           PrimaryButton(
+            key: const Key('game_winner_yes_button'),
             onPressed: () {
-              context.addScoreboardEvent(ResetGameEvent());
+              context.addScoreboardEvent(ResetGameEvent(shouldKeepNames: true));
               Navigator.of(context).pop();
             },
             label: strings.yes,
           ),
           PrimaryButton(
+            key: const Key('game_winner_no_button'),
             onPressed: () {
-              context.addScoreboardEvent(ResetGameEvent());
+              context.addScoreboardEvent(
+                ResetGameEvent(shouldKeepNames: false),
+              );
               Navigator.of(context).popUntil((route) => route.isFirst);
             },
             label: strings.no,
