@@ -806,6 +806,51 @@ void main() {
           ),
         );
       });
+
+      test(
+          'Should rest scores and rounds but keep NAMES, insults and gamePointParams when ResetGameEvent added with shouldKeepNames: true',
+          () async {
+        final inProgressState = ScoreboardState(
+          Game(
+            players: [
+              testPlayer1.copyWith(playerName: 'Nick', score: 10),
+              testPlayer2.copyWith(playerName: 'Bob', score: 5),
+            ],
+            gamePointParams: GamePointParams(winningScore: 100),
+            round: Round(
+              roundWinner: testPlayer1.copyWith(score: 10),
+              roundCount: 10,
+            ),
+          ),
+          insults: const ['I should not be deleted when resetting game'],
+        );
+
+        final bloc = ScoreboardBloc(FakeTts())..emit(inProgressState);
+
+        expectStateAndHydratedState(
+          bloc,
+          inProgressState,
+        );
+
+        bloc.add(ResetGameEvent(shouldKeepNames: true));
+        await tick();
+
+        expectStateAndHydratedState(
+          bloc,
+          initialScoreboardState.copyWith(
+            insults: const ['I should not be deleted when resetting game'],
+            game: initialScoreboardState.game.copyWith(
+              players: [
+                testPlayer1.copyWith(playerName: 'Nick', score: 0),
+                testPlayer2.copyWith(playerName: 'Bob', score: 0),
+              ],
+              gamePointParams: GamePointParams(
+                winningScore: 100,
+              ),
+            ),
+          ),
+        );
+      });
     });
 
     group('DeleteInsultEvent', () {
