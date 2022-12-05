@@ -24,7 +24,7 @@ class ResetGameDialog extends StatelessWidget {
       actions: [
         PrimaryButton(
           onPressed: () {
-            context.addScoreboardEvent(ResetGameEvent(shouldKeepNames: false));
+            context.addScoreboardEvent(ResetGameEvent(shouldKeepNames: true));
             Navigator.of(context).pop();
           },
           label: strings.yes,
