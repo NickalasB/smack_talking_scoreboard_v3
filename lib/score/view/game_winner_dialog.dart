@@ -27,6 +27,12 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
   }
 
   @override
+  void dispose() {
+    confettiController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final strings = context.l10n;
     final textTheme = Theme.of(context).textTheme;

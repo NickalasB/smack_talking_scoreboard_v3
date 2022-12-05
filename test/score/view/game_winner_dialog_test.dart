@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
@@ -43,6 +44,25 @@ void main() {
           ),
         );
         expect(then.harness.navigationObserver.didPushRoute, isTrue);
+      }),
+    );
+
+    testWidgets(
+      'Should play confetti blast when dialog launched',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          GameWinnerDialog(testPlayer1),
+          scoreboardState: _testGameWinnerState(testPlayer1),
+        );
+
+        then.findsWidget(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is ConfettiWidget &&
+                widget.confettiController.state ==
+                    ConfettiControllerState.playing,
+          ),
+        );
       }),
     );
   });
