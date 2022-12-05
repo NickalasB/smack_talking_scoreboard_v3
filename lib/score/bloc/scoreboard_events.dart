@@ -76,8 +76,6 @@ class NextTurnEvent extends ScoreboardEvent {
   List<Object?> get props => [];
 }
 
-// TODO(me): add reset scores event so people can reset without losing names
-
 class ResetGameEvent extends ScoreboardEvent {
   ResetGameEvent({required this.shouldKeepNames});
   final bool shouldKeepNames;
