@@ -13,18 +13,23 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/exit_game_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/game_winner_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/reset_game_dialog.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/scoreboared_page_dependencies.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
 
-class ScoreboardPage extends StatelessWidget {
+class ScoreboardPage extends StatelessWidget with NavigationMixin {
   const ScoreboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const ScoreboardView();
+    return ScoreboardPageDependencies(
+      data: this,
+      child: const ScoreboardView(),
+    );
   }
 }
 
@@ -53,45 +58,57 @@ class ScoreboardView extends StatelessWidget {
       }
     });
 
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 8),
-              // TODO(nibradshaw): this is just placeholder UI
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(strings.roundNumber(round.roundCount)),
-                  Text(strings.roundWinner(roundWinnerText)),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Expanded(child: PlayerScore(player: players.first)),
-              const SizedBox(height: 16),
-              Expanded(child: PlayerScore(player: players[1])),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: SettingsButton(
-                      context.readScoreboard,
+    return WillPopScope(
+      onWillPop: () async {
+        final exitGameDialogResult =
+            await ScoreboardPageDependencies.of(context)
+                ?.data
+                .launchExitGameDialog(
+                  context,
+                  scoreboardBloc: context.readScoreboard,
+                );
+        return exitGameDialogResult ?? false;
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 8),
+                // TODO(nibradshaw): this is just placeholder UI
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(strings.roundNumber(round.roundCount)),
+                    Text(strings.roundWinner(roundWinnerText)),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Expanded(child: PlayerScore(player: players.first)),
+                const SizedBox(height: 16),
+                Expanded(child: PlayerScore(player: players[1])),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: SettingsButton(
+                        context.readScoreboard,
+                      ),
                     ),
-                  ),
-                  Flexible(
-                    child: ChangeTurnButton(
-                      onTap: context.isGameOver
-                          ? null
-                          : () => context.addScoreboardEvent(NextTurnEvent()),
+                    Flexible(
+                      child: ChangeTurnButton(
+                        onTap: context.isGameOver
+                            ? null
+                            : () => context.addScoreboardEvent(NextTurnEvent()),
+                      ),
                     ),
-                  ),
-                  const Flexible(child: VolumeButton()),
-                ],
-              ),
-            ],
+                    const Flexible(child: VolumeButton()),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -111,6 +128,22 @@ Future<void> _launchGameWinnerDialog(
       return BlocProvider.value(
         value: scoreboardBloc,
         child: GameWinnerDialog(winningPlayer),
+      );
+    },
+  );
+}
+
+Future<bool?> _launchExitGameDialog(
+  BuildContext context, {
+  required ScoreboardBloc scoreboardBloc,
+}) async {
+  return showDialog<bool?>(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return BlocProvider.value(
+        value: scoreboardBloc,
+        child: const ExitGameDialog(),
       );
     },
   );

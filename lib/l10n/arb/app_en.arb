@@ -125,5 +125,9 @@
         "example": "Nick"
       }
     }
+  },
+  "exitGame": "Exit Game?",
+  "@exitGame": {
+    "description": "Title for exit game dialog"
   }
 }

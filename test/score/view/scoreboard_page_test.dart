@@ -40,6 +40,38 @@ void main() {
 
   group('ScoreboardView', () {
     testWidgets(
+      'Should allow willPopScope when ExitGameDialog returns true result',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithDependencies(
+          const ScoreboardView(),
+        );
+
+        final doNotPopResult = when.deviceBackButtonPressedResult();
+
+        when.exitGameDialogReturns(shouldExitGame: true);
+
+        //A result of false actually translates to RoutePopDisposition.bubble(do pop) inside of maybePop in Navigator.dart
+        expect(await doNotPopResult, isFalse);
+      }),
+    );
+
+    testWidgets(
+      'Should NOT allow willPopScope when ExitGameDialog returns false result',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithDependencies(
+          const ScoreboardView(),
+        );
+
+        final doNotPopResult = when.deviceBackButtonPressedResult();
+
+        when.exitGameDialogReturns(shouldExitGame: false);
+
+        //A result of true actually translates to RoutePopDisposition.doNotPop inside of maybePop in Navigator.dart
+        expect(await doNotPopResult, isTrue);
+      }),
+    );
+
+    testWidgets(
       'should add IncreaseScoreEvent when tapping on player score',
       appHarness((given, when, then) async {
         await given.pumpWidget(const ScoreboardView());

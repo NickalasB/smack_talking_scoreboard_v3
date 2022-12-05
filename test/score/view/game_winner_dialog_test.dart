@@ -65,6 +65,20 @@ void main() {
         );
       }),
     );
+
+    testWidgets(
+      'Should be unable to dismiss dialog with system back button',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          GameWinnerDialog(testPlayer1),
+          scoreboardState: _testGameWinnerState(testPlayer1),
+        );
+        final doNotPopResult = when.deviceBackButtonPressedResult();
+
+        //A result of true actually translates to RoutePopDisposition.doNotPop inside of maybePop in Navigator.dart
+        expect(await doNotPopResult, isTrue);
+      }),
+    );
   });
 }
 
