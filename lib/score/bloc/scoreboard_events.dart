@@ -77,10 +77,11 @@ class NextTurnEvent extends ScoreboardEvent {
 }
 
 class ResetGameEvent extends ScoreboardEvent {
-  ResetGameEvent();
+  ResetGameEvent({required this.shouldKeepNames});
+  final bool shouldKeepNames;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [shouldKeepNames];
 }
 
 class DeleteInsultEvent extends ScoreboardEvent {

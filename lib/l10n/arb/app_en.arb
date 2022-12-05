@@ -105,5 +105,25 @@
   "defaultFormError": "Fill this out... dummy!",
   "@defaultFormError": {
     "description": "default error message on invalid text input"
+  },
+  "playerWins": "{winningPlayerName} WINS!!",
+  "@playerWins": {
+    "description": "dynamic title for winning player",
+    "placeholders": {
+      "winningPlayerName": {
+        "type": "String",
+        "example": "Nick"
+      }
+    }
+  },
+  "winnerDialogBody": "Wanna go again, but actually try this time, {losingPlayerName}?",
+  "@winnerDialogBody": {
+    "description": "dynamic body for winning player dialog",
+    "placeholders": {
+      "losingPlayerName": {
+        "type": "String",
+        "example": "Nick"
+      }
+    }
   }
 }

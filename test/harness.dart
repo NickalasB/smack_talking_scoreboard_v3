@@ -12,6 +12,7 @@ import 'helpers/fake_bloc.dart';
 import 'helpers/fake_tts.dart';
 import 'helpers/pump_material_widget.dart';
 import 'helpers/test_helpers.dart';
+import 'helpers/test_observer.dart';
 
 Future<void> Function(WidgetTester) appHarness(
   WidgetTestHarnessCallback<AppHarness> callback,
@@ -22,6 +23,7 @@ Future<void> Function(WidgetTester) appHarness(
 class AppHarness extends WidgetTestHarness {
   AppHarness(super.tester);
   FakeScoreBloc scoreBloc = FakeScoreBloc(initialScoreboardState);
+  TestObserver navigationObserver = TestObserver();
 }
 
 extension AppGiven on WidgetTestGiven<AppHarness> {
@@ -35,6 +37,7 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
           },
         ),
       ),
+      navigatorObserver: harness.navigationObserver,
     );
   }
 
@@ -52,6 +55,7 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
           },
         ),
       ),
+      navigatorObserver: harness.navigationObserver,
     );
   }
 
@@ -93,6 +97,10 @@ extension AppThen on WidgetTestThen<AppHarness> {
       matchesGoldenFile('./goldens/$name.png'),
     );
   }
+
+  void addedScoreBlocEvents(Matcher matcher) {
+    expect(harness.scoreBloc.addedEvents, matcher);
+  }
 }
 
 extension AppWhen on WidgetTestWhen<AppHarness> {
@@ -128,6 +136,10 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
 
   Future<void> pumpAndSettle() {
     return tester.pumpAndSettle(const Duration(seconds: 3));
+  }
+
+  Future<void> pump({Duration? duration}) {
+    return tester.pump(duration);
   }
 
   Future<void> userTypes(String text, Finder finder) {

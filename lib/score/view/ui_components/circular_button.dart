@@ -10,7 +10,7 @@ class CircularButton extends StatelessWidget {
 
   final Color color;
   final Widget child;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

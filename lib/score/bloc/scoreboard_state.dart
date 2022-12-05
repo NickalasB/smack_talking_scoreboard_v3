@@ -16,6 +16,8 @@ extension ScoreboardContext on BuildContext {
 
   ScoreboardBloc get selectScoreboard =>
       BlocProvider.of<ScoreboardBloc>(this, listen: true);
+
+  bool get isGameOver => selectScoreboard.state.game.gameWinner != null;
 }
 
 @JsonSerializable()

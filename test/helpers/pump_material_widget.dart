@@ -11,7 +11,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 
 extension PumpMaterialWidget on WidgetTester {
-  Future<void> pumpMaterialWidget(Widget widget) {
+  Future<void> pumpMaterialWidget(
+    Widget widget, {
+    required NavigatorObserver navigatorObserver,
+  }) {
     return pumpWidget(
       MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -21,6 +24,7 @@ extension PumpMaterialWidget on WidgetTester {
         ],
         supportedLocales: AppLocalizations.supportedLocales,
         home: Material(child: widget),
+        navigatorObservers: [navigatorObserver],
       ),
     );
   }

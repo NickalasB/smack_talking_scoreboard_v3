@@ -4,8 +4,11 @@ import 'package:page_object/page_object.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
 import 'package:smack_talking_scoreboard_v3/score/score.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/game_winner_dialog.dart';
 
 final scoreboardPage = ScoreBoardPageObject();
+final homePage = HomePageObjects();
+final gameWinnerDialogPage = GameWinnerDialogPageObject();
 
 class ScoreBoardPageObject extends PageObject {
   ScoreBoardPageObject() : super(find.byType(ScoreboardPage));
@@ -27,6 +30,8 @@ class ScoreBoardPageObject extends PageObject {
 
   Finder get resetScoreDialog => find.byKey(const Key('reset_score_dialog'));
 
+  Finder get gameWinnerDialog => gameWinnerDialogPage;
+
   Finder get doneButton => find.byKey(const Key('done_button'));
 
   Finder get addMoreInsultButton =>
@@ -39,8 +44,6 @@ class ScoreBoardPageObject extends PageObject {
 
   Finder get lowDraggable => find.byKey(const Key('low_draggable'));
 }
-
-final homePage = HomePageObjects();
 
 class HomePageObjects extends PageObject {
   HomePageObjects() : super(find.byType(HomePage));
@@ -67,4 +70,12 @@ class HomePageObjects extends PageObject {
   Finder get player1TextInput => find.byKey(
         const Key('player_1_form_field'),
       );
+}
+
+class GameWinnerDialogPageObject extends PageObject {
+  GameWinnerDialogPageObject() : super(find.byType(GameWinnerDialog));
+
+  Finder get yesButton => find.byKey(const Key('game_winner_yes_button'));
+
+  Finder get noButton => find.byKey(const Key('game_winner_no_button'));
 }

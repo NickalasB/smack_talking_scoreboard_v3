@@ -13,9 +13,10 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/game_winner_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/reset_game_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
 
 class ScoreboardPage extends StatelessWidget {
@@ -39,6 +40,19 @@ class ScoreboardView extends StatelessWidget {
     final roundWinnerText = round.roundWinner != null
         ? strings.playerNumber(round.roundWinner!.playerId)
         : '';
+
+    final gameWinner = context.selectScoreboard.state.game.gameWinner;
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      if (gameWinner != null) {
+        await _launchGameWinnerDialog(
+          context,
+          gameWinner,
+          scoreboardBloc: context.readScoreboard,
+        );
+      }
+    });
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -69,9 +83,9 @@ class ScoreboardView extends StatelessWidget {
                   ),
                   Flexible(
                     child: ChangeTurnButton(
-                      onTap: () {
-                        context.addScoreboardEvent(NextTurnEvent());
-                      },
+                      onTap: context.isGameOver
+                          ? null
+                          : () => context.addScoreboardEvent(NextTurnEvent()),
                     ),
                   ),
                   const Flexible(child: VolumeButton()),
@@ -83,6 +97,23 @@ class ScoreboardView extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _launchGameWinnerDialog(
+  BuildContext context,
+  Player winningPlayer, {
+  required ScoreboardBloc scoreboardBloc,
+}) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return BlocProvider.value(
+        value: scoreboardBloc,
+        child: GameWinnerDialog(winningPlayer),
+      );
+    },
+  );
 }
 
 class PlayerScore extends StatelessWidget {
@@ -123,24 +154,28 @@ class PlayerScore extends StatelessWidget {
           child: GestureDetector(
             key: Key('scoreboard_gesture_player_${player.playerId}'),
             onLongPress: () async => _launchResetGameDialog(context),
-            onTap: () => context.addScoreboardEvent(
-              IncreaseScoreEvent(playerId: player.playerId),
-            ),
-            onVerticalDragEnd: (DragEndDetails details) {
-              final primaryVelocity = details.primaryVelocity;
-              if (primaryVelocity != null) {
-                if (primaryVelocity < 0) {
-                  context.addScoreboardEvent(
-                    IncreaseScoreEvent(playerId: player.playerId),
-                  );
-                }
-                if (primaryVelocity > 0) {
-                  context.addScoreboardEvent(
-                    DecreaseScoreEvent(playerId: player.playerId),
-                  );
-                }
-              }
-            },
+            onTap: context.isGameOver
+                ? null
+                : () => context.addScoreboardEvent(
+                      IncreaseScoreEvent(playerId: player.playerId),
+                    ),
+            onVerticalDragEnd: context.isGameOver
+                ? null
+                : (DragEndDetails details) {
+                    final primaryVelocity = details.primaryVelocity;
+                    if (primaryVelocity != null) {
+                      if (primaryVelocity < 0) {
+                        context.addScoreboardEvent(
+                          IncreaseScoreEvent(playerId: player.playerId),
+                        );
+                      }
+                      if (primaryVelocity > 0) {
+                        context.addScoreboardEvent(
+                          DecreaseScoreEvent(playerId: player.playerId),
+                        );
+                      }
+                    }
+                  },
             child: DecoratedBox(
               decoration: BoxDecoration(
                 border: Border.all(),
@@ -156,54 +191,16 @@ class PlayerScore extends StatelessWidget {
       ],
     );
   }
-
-  Future<void> _launchResetGameDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (_) {
-        return BlocProvider.value(
-          value: context.selectScoreboard,
-          child: const _ResetGameDialog(),
-        );
-      },
-    );
-  }
 }
 
-class _ResetGameDialog extends StatelessWidget {
-  const _ResetGameDialog() : super(key: const Key('reset_score_dialog'));
-
-  @override
-  Widget build(BuildContext context) {
-    final strings = context.l10n;
-
-    return AlertDialog(
-      contentPadding: const EdgeInsets.all(16),
-      title: Center(
-        child: Text(
-          strings.resetGame,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 32),
-        ),
-      ),
-      content: const SizedBox(height: 24),
-      actions: [
-        PrimaryButton(
-          onPressed: () {
-            context.addScoreboardEvent(ResetGameEvent());
-            Navigator.of(context).pop();
-          },
-          label: strings.yes,
-        ),
-        PrimaryButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          label: strings.no,
-        ),
-      ],
-      actionsAlignment: MainAxisAlignment.spaceEvenly,
-      actionsPadding: const EdgeInsets.only(bottom: 16),
-    );
-  }
+Future<void> _launchResetGameDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (_) {
+      return BlocProvider.value(
+        value: context.selectScoreboard,
+        child: const ResetGameDialog(),
+      );
+    },
+  );
 }

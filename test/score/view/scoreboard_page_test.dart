@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
@@ -39,13 +40,28 @@ void main() {
 
   group('ScoreboardView', () {
     testWidgets(
-      'should add IncreaseScoreEvent when add button tapped',
+      'should add IncreaseScoreEvent when tapping on player score',
       appHarness((given, when, then) async {
         await given.pumpWidget(const ScoreboardView());
         await when.userTaps(scoreboardPage.playerScore(forPlayerId: 1));
         expect(
           then.harness.scoreBloc.addedEvents,
           [IncreaseScoreEvent(playerId: 1)],
+        );
+      }),
+    );
+
+    testWidgets(
+      'should NOT add IncreaseScoreEvent tapping on playerScore if gameWinner is not null',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          const ScoreboardView(),
+          scoreboardState: _stateWithAGameWinner,
+        );
+        await when.userTaps(scoreboardPage.playerScore(forPlayerId: 1));
+        expect(
+          then.harness.scoreBloc.addedEvents,
+          isEmpty,
         );
       }),
     );
@@ -69,6 +85,27 @@ void main() {
     );
 
     testWidgets(
+      'should NOT add DecreaseScoreEvent when swiping down on player score if gameWinner is not null',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          const ScoreboardView(),
+          scoreboardState: _stateWithAGameWinner,
+        );
+
+        await when.userDragsVertically(
+          scoreboardPage.playerScore(forPlayerId: 1),
+          const Offset(0, 300),
+        );
+
+        await when.pump();
+        expect(
+          then.harness.scoreBloc.addedEvents,
+          isEmpty,
+        );
+      }),
+    );
+
+    testWidgets(
       'should add IncreaseScoreEvent when swiping up on player score',
       appHarness((given, when, then) async {
         await given.pumpWidget(const ScoreboardView());
@@ -82,6 +119,27 @@ void main() {
         expect(
           then.harness.scoreBloc.addedEvents,
           [IncreaseScoreEvent(playerId: 1)],
+        );
+      }),
+    );
+
+    testWidgets(
+      'should NOT add IncreaseScoreEvent when swiping up on player score if gameWinner is not null',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          const ScoreboardView(),
+          scoreboardState: _stateWithAGameWinner,
+        );
+
+        await when.userDragsVertically(
+          scoreboardPage.playerScore(forPlayerId: 1),
+          const Offset(0, -300),
+        );
+
+        await when.pump();
+        expect(
+          then.harness.scoreBloc.addedEvents,
+          isEmpty,
         );
       }),
     );
@@ -116,7 +174,10 @@ void main() {
         await when.userTaps(find.text('Yes'));
         await when.pumpAndSettle();
 
-        expect(then.harness.scoreBloc.addedEvents, [ResetGameEvent()]);
+        expect(
+          then.harness.scoreBloc.addedEvents,
+          [ResetGameEvent(shouldKeepNames: true)],
+        );
         then.findsNoWidget(scoreboardPage.resetScoreDialog);
       }),
     );
@@ -136,6 +197,30 @@ void main() {
 
         expect(then.harness.scoreBloc.addedEvents, isEmpty);
         then.findsNoWidget(scoreboardPage.resetScoreDialog);
+      }),
+    );
+  });
+
+  group('GameWinnerDialogTest', () {
+    testGoldens(
+      'Should launch GameWinnerDialog when pressing change turn button when a user has won the game',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          const ScoreboardView(),
+          scoreboardState: initialScoreboardState.copyWith(
+            game: initialScoreboardState.game.copyWith(gameWinner: testPlayer1),
+          ),
+        );
+
+        await when.userTaps(scoreboardPage.changeTurnButton);
+        await when.pump();
+
+        then.findsWidget(scoreboardPage.gameWinnerDialog);
+
+        await then.multiScreenGoldensMatch(
+          'game_winner_dialog',
+          devices: [Device.phone],
+        );
       }),
     );
   });
@@ -252,6 +337,22 @@ void main() {
     );
 
     testWidgets(
+      'Should disable ChangeTurn button when gameWinner is not null',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          const ScoreboardView(),
+          scoreboardState: _stateWithAGameWinner,
+        );
+
+        then.findsWidget(
+          find.byWidgetPredicate(
+            (widget) => widget is ChangeTurnButton && widget.onTap == null,
+          ),
+        );
+      }),
+    );
+
+    testWidgets(
       'Should show round winner UI when game has a winner and a round value',
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
@@ -278,3 +379,7 @@ void main() {
     );
   });
 }
+
+ScoreboardState _stateWithAGameWinner = initialScoreboardState.copyWith(
+  game: initialScoreboardState.game.copyWith(gameWinner: testPlayer1),
+);

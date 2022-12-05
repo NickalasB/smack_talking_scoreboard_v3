@@ -117,7 +117,7 @@ This project relies on [flutter_localizations][flutter_localizations_link] and f
 }
 ```
 
-3. Use the new string
+3. Use the new string (run `flutter gen-l10n` if it's not immediately available)
 
 ```dart
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';

@@ -105,7 +105,7 @@ void main() {
         );
         await tick();
 
-        bloc.add(ResetGameEvent());
+        bloc.add(ResetGameEvent(shouldKeepNames: false));
         await tick();
 
         bloc.add(
@@ -193,6 +193,33 @@ void main() {
             ),
           ),
         );
+      });
+
+      test('should reset gameWinner when adding StartGameEvent', () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..emit(
+            initialScoreboardState.copyWith(
+              game:
+                  initialScoreboardState.game.copyWith(gameWinner: testPlayer1),
+            ),
+          );
+
+        expect(bloc.state.game.gameWinner, testPlayer1);
+
+        bloc.add(
+          StartGameEvent(
+            player1: Player(playerId: 111, playerName: 'Foo'),
+            player2: Player(playerId: 222, playerName: 'Bar'),
+            gamePointParams: GamePointParams(
+              winningScore: 1,
+              pointsPerScore: 2,
+              winByMargin: 3,
+            ),
+          ),
+        );
+        await tick();
+
+        expect(bloc.state.game.gameWinner, isNull);
       });
     });
 
@@ -634,6 +661,86 @@ void main() {
           isEmpty,
         );
       });
+
+      test('Should emit gameWinner based on player with winningScore',
+          () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 20),
+                  testPlayer2.copyWith(score: 20),
+                ],
+                gamePointParams: GamePointParams(winningScore: 21),
+              ),
+            ),
+          );
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 1));
+        await tick();
+
+        bloc.add(NextTurnEvent());
+        await tick();
+
+        expectStateAndHydratedState(
+          bloc,
+          isAScoreboardState.havingGameWinner(testPlayer1.copyWith(score: 21)),
+        );
+      });
+
+      test(
+          'Should emit gameWinner based on player with highest score and satisfied winByMargin',
+          () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 20),
+                  testPlayer2.copyWith(score: 20),
+                ],
+                gamePointParams: GamePointParams(
+                  winningScore: 21,
+                  winByMargin: 2,
+                ),
+              ),
+            ),
+          );
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+
+        bloc.add(NextTurnEvent());
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 1));
+        await tick();
+
+        bloc.add(NextTurnEvent());
+        await tick();
+
+        expectStateAndHydratedState(
+          bloc,
+          isAScoreboardState.havingGameWinner(null),
+        );
+
+        bloc.add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+
+        bloc.add(NextTurnEvent());
+        await tick();
+
+        expectStateAndHydratedState(
+          bloc,
+          isAScoreboardState.havingGameWinner(testPlayer2.copyWith(score: 23)),
+        );
+      });
     });
 
     group('ToggleInsultVolumeEvent', () {
@@ -660,7 +767,7 @@ void main() {
 
     group('ResetGameEvent', () {
       test(
-          'Should rest scores and rounds but keep insults when ResetGameEvent added',
+          'Should rest scores and rounds but keep insults and gamePointParams when ResetGameEvent added',
           () async {
         final inProgressState = ScoreboardState(
           Game(
@@ -668,7 +775,7 @@ void main() {
               testPlayer1.copyWith(score: 10),
               testPlayer2.copyWith(score: 5),
             ],
-            gamePointParams: _initialPointParams,
+            gamePointParams: GamePointParams(winningScore: 100),
             round: Round(
               roundWinner: testPlayer1.copyWith(score: 10),
               roundCount: 10,
@@ -684,13 +791,63 @@ void main() {
           inProgressState,
         );
 
-        bloc.add(ResetGameEvent());
+        bloc.add(ResetGameEvent(shouldKeepNames: false));
         await tick();
 
         expectStateAndHydratedState(
           bloc,
           initialScoreboardState.copyWith(
             insults: const ['I should not be deleted when resetting game'],
+            game: initialScoreboardState.game.copyWith(
+              gamePointParams: GamePointParams(
+                winningScore: 100,
+              ),
+            ),
+          ),
+        );
+      });
+
+      test(
+          'Should rest scores and rounds but keep NAMES, insults and gamePointParams when ResetGameEvent added with shouldKeepNames: true',
+          () async {
+        final inProgressState = ScoreboardState(
+          Game(
+            players: [
+              testPlayer1.copyWith(playerName: 'Nick', score: 10),
+              testPlayer2.copyWith(playerName: 'Bob', score: 5),
+            ],
+            gamePointParams: GamePointParams(winningScore: 100),
+            round: Round(
+              roundWinner: testPlayer1.copyWith(score: 10),
+              roundCount: 10,
+            ),
+          ),
+          insults: const ['I should not be deleted when resetting game'],
+        );
+
+        final bloc = ScoreboardBloc(FakeTts())..emit(inProgressState);
+
+        expectStateAndHydratedState(
+          bloc,
+          inProgressState,
+        );
+
+        bloc.add(ResetGameEvent(shouldKeepNames: true));
+        await tick();
+
+        expectStateAndHydratedState(
+          bloc,
+          initialScoreboardState.copyWith(
+            insults: const ['I should not be deleted when resetting game'],
+            game: initialScoreboardState.game.copyWith(
+              players: [
+                testPlayer1.copyWith(playerName: 'Nick', score: 0),
+                testPlayer2.copyWith(playerName: 'Bob', score: 0),
+              ],
+              gamePointParams: GamePointParams(
+                winningScore: 100,
+              ),
+            ),
           ),
         );
       });
@@ -732,6 +889,13 @@ final isAScoreboardState = TypeMatcher<ScoreboardState>();
 extension on TypeMatcher<ScoreboardState> {
   TypeMatcher<ScoreboardState> havingRound(Round round) =>
       isAScoreboardState.having((p0) => p0.game.round, 'round', round);
+
+  TypeMatcher<ScoreboardState> havingGameWinner(Player? player) =>
+      isAScoreboardState.having(
+        (p0) => p0.game.gameWinner,
+        'gameWinner',
+        player,
+      );
 }
 
 void expectStateAndHydratedState(ScoreboardBloc bloc, dynamic matcher) {

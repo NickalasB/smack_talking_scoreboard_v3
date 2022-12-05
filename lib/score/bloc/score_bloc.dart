@@ -68,6 +68,8 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         game: state.game.copyWith(
           players: [event.player1, event.player2],
           gamePointParams: event.gamePointParams,
+          // ignore:avoid_redundant_argument_values
+          gameWinner: null,
         ),
       ),
     );
@@ -139,6 +141,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     }
   }
 
+  // TODO(me): handle tie game case + hitting button twice emits wrong player
   void _changeToNextTurn(NextTurnEvent event, Emitter<ScoreboardState> emit) {
     final game = state.game;
     final players = game.players;
@@ -164,6 +167,14 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
       tts.speak(insultWithPlayerNamesInserted);
     }
 
+    final scores = players.map((e) => e.score);
+
+    final gameWinnerOrNull = playersWithResetRoundScores.firstWhereOrNull(
+      (player) =>
+          player.score >= game.gamePointParams.winningScore &&
+          player.score - scores.min >= game.gamePointParams.winByMargin,
+    );
+
     emit(
       state.copyWith(
         game: game.copyWith(
@@ -172,6 +183,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
             roundWinner: winningPlayer,
             roundCount: game.round.roundCount + 1,
           ),
+          gameWinner: gameWinnerOrNull,
         ),
       ),
     );
@@ -191,9 +203,28 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   }
 
   void _resetGame(ResetGameEvent event, Emitter<ScoreboardState> emit) {
+    final initialGame = initialScoreboardState.game;
+    final keepNamesNewGame = state.game.players
+        .map(
+          (e) => e.copyWith(
+            score: 0,
+            roundScore: 0,
+          ),
+        )
+        .toList();
+
+    final newGame = event.shouldKeepNames
+        ? initialScoreboardState.game.copyWith(
+            players: keepNamesNewGame,
+            gamePointParams: state.game.gamePointParams,
+          )
+        : initialGame.copyWith(
+            gamePointParams: state.game.gamePointParams,
+          );
+
     emit(
       state.copyWith(
-        game: initialScoreboardState.game,
+        game: newGame,
         insults: state.insults,
       ),
     );

@@ -7,17 +7,17 @@ class ChangeTurnButton extends StatelessWidget {
     required this.onTap,
   });
 
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) {
     return CircularButton(
       onTap: onTap,
-      child: const DecoratedBox(
+      child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Colors.green,
+          color: onTap != null ? Colors.green : Theme.of(context).disabledColor,
           shape: BoxShape.circle,
         ),
-        child: Center(
+        child: const Center(
           child: Text(
             r'#$%!',
             style: TextStyle(
