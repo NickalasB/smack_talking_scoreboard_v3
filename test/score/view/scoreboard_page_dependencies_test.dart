@@ -33,19 +33,21 @@ class _TestScoreboardDependencies extends StatelessWidget with NavigationMixin {
     return Scaffold(
       body: ScoreboardPageDependencies(
         data: this,
-        child: Builder(builder: (context) {
-          return PrimaryButton(
-            label: 'test',
-            onPressed: () async {
-              await ScoreboardPageDependencies.of(context)
-                  ?.data
-                  .launchExitGameDialog(
-                    context,
-                    scoreboardBloc: FakeScoreBloc(initialScoreboardState),
-                  );
-            },
-          );
-        }),
+        child: Builder(
+          builder: (context) {
+            return PrimaryButton(
+              label: 'test',
+              onPressed: () async {
+                await ScoreboardPageDependencies.of(context)
+                    ?.data
+                    .launchExitGameDialog(
+                      context,
+                      scoreboardBloc: FakeScoreBloc(initialScoreboardState),
+                    );
+              },
+            );
+          },
+        ),
       ),
     );
   }
