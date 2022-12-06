@@ -3,6 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/exit_game_dialog.dart';
 
+//ignore:one_member_abstracts
+abstract class ScoreboardPageDependenciesData {
+  Future<bool?> launchExitGameDialog(
+    BuildContext context, {
+    required ScoreboardBloc scoreboardBloc,
+  });
+}
+
 class ScoreboardPageDependencies extends InheritedWidget {
   const ScoreboardPageDependencies({
     super.key,
@@ -21,13 +29,6 @@ class ScoreboardPageDependencies extends InheritedWidget {
   bool updateShouldNotify(covariant ScoreboardPageDependencies oldWidget) {
     return data != oldWidget.data;
   }
-}
-
-abstract class ScoreboardPageDependenciesData {
-  Future<bool?> launchExitGameDialog(
-    BuildContext context, {
-    required ScoreboardBloc scoreboardBloc,
-  });
 }
 
 mixin NavigationMixin implements ScoreboardPageDependenciesData {

@@ -13,11 +13,10 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/exit_game_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/game_winner_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/reset_game_dialog.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/scoreboared_page_dependencies.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page_dependencies.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
 
@@ -60,14 +59,13 @@ class ScoreboardView extends StatelessWidget {
 
     return WillPopScope(
       onWillPop: () async {
-        final exitGameDialogResult =
-            await ScoreboardPageDependencies.of(context)
-                ?.data
-                .launchExitGameDialog(
-                  context,
-                  scoreboardBloc: context.readScoreboard,
-                );
-        return exitGameDialogResult ?? false;
+        final shouldExitGame = await ScoreboardPageDependencies.of(context)
+            ?.data
+            .launchExitGameDialog(
+              context,
+              scoreboardBloc: context.readScoreboard,
+            );
+        return shouldExitGame ?? false;
       },
       child: Scaffold(
         body: SafeArea(
@@ -128,22 +126,6 @@ Future<void> _launchGameWinnerDialog(
       return BlocProvider.value(
         value: scoreboardBloc,
         child: GameWinnerDialog(winningPlayer),
-      );
-    },
-  );
-}
-
-Future<bool?> _launchExitGameDialog(
-  BuildContext context, {
-  required ScoreboardBloc scoreboardBloc,
-}) async {
-  return showDialog<bool?>(
-    context: context,
-    barrierDismissible: false,
-    builder: (context) {
-      return BlocProvider.value(
-        value: scoreboardBloc,
-        child: const ExitGameDialog(),
       );
     },
   );

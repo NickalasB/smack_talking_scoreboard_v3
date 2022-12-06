@@ -6,11 +6,11 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/scoreboared_page_dependencies.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page_dependencies.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
-import 'helpers/FakeScoreboardDependenciesData.dart';
 import 'helpers/fake_bloc.dart';
+import 'helpers/fake_scoreboard_dependencies_data.dart';
 import 'helpers/fake_tts.dart';
 import 'helpers/pump_material_widget.dart';
 import 'helpers/test_helpers.dart';
