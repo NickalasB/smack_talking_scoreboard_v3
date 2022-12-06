@@ -26,7 +26,7 @@ void main() {
 }
 
 class _TestScoreboardDependencies extends StatelessWidget with NavigationMixin {
-  const _TestScoreboardDependencies({super.key});
+  const _TestScoreboardDependencies();
 
   @override
   Widget build(BuildContext context) {
