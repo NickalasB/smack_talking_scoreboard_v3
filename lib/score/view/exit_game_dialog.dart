@@ -34,7 +34,7 @@ class ExitGameDialog extends StatelessWidget {
           label: strings.yes,
         ),
         PrimaryButton(
-          key: const Key('game_winner_no_button'),
+          key: const Key('exit_game_no_button'),
           onPressed: () {
             Navigator.of(context).pop(false);
           },
