@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
