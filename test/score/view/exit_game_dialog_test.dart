@@ -21,7 +21,7 @@ void main() {
     );
 
     testWidgets(
-      'Should add ResetGameEvent without keeping names when yes button tapped',
+      'Should add ResetGameEvent without keeping names when YES button tapped',
       appHarness((given, when, then) async {
         await given.pumpWidget(const ExitGameDialog());
 
@@ -38,7 +38,7 @@ void main() {
     );
 
     testWidgets(
-      'Should dismiss dialog when not button tapped',
+      'Should dismiss dialog when NO button tapped',
       appHarness((given, when, then) async {
         await given.pumpWidget(const ExitGameDialog());
 
