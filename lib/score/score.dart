@@ -7,4 +7,5 @@
 
 export 'bloc/score_bloc.dart';
 export 'view/scoreboard_page.dart';
-export 'view/scoreboard_page_dependencies.dart' show ScoreboardPageDependencies;
+export 'view/scoreboard_page_dependencies.dart'
+    show ScoreboardPageDependencies, NavigationMixin;
