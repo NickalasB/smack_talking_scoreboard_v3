@@ -15,7 +15,7 @@ class VolumeButton extends StatelessWidget {
       key: const Key('volume_button'),
       onTap: () {
         context.addScoreboardEvent(ToggleInsultVolumeEvent());
-      }, // coverage:ignore-line
+      },
       child: volumeIcon,
     );
   }
