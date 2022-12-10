@@ -576,7 +576,7 @@ void main() {
 
     group('ResetGameEvent', () {
       test(
-          'Should rest scores and rounds but keep gamePointParams when ResetGameEvent added',
+          'Should reset scores and rounds but keep gamePointParams when ResetGameEvent added',
           () async {
         final inProgressState = ScoreboardState(
           Game(
@@ -590,6 +590,7 @@ void main() {
               roundCount: 10,
             ),
           ),
+          isGameInProgress: true,
         );
 
         final bloc = ScoreboardBloc(FakeTts())..emit(inProgressState);
