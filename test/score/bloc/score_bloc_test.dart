@@ -65,6 +65,7 @@ void main() {
           bloc,
           equals(
             initialScoreboardState.copyWith(
+              isGameInProgress: true,
               game: initialScoreboardState.game.copyWith(
                 players: [
                   Player(playerId: 111, playerName: 'Foo'),
@@ -154,6 +155,7 @@ void main() {
           bloc,
           equals(
             initialScoreboardState.copyWith(
+              isGameInProgress: true,
               game: initialScoreboardState.game.copyWith(
                 players: [
                   testPlayer1.copyWith(score: 100, roundScore: 100),
@@ -249,6 +251,7 @@ void main() {
                   pointsPerScore: 500,
                 ),
               ),
+              isGameInProgress: true,
             ),
           ),
         );
@@ -612,7 +615,7 @@ void main() {
       });
 
       test(
-          'Should rest scores and rounds but keep NAMES and gamePointParams when ResetGameEvent added with shouldKeepNames: true',
+          'Should reset scores and rounds but keep NAMES and gamePointParams when ResetGameEvent added with shouldKeepNames: true',
           () async {
         final inProgressState = ScoreboardState(
           Game(
@@ -641,6 +644,7 @@ void main() {
         expectStateAndHydratedState(
           bloc,
           initialScoreboardState.copyWith(
+            isGameInProgress: true,
             game: initialScoreboardState.game.copyWith(
               players: [
                 testPlayer1.copyWith(playerName: 'Nick', score: 0),

@@ -33,6 +33,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   void _startGame(StartGameEvent event, Emitter<ScoreboardState> emit) {
     return emit(
       state.copyWith(
+        isGameInProgress: true,
         game: state.game.copyWith(
           players: [event.player1, event.player2],
           gamePointParams: event.gamePointParams,
@@ -190,6 +191,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     emit(
       state.copyWith(
+        isGameInProgress: event.shouldKeepNames,
         game: newGame,
       ),
     );

@@ -18,7 +18,6 @@ extension AppContext on BuildContext {
 class AppState extends Equatable {
   const AppState({
     this.insults = const [],
-    this.isGameInProgress = false,
   });
 
   factory AppState.fromJson(Map<String, dynamic> json) {
@@ -33,13 +32,11 @@ class AppState extends Equatable {
   }) {
     return AppState(
       insults: insults ?? this.insults,
-      isGameInProgress: isGameInProgress ?? this.isGameInProgress,
     );
   }
 
   final List<String> insults;
-  final bool isGameInProgress;
 
   @override
-  List<Object?> get props => [insults, isGameInProgress];
+  List<Object?> get props => [insults];
 }

@@ -25,6 +25,7 @@ class ScoreboardState extends Equatable {
   const ScoreboardState(
     this.game, {
     this.areInsultsEnabled = true,
+    this.isGameInProgress = false,
   });
 
   factory ScoreboardState.fromJson(Map<String, dynamic> json) {
@@ -36,18 +37,21 @@ class ScoreboardState extends Equatable {
   ScoreboardState copyWith({
     Game? game,
     bool? areInsultsEnabled,
+    bool? isGameInProgress,
   }) {
     return ScoreboardState(
       game ?? this.game,
       areInsultsEnabled: areInsultsEnabled ?? this.areInsultsEnabled,
+      isGameInProgress: isGameInProgress ?? this.isGameInProgress,
     );
   }
 
   final Game game;
   final bool areInsultsEnabled;
+  final bool isGameInProgress;
 
   @override
-  List<Object?> get props => [game, areInsultsEnabled];
+  List<Object?> get props => [game, areInsultsEnabled, isGameInProgress];
 }
 
 ScoreboardState get initialScoreboardState => const ScoreboardState(

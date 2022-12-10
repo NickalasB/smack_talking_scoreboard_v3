@@ -11,10 +11,8 @@ AppState _$AppStateFromJson(Map<String, dynamic> json) => AppState(
               ?.map((e) => e as String)
               .toList() ??
           const [],
-      isGameInProgress: json['isGameInProgress'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$AppStateToJson(AppState instance) => <String, dynamic>{
       'insults': instance.insults,
-      'isGameInProgress': instance.isGameInProgress,
     };
