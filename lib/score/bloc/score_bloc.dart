@@ -117,7 +117,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
       playersWithResetRoundScores.add(player.copyWith(roundScore: 0));
     }
 
-    final insults = List<String>.from(state.insults);
+    final insults = List<String>.from(event.insults);
     if (insults.isNotEmpty) {
       final insultWithPlayerNamesInserted = (insults..shuffle())
           .first
@@ -185,7 +185,6 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     emit(
       state.copyWith(
         game: newGame,
-        insults: state.insults,
       ),
     );
   }

@@ -100,7 +100,9 @@ class ScoreboardView extends StatelessWidget {
                       child: ChangeTurnButton(
                         onTap: context.isGameOver
                             ? null
-                            : () => context.readScoreboard.add(NextTurnEvent()),
+                            : () => context.readScoreboard.add(
+                                  NextTurnEvent(context.readApp.state.insults),
+                                ),
                       ),
                     ),
                     const Flexible(child: VolumeButton()),

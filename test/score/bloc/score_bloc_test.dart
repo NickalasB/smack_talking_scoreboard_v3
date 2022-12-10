@@ -36,7 +36,6 @@ void main() {
           ],
           gamePointParams: _initialPointParams,
         ),
-        insults: const [],
       );
 
       expect(testStorage.readForKeyCalls, hasLength(1));
@@ -337,7 +336,7 @@ void main() {
           ],
         );
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const ['any insult']));
         await tick();
         await tick();
 
@@ -400,7 +399,7 @@ void main() {
           ],
         );
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const ['any insult']));
         await tick();
         await tick();
 
@@ -427,12 +426,13 @@ void main() {
                 ],
                 gamePointParams: _initialPointParams,
               ),
-              insults: const [r'$HI$ you are good. $LOW$ you are bad.'],
             ),
           );
         await tick();
 
-        bloc.add(NextTurnEvent());
+        bloc.add(
+          NextTurnEvent(const [r'$HI$ you are good. $LOW$ you are bad.']),
+        );
         await tick();
 
         expect(
@@ -455,12 +455,11 @@ void main() {
                 ],
                 gamePointParams: _initialPointParams,
               ),
-              insults: const [],
             ),
           );
         await tick();
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const <String>[]));
         await tick();
 
         expect(
@@ -488,7 +487,7 @@ void main() {
         bloc.add(IncreaseScoreEvent(playerId: 1));
         await tick();
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const <String>[]));
         await tick();
 
         expectStateAndHydratedState(
@@ -520,13 +519,13 @@ void main() {
         bloc.add(IncreaseScoreEvent(playerId: 2));
         await tick();
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const <String>[]));
         await tick();
 
         bloc.add(IncreaseScoreEvent(playerId: 1));
         await tick();
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const <String>[]));
         await tick();
 
         expectStateAndHydratedState(
@@ -540,7 +539,7 @@ void main() {
         bloc.add(IncreaseScoreEvent(playerId: 2));
         await tick();
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const <String>[]));
         await tick();
 
         expectStateAndHydratedState(
@@ -574,7 +573,7 @@ void main() {
 
     group('ResetGameEvent', () {
       test(
-          'Should rest scores and rounds but keep insults and gamePointParams when ResetGameEvent added',
+          'Should rest scores and rounds but keep gamePointParams when ResetGameEvent added',
           () async {
         final inProgressState = ScoreboardState(
           Game(
@@ -588,7 +587,6 @@ void main() {
               roundCount: 10,
             ),
           ),
-          insults: const ['I should not be deleted when resetting game'],
         );
 
         final bloc = ScoreboardBloc(FakeTts())..emit(inProgressState);
@@ -604,7 +602,6 @@ void main() {
         expectStateAndHydratedState(
           bloc,
           initialScoreboardState.copyWith(
-            insults: const ['I should not be deleted when resetting game'],
             game: initialScoreboardState.game.copyWith(
               gamePointParams: GamePointParams(
                 winningScore: 100,
@@ -615,7 +612,7 @@ void main() {
       });
 
       test(
-          'Should rest scores and rounds but keep NAMES, insults and gamePointParams when ResetGameEvent added with shouldKeepNames: true',
+          'Should rest scores and rounds but keep NAMES and gamePointParams when ResetGameEvent added with shouldKeepNames: true',
           () async {
         final inProgressState = ScoreboardState(
           Game(
@@ -629,7 +626,6 @@ void main() {
               roundCount: 10,
             ),
           ),
-          insults: const ['I should not be deleted when resetting game'],
         );
 
         final bloc = ScoreboardBloc(FakeTts())..emit(inProgressState);
@@ -645,7 +641,6 @@ void main() {
         expectStateAndHydratedState(
           bloc,
           initialScoreboardState.copyWith(
-            insults: const ['I should not be deleted when resetting game'],
             game: initialScoreboardState.game.copyWith(
               players: [
                 testPlayer1.copyWith(playerName: 'Nick', score: 0),

@@ -51,10 +51,12 @@ class DecreaseScoreEvent extends ScoreboardEvent {
 }
 
 class NextTurnEvent extends ScoreboardEvent {
-  NextTurnEvent();
+  NextTurnEvent(this.insults);
+
+  final List<String> insults;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [insults];
 }
 
 class ResetGameEvent extends ScoreboardEvent {

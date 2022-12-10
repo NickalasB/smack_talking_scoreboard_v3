@@ -364,7 +364,7 @@ void main() {
 
         expect(
           then.harness.scoreBloc.addedEvents,
-          [NextTurnEvent()],
+          [NextTurnEvent(const <String>[])],
         );
       }),
     );
