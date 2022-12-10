@@ -153,7 +153,13 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     ToggleInsultVolumeEvent event,
     Emitter<ScoreboardState> emit,
   ) {
-    final newAreInsultsEnabled = !state.areInsultsEnabled;
+    final bool newAreInsultsEnabled;
+    if (state.areInsultsEnabled) {
+      newAreInsultsEnabled = false;
+    } else {
+      newAreInsultsEnabled = true;
+    }
+
     tts.setVolume(newAreInsultsEnabled ? 1 : 0);
     emit(
       state.copyWith(
