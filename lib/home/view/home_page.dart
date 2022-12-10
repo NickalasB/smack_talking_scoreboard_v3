@@ -151,7 +151,7 @@ class _StartGameFormState extends State<StartGameForm> {
                       ),
                     ),
                   );
-                  navigator.push(
+                  navigator.pushReplacement(
                     MaterialPageRoute<void>(
                       builder: (context) {
                         return const ScoreboardPage();
@@ -203,6 +203,7 @@ class _GameFormField extends StatelessWidget {
         return null;
       },
       keyboardType: keyboardType,
+      textCapitalization: TextCapitalization.words,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         hintText: hintText,

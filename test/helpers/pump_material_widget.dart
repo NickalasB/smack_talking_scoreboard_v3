@@ -13,7 +13,7 @@ import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 extension PumpMaterialWidget on WidgetTester {
   Future<void> pumpMaterialWidget(
     Widget widget, {
-    required NavigatorObserver navigatorObserver,
+    NavigatorObserver? navigatorObserver,
   }) {
     return pumpWidget(
       MaterialApp(
@@ -24,7 +24,8 @@ extension PumpMaterialWidget on WidgetTester {
         ],
         supportedLocales: AppLocalizations.supportedLocales,
         home: Material(child: widget),
-        navigatorObservers: [navigatorObserver],
+        navigatorObservers:
+            navigatorObserver != null ? [navigatorObserver] : [],
       ),
     );
   }

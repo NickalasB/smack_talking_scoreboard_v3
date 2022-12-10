@@ -4,11 +4,13 @@ import 'package:page_object/page_object.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
 import 'package:smack_talking_scoreboard_v3/score/score.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/exit_game_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/game_winner_dialog.dart';
 
 final scoreboardPage = ScoreBoardPageObject();
 final homePage = HomePageObjects();
 final gameWinnerDialogPage = GameWinnerDialogPageObject();
+final exitGameDialogPage = ExitGameDialogPageObject();
 
 class ScoreBoardPageObject extends PageObject {
   ScoreBoardPageObject() : super(find.byType(ScoreboardPage));
@@ -78,4 +80,12 @@ class GameWinnerDialogPageObject extends PageObject {
   Finder get yesButton => find.byKey(const Key('game_winner_yes_button'));
 
   Finder get noButton => find.byKey(const Key('game_winner_no_button'));
+}
+
+class ExitGameDialogPageObject extends PageObject {
+  ExitGameDialogPageObject() : super(find.byType(ExitGameDialog));
+
+  Finder get yesButton => find.byKey(const Key('exit_game_yes_button'));
+
+  Finder get noButton => find.byKey(const Key('exit_game_no_button'));
 }

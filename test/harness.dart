@@ -6,9 +6,11 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page_dependencies.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 import 'helpers/fake_bloc.dart';
+import 'helpers/fake_scoreboard_dependencies_data.dart';
 import 'helpers/fake_tts.dart';
 import 'helpers/pump_material_widget.dart';
 import 'helpers/test_helpers.dart';
@@ -20,7 +22,7 @@ Future<void> Function(WidgetTester) appHarness(
   return (tester) => givenWhenThenWidgetTest(AppHarness(tester), callback);
 }
 
-class AppHarness extends WidgetTestHarness {
+class AppHarness extends WidgetTestHarness with FakeScoreboardDependenciesData {
   AppHarness(super.tester);
   FakeScoreBloc scoreBloc = FakeScoreBloc(initialScoreboardState);
   TestObserver navigationObserver = TestObserver();
@@ -38,6 +40,22 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
         ),
       ),
       navigatorObserver: harness.navigationObserver,
+    );
+  }
+
+  Future<void> pumpWidgetWithDependencies(Widget child) async {
+    await harness.tester.pumpMaterialWidget(
+      BlocProvider<ScoreboardBloc>(
+        create: (context) => harness.scoreBloc,
+        child: Builder(
+          builder: (context) {
+            return ScoreboardPageDependencies(
+              data: harness,
+              child: child,
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -118,6 +136,18 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
       offset,
       const Duration(milliseconds: 750),
     );
+  }
+
+  Future<dynamic> deviceBackButtonPressedResult() async {
+    final dynamic widgetsAppState =
+        harness.tester.state(find.byType(WidgetsApp));
+
+    // ignore: avoid_dynamic_calls
+    return widgetsAppState.didPopRoute();
+  }
+
+  void exitGameDialogReturns({required bool shouldExitGame}) {
+    harness.exitGameCompleters[0].complete(shouldExitGame);
   }
 
   Future<void> userDragsWidgetTo({
