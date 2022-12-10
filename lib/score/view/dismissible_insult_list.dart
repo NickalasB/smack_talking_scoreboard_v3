@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
-import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
-import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 
 class DismissibleInsultList extends StatefulWidget {
   const DismissibleInsultList({super.key});
@@ -13,7 +13,7 @@ class DismissibleInsultList extends StatefulWidget {
 class _DismissibleInsultListState extends State<DismissibleInsultList> {
   @override
   Widget build(BuildContext context) {
-    final bloc = context.readScoreboard;
+    final bloc = context.readApp;
     final insults = bloc.state.insults;
     final theme = Theme.of(context);
 

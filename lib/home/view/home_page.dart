@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/default_insult_l10n_retriever.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
@@ -19,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    context.addScoreboardEvent(
+    context.readApp.add(
       LoadDefaultInsultsEvent(
         defaultInsults: localizedDefaultInsults(
           context,

@@ -14,13 +14,19 @@ import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
+import '../bloc/app_bloc.dart';
+
 class App extends StatelessWidget {
   const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ScoreboardBloc(TtsImplementation(FlutterTts())),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+            create: (_) => ScoreboardBloc(TtsImplementation(FlutterTts()))),
+        BlocProvider(create: (_) => AppBloc()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

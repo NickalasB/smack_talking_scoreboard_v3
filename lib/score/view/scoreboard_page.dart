@@ -8,6 +8,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
@@ -92,14 +93,14 @@ class ScoreboardView extends StatelessWidget {
                   children: [
                     Flexible(
                       child: SettingsButton(
-                        context.readScoreboard,
+                        context.readApp,
                       ),
                     ),
                     Flexible(
                       child: ChangeTurnButton(
                         onTap: context.isGameOver
                             ? null
-                            : () => context.addScoreboardEvent(NextTurnEvent()),
+                            : () => context.readScoreboard.add(NextTurnEvent()),
                       ),
                     ),
                     const Flexible(child: VolumeButton()),
@@ -171,7 +172,7 @@ class PlayerScore extends StatelessWidget {
             onLongPress: () async => _launchResetGameDialog(context),
             onTap: context.isGameOver
                 ? null
-                : () => context.addScoreboardEvent(
+                : () => context.readScoreboard.add(
                       IncreaseScoreEvent(playerId: player.playerId),
                     ),
             onVerticalDragEnd: context.isGameOver
@@ -180,12 +181,12 @@ class PlayerScore extends StatelessWidget {
                     final primaryVelocity = details.primaryVelocity;
                     if (primaryVelocity != null) {
                       if (primaryVelocity < 0) {
-                        context.addScoreboardEvent(
+                        context.readScoreboard.add(
                           IncreaseScoreEvent(playerId: player.playerId),
                         );
                       }
                       if (primaryVelocity > 0) {
-                        context.addScoreboardEvent(
+                        context.readScoreboard.add(
                           DecreaseScoreEvent(playerId: player.playerId),
                         );
                       }

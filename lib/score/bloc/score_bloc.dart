@@ -16,51 +16,19 @@ const lowPlayerInsultKey = r'$LOW$';
 
 class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   ScoreboardBloc(this.tts) : super(initialScoreboardState) {
-    on<LoadDefaultInsultsEvent>(_loadDefaultInsults);
-
     on<StartGameEvent>(_startGame);
 
     on<IncreaseScoreEvent>(_increaseScore);
 
     on<DecreaseScoreEvent>(_decreaseScore);
 
-    on<SaveInsultEvent>(_saveInsult);
-
     on<NextTurnEvent>(_changeToNextTurn);
 
     on<ToggleInsultVolumeEvent>(_toggleInsultVolume);
 
     on<ResetGameEvent>(_resetGame);
-
-    on<DeleteInsultEvent>(_deleteInsult);
   }
   final Tts tts;
-
-  void _loadDefaultInsults(
-    LoadDefaultInsultsEvent event,
-    Emitter<ScoreboardState> emit,
-  ) {
-    final userAddedInsultsOnly = state.insults
-        .where((insult) => !event.defaultInsults.contains(insult))
-        .toList();
-
-    final userModifiedDefaultInsults = event.defaultInsults
-        .where((insult) => state.insults.contains(insult))
-        .toList();
-
-    final correctDefaultInsultsToUse = userModifiedDefaultInsults.isNotEmpty
-        ? userModifiedDefaultInsults
-        : event.defaultInsults;
-
-    return emit(
-      state.copyWith(
-        insults: [
-          ...userAddedInsultsOnly,
-          ...correctDefaultInsultsToUse,
-        ],
-      ),
-    );
-  }
 
   void _startGame(StartGameEvent event, Emitter<ScoreboardState> emit) {
     return emit(
@@ -130,14 +98,6 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
           ),
         ),
       );
-    }
-  }
-
-  void _saveInsult(SaveInsultEvent event, Emitter<ScoreboardState> emit) {
-    if (event.insult != null && event.insult!.isNotEmpty) {
-      final newState =
-          state.copyWith(insults: [event.insult!, ...state.insults]);
-      emit(newState);
     }
   }
 
@@ -227,13 +187,6 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         game: newGame,
         insults: state.insults,
       ),
-    );
-  }
-
-  void _deleteInsult(DeleteInsultEvent event, Emitter<ScoreboardState> emit) {
-    final insults = List<String>.from(state.insults)..remove(event.insult);
-    emit(
-      state.copyWith(insults: insults),
     );
   }
 
