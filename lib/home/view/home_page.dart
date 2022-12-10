@@ -203,6 +203,7 @@ class _GameFormField extends StatelessWidget {
         return null;
       },
       keyboardType: keyboardType,
+      textCapitalization: TextCapitalization.words,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         hintText: hintText,

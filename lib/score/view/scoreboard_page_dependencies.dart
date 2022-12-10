@@ -32,8 +32,6 @@ class ScoreboardPageDependencies extends InheritedWidget {
 }
 
 mixin NavigationMixin implements ScoreboardPageDependenciesData {
-  // TODO(me): this IS covered in a test but code coverage says it's not. Test = Should launch ExitGameDialog when launchExitGameDialog called
-  // coverage:ignore-start
   @override
   Future<bool?> launchExitGameDialog(
     BuildContext context, {
@@ -50,5 +48,4 @@ mixin NavigationMixin implements ScoreboardPageDependenciesData {
       },
     );
   }
-  // coverage:ignore-end
 }
