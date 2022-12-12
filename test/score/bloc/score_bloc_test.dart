@@ -471,6 +471,33 @@ void main() {
         );
       });
 
+      test(
+          'Should not call tts.speak if areInsultsEnabled is false when NextTurnEvent added',
+          () async {
+        final fakeTts = FakeTts();
+        final bloc = ScoreboardBloc(fakeTts)
+          ..emit(
+            ScoreboardState(
+                Game(
+                  players: [
+                    testPlayer1.copyWith(score: 10),
+                    testPlayer2.copyWith(score: 5),
+                  ],
+                  gamePointParams: _initialPointParams,
+                ),
+                areInsultsEnabled: false),
+          );
+        await tick();
+
+        bloc.add(NextTurnEvent(const ['anything']));
+        await tick();
+
+        expect(
+          fakeTts.fakeTsEvents,
+          isEmpty,
+        );
+      });
+
       test('Should emit gameWinner based on player with winningScore',
           () async {
         final bloc = ScoreboardBloc(FakeTts())

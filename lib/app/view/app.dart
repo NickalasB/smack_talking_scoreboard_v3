@@ -13,6 +13,8 @@ import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 class App extends StatelessWidget {
@@ -40,8 +42,19 @@ class App extends StatelessWidget {
           GlobalMaterialLocalizations.delegate,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        home: const HomePage(),
+        home: const FirstScreen(),
       ),
     );
+  }
+}
+
+class FirstScreen extends StatelessWidget {
+  const FirstScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final isGameInProgress = context.selectScoreboard.state.isGameInProgress;
+
+    return isGameInProgress ? const ScoreboardPage() : const HomePage();
   }
 }

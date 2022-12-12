@@ -10,8 +10,6 @@ part 'app_state.g.dart';
 extension AppContext on BuildContext {
   AppBloc get readApp => read<AppBloc>();
   void addAppEvent(AppEvent event) => readApp.add(event);
-
-  AppBloc get selectApp => BlocProvider.of<AppBloc>(this, listen: true);
 }
 
 @JsonSerializable()
@@ -28,7 +26,6 @@ class AppState extends Equatable {
 
   AppState copyWith({
     List<String>? insults,
-    bool? isGameInProgress,
   }) {
     return AppState(
       insults: insults ?? this.insults,

@@ -119,7 +119,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     }
 
     final insults = List<String>.from(event.insults);
-    if (insults.isNotEmpty) {
+    if (insults.isNotEmpty && state.areInsultsEnabled) {
       final insultWithPlayerNamesInserted = (insults..shuffle())
           .first
           .replaceAll(hiPlayerInsultKey, winningPlayer.playerName)
