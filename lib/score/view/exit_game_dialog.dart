@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smack_talking_scoreboard_v3/app/view/app.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
@@ -29,7 +30,7 @@ class ExitGameDialog extends StatelessWidget {
           key: const Key('exit_game_yes_button'),
           onPressed: () {
             context.addScoreboardEvent(ResetGameEvent(shouldKeepNames: false));
-            Navigator.of(context).pop(true);
+            Navigator.of(context).popAndPushNamed(homeRouteName, result: true);
           },
           label: strings.yes,
         ),

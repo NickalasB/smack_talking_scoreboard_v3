@@ -478,14 +478,15 @@ void main() {
         final bloc = ScoreboardBloc(fakeTts)
           ..emit(
             ScoreboardState(
-                Game(
-                  players: [
-                    testPlayer1.copyWith(score: 10),
-                    testPlayer2.copyWith(score: 5),
-                  ],
-                  gamePointParams: _initialPointParams,
-                ),
-                areInsultsEnabled: false),
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 10),
+                  testPlayer2.copyWith(score: 5),
+                ],
+                gamePointParams: _initialPointParams,
+              ),
+              areInsultsEnabled: false,
+            ),
           );
         await tick();
 

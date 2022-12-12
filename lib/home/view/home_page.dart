@@ -135,7 +135,7 @@ class _StartGameFormState extends State<StartGameForm> {
               label: strings.letsGo,
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  context.readScoreboard.add(
+                  context.addScoreboardEvent(
                     StartGameEvent(
                       player1: Player(
                         playerId: 1,
@@ -153,13 +153,15 @@ class _StartGameFormState extends State<StartGameForm> {
                       ),
                     ),
                   );
-                  navigator.pushReplacement(
-                    MaterialPageRoute<void>(
-                      builder: (context) {
-                        return const ScoreboardPage();
-                      },
-                    ),
-                  );
+                  navigator
+                    ..pop()
+                    ..push(
+                      MaterialPageRoute<void>(
+                        builder: (context) {
+                          return const ScoreboardPage();
+                        },
+                      ),
+                    );
                 }
               },
             )

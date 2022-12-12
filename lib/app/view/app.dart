@@ -17,6 +17,8 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
+const homeRouteName = '/';
+
 class App extends StatelessWidget {
   const App({super.key});
 
