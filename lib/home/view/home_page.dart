@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    context.readApp.add(
+    context.addAppEvent(
       LoadDefaultInsultsEvent(
         defaultInsults: localizedDefaultInsults(
           context,

@@ -1,3 +1,4 @@
+// ignore_for_file:prefer_const_constructors
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
@@ -7,6 +8,15 @@ import '../../flutter_test_config.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
+  group('AppState', () {
+    test('Should have value-type equality', () {
+      final appState1 = AppState(insults: const ['A']);
+
+      expect(appState1, equals(appState1.copyWith()));
+      expect(appState1, isNot(appState1.copyWith(insults: ['B'])));
+    });
+  });
+
   group('LoadDefaultInsultsEvent', () {
     test('should add default insults', () async {
       final bloc = AppBloc()
