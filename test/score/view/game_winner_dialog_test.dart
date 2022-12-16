@@ -1,5 +1,6 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/game_winner_dialog.dart';
@@ -11,6 +12,18 @@ import 'scoreboard_page_objects.dart';
 
 void main() {
   group('GameWinnerDialogTest', () {
+    testGoldens(
+      'Should look right',
+      appHarness((given, when, then) async {
+        await given.pumpWidget(GameWinnerDialog(testPlayer1));
+
+        await then.multiScreenGoldensMatch(
+          'game_winner_dialog',
+          devices: [Device.phone],
+        );
+      }),
+    );
+
     testWidgets(
       'Should add ResetGameEvent, keep names and pop when yes button pressed',
       appHarness((given, when, then) async {

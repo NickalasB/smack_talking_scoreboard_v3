@@ -235,30 +235,6 @@ void main() {
     );
   });
 
-  group('GameWinnerDialogTest', () {
-    testGoldens(
-      'Should launch GameWinnerDialog when pressing change turn button when a user has won the game',
-      appHarness((given, when, then) async {
-        await given.pumpWidgetWithState(
-          const ScoreboardView(),
-          scoreboardState: initialScoreboardState.copyWith(
-            game: initialScoreboardState.game.copyWith(gameWinner: testPlayer1),
-          ),
-        );
-
-        await when.userTaps(scoreboardPage.changeTurnButton);
-        await when.pump();
-
-        then.findsWidget(scoreboardPage.gameWinnerDialog);
-
-        await then.multiScreenGoldensMatch(
-          'game_winner_dialog',
-          devices: [Device.phone],
-        );
-      }),
-    );
-  });
-
   group('Settings Button', () {
     testWidgets(
       'Should launch Settings Bottom sheet when clicking on settings button',
