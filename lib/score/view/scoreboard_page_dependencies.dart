@@ -3,10 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/exit_game_dialog.dart';
 
+import 'game_winner_dialog.dart';
+import 'models/player.dart';
+
 //ignore:one_member_abstracts
 abstract class ScoreboardPageDependenciesData {
   Future<bool?> launchExitGameDialog(
     BuildContext context, {
+    required ScoreboardBloc scoreboardBloc,
+  });
+
+  Future<void> launchGameWinnerDialog(
+    BuildContext context,
+    Player winningPlayer, {
     required ScoreboardBloc scoreboardBloc,
   });
 }
@@ -51,4 +60,22 @@ mixin NavigationMixin implements ScoreboardPageDependenciesData {
     );
   }
 // coverage:ignore-end
+
+  @override
+  Future<void> launchGameWinnerDialog(
+    BuildContext context,
+    Player winningPlayer, {
+    required ScoreboardBloc scoreboardBloc,
+  }) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return BlocProvider.value(
+          value: scoreboardBloc,
+          child: GameWinnerDialog(winningPlayer),
+        );
+      },
+    );
+  }
 }

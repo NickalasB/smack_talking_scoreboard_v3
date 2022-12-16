@@ -46,18 +46,6 @@ class ScoreboardView extends StatelessWidget {
         ? strings.playerNumber(round.roundWinner!.playerId)
         : '';
 
-    final gameWinner = context.selectScoreboard.state.game.gameWinner;
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      if (gameWinner != null) {
-        await _launchGameWinnerDialog(
-          context,
-          gameWinner,
-          scoreboardBloc: context.readScoreboard,
-        );
-      }
-    });
-
     return WillPopScope(
       onWillPop: () async {
         final shouldExitGame = await ScoreboardPageDependencies.of(context)

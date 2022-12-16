@@ -410,6 +410,37 @@ void main() {
           ..findsWidget(find.text('Round Winner: Player 2'));
       }),
     );
+
+    testWidgets(
+      'Should call launchGameWinnerDialog when game has winner',
+      appHarness((given, when, then) async {
+        final gameWithoutWinner = Game(
+          players: [testPlayer1, testPlayer2],
+          gamePointParams: initialScoreboardState.game.gamePointParams,
+        );
+        await given.pumpWidgetWithDependencies(
+          const ScoreboardView(),
+        );
+
+        await given.scoreBoardState(
+          initialScoreboardState.copyWith(game: gameWithoutWinner),
+        );
+
+        expect(then.harness.launchGameWinnerDialogCompleters, isEmpty);
+
+        when.harness.scoreBloc.emit(
+          initialScoreboardState.copyWith(
+            game: gameWithoutWinner.copyWith(gameWinner: testPlayer2),
+          ),
+        );
+
+        await when.userTaps(scoreboardPage.changeTurnButton);
+        await when.pumpAndSettle();
+        when.launchGameWinnerDialogCompletes(withPlayer: testPlayer2);
+
+        expect(then.harness.launchGameWinnerDialogCompleters, isNotEmpty);
+      }),
+    );
   });
 }
 
