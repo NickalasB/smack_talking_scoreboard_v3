@@ -1,11 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:given_when_then/given_when_then.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/exit_game_dialog.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/game_winner_dialog.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page_dependencies.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
 import '../../harness.dart';
+import '../../helpers/pump_material_widget.dart';
 import '../../helpers/test_helpers.dart';
 import 'scoreboard_page_objects.dart';
 
@@ -35,20 +45,44 @@ void main() {
     }),
   );
 
-  testWidgets(
-    'Should launch ExitGameDialog when launchExitGameDialog called',
-    appHarness((given, when, then) async {
-      await given.pumpWidget(
-        const _TestScoreboardDependencies(),
-      );
+  group('NavigationMixin', () {
+    testWidgets(
+      'Should launch ExitGameDialog when device back button pressed from ScoreboardView',
+      integrationHarness((given, when, then) async {
+        await given.pumpWidgetWithRealDependencies(
+          const ScoreboardView(),
+        );
 
-      await when.userTaps(find.byType(PrimaryButton));
-      await tick();
-      await when.pumpAndSettle();
+        unawaited(when.deviceBackButtonPressedResult());
 
-      then.findsWidget(exitGameDialogPage);
-    }),
-  );
+        await when.tester.pump();
+        expect(find.byType(ExitGameDialog), findsOneWidget);
+      }),
+    );
+
+    testWidgets(
+      'Should launch GameWinnerDialog when pressing ChangeTurn Button if game has winner',
+      integrationHarness((given, when, then) async {
+        await tick();
+        await given.pumpWidgetWithRealDependencies(
+          const ScoreboardView(),
+        );
+
+        given.harness.scoreBloc.emit(
+          initialScoreboardState.copyWith(
+            game: initialScoreboardState.game.copyWith(
+              gameWinner: testPlayer1,
+            ),
+          ),
+        );
+
+        await when.tester.tap(scoreboardPage.changeTurnButton);
+        await when.tester.pumpAndSettle();
+
+        expect(find.byType(GameWinnerDialog), findsOneWidget);
+      }),
+    );
+  });
 }
 
 extension on WidgetTestGiven<AppHarness> {
@@ -83,5 +117,49 @@ class _TestScoreboardDependencies extends StatelessWidget with NavigationMixin {
         ),
       ),
     );
+  }
+}
+
+Future<void> Function(WidgetTester) integrationHarness(
+  WidgetTestHarnessCallback<IntegrationHarness> callback,
+) {
+  return (tester) =>
+      givenWhenThenWidgetTest(IntegrationHarness(tester), callback);
+}
+
+class IntegrationHarness extends WidgetTestHarness with NavigationMixin {
+  IntegrationHarness(super.tester);
+  FakeScoreBloc scoreBloc = FakeScoreBloc(initialScoreboardState);
+  FakeAppBloc appBloc = FakeAppBloc(const AppState());
+}
+
+extension IntegrationGiven on WidgetTestGiven<IntegrationHarness> {
+  Future<void> pumpWidgetWithRealDependencies(Widget child) async {
+    await harness.tester.pumpMaterialWidget(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
+          BlocProvider<AppBloc>(create: (context) => harness.appBloc),
+        ],
+        child: Builder(
+          builder: (context) {
+            return ScoreboardPageDependencies(
+              data: harness,
+              child: child,
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+extension IntegrationHarnessWhen on WidgetTestWhen<IntegrationHarness> {
+  Future<dynamic> deviceBackButtonPressedResult() async {
+    final dynamic widgetsAppState =
+        harness.tester.state(find.byType(WidgetsApp));
+
+    // ignore: avoid_dynamic_calls
+    return widgetsAppState.didPopRoute();
   }
 }

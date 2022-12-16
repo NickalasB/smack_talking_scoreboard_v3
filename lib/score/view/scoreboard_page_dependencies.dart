@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/exit_game_dialog.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/game_winner_dialog.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 
-import 'game_winner_dialog.dart';
-import 'models/player.dart';
-
-//ignore:one_member_abstracts
 abstract class ScoreboardPageDependenciesData {
   Future<bool?> launchExitGameDialog(
     BuildContext context, {
@@ -41,8 +39,6 @@ class ScoreboardPageDependencies extends InheritedWidget {
 }
 
 mixin NavigationMixin implements ScoreboardPageDependenciesData {
-  // TODO(me): this IS covered in a test but code coverage says it's not. Test = Should launch ExitGameDialog when launchExitGameDialog called
-  // coverage:ignore-start
   @override
   Future<bool?> launchExitGameDialog(
     BuildContext context, {
@@ -59,7 +55,6 @@ mixin NavigationMixin implements ScoreboardPageDependenciesData {
       },
     );
   }
-// coverage:ignore-end
 
   @override
   Future<void> launchGameWinnerDialog(

@@ -14,7 +14,6 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/game_winner_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/reset_game_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page_dependencies.dart';
@@ -103,23 +102,6 @@ class ScoreboardView extends StatelessWidget {
       ),
     );
   }
-}
-
-Future<void> _launchGameWinnerDialog(
-  BuildContext context,
-  Player winningPlayer, {
-  required ScoreboardBloc scoreboardBloc,
-}) async {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false,
-    builder: (context) {
-      return BlocProvider.value(
-        value: scoreboardBloc,
-        child: GameWinnerDialog(winningPlayer),
-      );
-    },
-  );
 }
 
 class PlayerScore extends StatelessWidget {

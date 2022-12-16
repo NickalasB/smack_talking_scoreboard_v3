@@ -5,7 +5,7 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page_dependencies.dart';
 
-mixin FakeScoreboardDependenciesData implements ScoreboardPageDependenciesData {
+mixin FakeScoreboardDependenciesData implements NavigationMixin {
   final exitGameCompleters = <Completer<bool>>[];
   final launchGameWinnerDialogCompleters = <Completer<Player>>[];
 

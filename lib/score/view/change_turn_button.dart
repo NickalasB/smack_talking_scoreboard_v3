@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/score.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/circular_button.dart';
-
-import '../bloc/scoreboard_events.dart';
 
 class ChangeTurnButton extends StatefulWidget {
   const ChangeTurnButton({
