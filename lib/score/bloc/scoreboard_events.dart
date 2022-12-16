@@ -4,17 +4,6 @@ import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 
 abstract class ScoreboardEvent extends Equatable {}
 
-class LoadDefaultInsultsEvent extends ScoreboardEvent {
-  LoadDefaultInsultsEvent({
-    required this.defaultInsults,
-  });
-
-  final List<String> defaultInsults;
-
-  @override
-  List<Object?> get props => [defaultInsults];
-}
-
 class StartGameEvent extends ScoreboardEvent {
   StartGameEvent({
     required this.player1,
@@ -61,19 +50,13 @@ class DecreaseScoreEvent extends ScoreboardEvent {
   List<Object?> get props => [playerId];
 }
 
-class SaveInsultEvent extends ScoreboardEvent {
-  SaveInsultEvent(this.insult);
-  final String? insult;
-
-  @override
-  List<Object?> get props => [insult];
-}
-
 class NextTurnEvent extends ScoreboardEvent {
-  NextTurnEvent();
+  NextTurnEvent(this.insults);
+
+  final List<String> insults;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [insults];
 }
 
 class ResetGameEvent extends ScoreboardEvent {
@@ -82,14 +65,6 @@ class ResetGameEvent extends ScoreboardEvent {
 
   @override
   List<Object?> get props => [shouldKeepNames];
-}
-
-class DeleteInsultEvent extends ScoreboardEvent {
-  DeleteInsultEvent(this.insult);
-
-  final String insult;
-  @override
-  List<Object?> get props => [insult];
 }
 
 class ToggleInsultVolumeEvent extends ScoreboardEvent {

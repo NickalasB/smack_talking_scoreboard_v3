@@ -16,55 +16,24 @@ const lowPlayerInsultKey = r'$LOW$';
 
 class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   ScoreboardBloc(this.tts) : super(initialScoreboardState) {
-    on<LoadDefaultInsultsEvent>(_loadDefaultInsults);
-
     on<StartGameEvent>(_startGame);
 
     on<IncreaseScoreEvent>(_increaseScore);
 
     on<DecreaseScoreEvent>(_decreaseScore);
 
-    on<SaveInsultEvent>(_saveInsult);
-
     on<NextTurnEvent>(_changeToNextTurn);
 
     on<ToggleInsultVolumeEvent>(_toggleInsultVolume);
 
     on<ResetGameEvent>(_resetGame);
-
-    on<DeleteInsultEvent>(_deleteInsult);
   }
   final Tts tts;
-
-  void _loadDefaultInsults(
-    LoadDefaultInsultsEvent event,
-    Emitter<ScoreboardState> emit,
-  ) {
-    final userAddedInsultsOnly = state.insults
-        .where((insult) => !event.defaultInsults.contains(insult))
-        .toList();
-
-    final userModifiedDefaultInsults = event.defaultInsults
-        .where((insult) => state.insults.contains(insult))
-        .toList();
-
-    final correctDefaultInsultsToUse = userModifiedDefaultInsults.isNotEmpty
-        ? userModifiedDefaultInsults
-        : event.defaultInsults;
-
-    return emit(
-      state.copyWith(
-        insults: [
-          ...userAddedInsultsOnly,
-          ...correctDefaultInsultsToUse,
-        ],
-      ),
-    );
-  }
 
   void _startGame(StartGameEvent event, Emitter<ScoreboardState> emit) {
     return emit(
       state.copyWith(
+        isGameInProgress: true,
         game: state.game.copyWith(
           players: [event.player1, event.player2],
           gamePointParams: event.gamePointParams,
@@ -133,14 +102,6 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     }
   }
 
-  void _saveInsult(SaveInsultEvent event, Emitter<ScoreboardState> emit) {
-    if (event.insult != null && event.insult!.isNotEmpty) {
-      final newState =
-          state.copyWith(insults: [event.insult!, ...state.insults]);
-      emit(newState);
-    }
-  }
-
   // TODO(me): handle tie game case + hitting button twice emits wrong player
   void _changeToNextTurn(NextTurnEvent event, Emitter<ScoreboardState> emit) {
     final game = state.game;
@@ -157,8 +118,8 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
       playersWithResetRoundScores.add(player.copyWith(roundScore: 0));
     }
 
-    final insults = List<String>.from(state.insults);
-    if (insults.isNotEmpty) {
+    final insults = List<String>.from(event.insults);
+    if (insults.isNotEmpty && state.areInsultsEnabled) {
       final insultWithPlayerNamesInserted = (insults..shuffle())
           .first
           .replaceAll(hiPlayerInsultKey, winningPlayer.playerName)
@@ -193,7 +154,13 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     ToggleInsultVolumeEvent event,
     Emitter<ScoreboardState> emit,
   ) {
-    final newAreInsultsEnabled = !state.areInsultsEnabled;
+    final bool newAreInsultsEnabled;
+    if (state.areInsultsEnabled) {
+      newAreInsultsEnabled = false;
+    } else {
+      newAreInsultsEnabled = true;
+    }
+
     tts.setVolume(newAreInsultsEnabled ? 1 : 0);
     emit(
       state.copyWith(
@@ -224,16 +191,9 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     emit(
       state.copyWith(
+        isGameInProgress: event.shouldKeepNames,
         game: newGame,
-        insults: state.insults,
       ),
-    );
-  }
-
-  void _deleteInsult(DeleteInsultEvent event, Emitter<ScoreboardState> emit) {
-    final insults = List<String>.from(state.insults)..remove(event.insult);
-    emit(
-      state.copyWith(insults: insults),
     );
   }
 

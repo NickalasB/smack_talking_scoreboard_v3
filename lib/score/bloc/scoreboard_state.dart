@@ -24,8 +24,8 @@ extension ScoreboardContext on BuildContext {
 class ScoreboardState extends Equatable {
   const ScoreboardState(
     this.game, {
-    this.insults = const [],
     this.areInsultsEnabled = true,
+    this.isGameInProgress = false,
   });
 
   factory ScoreboardState.fromJson(Map<String, dynamic> json) {
@@ -36,22 +36,22 @@ class ScoreboardState extends Equatable {
 
   ScoreboardState copyWith({
     Game? game,
-    List<String>? insults,
     bool? areInsultsEnabled,
+    bool? isGameInProgress,
   }) {
     return ScoreboardState(
       game ?? this.game,
-      insults: insults ?? this.insults,
       areInsultsEnabled: areInsultsEnabled ?? this.areInsultsEnabled,
+      isGameInProgress: isGameInProgress ?? this.isGameInProgress,
     );
   }
 
   final Game game;
-  final List<String> insults;
   final bool areInsultsEnabled;
+  final bool isGameInProgress;
 
   @override
-  List<Object?> get props => [game, insults, areInsultsEnabled];
+  List<Object?> get props => [game, areInsultsEnabled, isGameInProgress];
 }
 
 ScoreboardState get initialScoreboardState => const ScoreboardState(

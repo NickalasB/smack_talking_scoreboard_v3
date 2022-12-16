@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
-import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/circular_button.dart';
 
@@ -10,7 +10,7 @@ class SettingsButton extends StatelessWidget {
     this.bloc, {
     super.key,
   });
-  final ScoreboardBloc bloc;
+  final AppBloc bloc;
 
   @override
   Widget build(BuildContext context) {

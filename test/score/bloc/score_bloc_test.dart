@@ -36,126 +36,12 @@ void main() {
           ],
           gamePointParams: _initialPointParams,
         ),
-        insults: const [],
       );
 
       expect(testStorage.readForKeyCalls, hasLength(1));
       expect(testStorage.writeForKeyCalls, hasLength(1));
 
       expectStateAndHydratedState(bloc, equals(initialState));
-    });
-
-    group('LoadDefaultInsultsEvent', () {
-      test('should add default insults', () async {
-        final bloc = ScoreboardBloc(FakeTts())
-          ..add(
-            LoadDefaultInsultsEvent(
-              defaultInsults: const ['default1', 'default2'],
-            ),
-          );
-        await tick();
-
-        expectStateAndHydratedState(
-          bloc,
-          equals(
-            initialScoreboardState.copyWith(
-              insults: const ['default1', 'default2'],
-            ),
-          ),
-        );
-      });
-
-      test('should include user saved insults', () async {
-        final bloc = ScoreboardBloc(FakeTts())
-          ..add(
-            SaveInsultEvent('userSavedInsult'),
-          );
-        await tick();
-
-        bloc.add(
-          LoadDefaultInsultsEvent(
-            defaultInsults: const ['default1', 'default2'],
-          ),
-        );
-        await tick();
-
-        expectStateAndHydratedState(
-          bloc,
-          equals(
-            initialScoreboardState.copyWith(
-              insults: const ['userSavedInsult', 'default1', 'default2'],
-            ),
-          ),
-        );
-      });
-
-      test(
-          'should only one include one instance of default insults plus user saved insults when added more than once',
-          () async {
-        final bloc = ScoreboardBloc(FakeTts())
-          ..add(
-            SaveInsultEvent('userSavedInsult'),
-          );
-        await tick();
-
-        bloc.add(
-          LoadDefaultInsultsEvent(
-            defaultInsults: const ['default1', 'default2'],
-          ),
-        );
-        await tick();
-
-        bloc.add(ResetGameEvent(shouldKeepNames: false));
-        await tick();
-
-        bloc.add(
-          LoadDefaultInsultsEvent(
-            defaultInsults: const ['default1', 'default2'],
-          ),
-        );
-        await tick();
-
-        expectStateAndHydratedState(
-          bloc,
-          equals(
-            initialScoreboardState.copyWith(
-              insults: const ['userSavedInsult', 'default1', 'default2'],
-            ),
-          ),
-        );
-      });
-
-      test(
-          'should allow deleting of default insults only load modified default insults',
-          () async {
-        final bloc = ScoreboardBloc(FakeTts())
-          ..add(
-            LoadDefaultInsultsEvent(
-              defaultInsults: const ['default1', 'default2'],
-            ),
-          );
-        await tick();
-
-        bloc.add(
-          DeleteInsultEvent('default1'),
-        );
-        await tick();
-
-        bloc.add(
-          LoadDefaultInsultsEvent(
-            defaultInsults: const ['default1', 'default2'],
-          ),
-        );
-
-        expectStateAndHydratedState(
-          bloc,
-          equals(
-            initialScoreboardState.copyWith(
-              insults: const ['default2'],
-            ),
-          ),
-        );
-      });
     });
 
     group('StartGameEvent', () {
@@ -179,6 +65,7 @@ void main() {
           bloc,
           equals(
             initialScoreboardState.copyWith(
+              isGameInProgress: true,
               game: initialScoreboardState.game.copyWith(
                 players: [
                   Player(playerId: 111, playerName: 'Foo'),
@@ -268,6 +155,7 @@ void main() {
           bloc,
           equals(
             initialScoreboardState.copyWith(
+              isGameInProgress: true,
               game: initialScoreboardState.game.copyWith(
                 players: [
                   testPlayer1.copyWith(score: 100, roundScore: 100),
@@ -363,6 +251,7 @@ void main() {
                   pointsPerScore: 500,
                 ),
               ),
+              isGameInProgress: true,
             ),
           ),
         );
@@ -415,86 +304,6 @@ void main() {
       });
     });
 
-    group('SaveInsultEvent', () {
-      test(
-          'should emit state with new insult when SaveInsultEvent added with valid text',
-          () async {
-        final bloc = ScoreboardBloc(FakeTts());
-        await tick();
-
-        bloc.add(SaveInsultEvent('be better'));
-        await tick();
-
-        final updatedState = ScoreboardState(
-          Game(
-            players: [
-              testPlayer1.copyWith(score: 0),
-              testPlayer2.copyWith(score: 0),
-            ],
-            gamePointParams: _initialPointParams,
-          ),
-          insults: const ['be better'],
-        );
-
-        await tick();
-
-        expectStateAndHydratedState(bloc, equals(updatedState));
-      });
-
-      test(
-          'should NOT emit state with new insult when SaveInsultEvent added with empty or null text',
-          () async {
-        final bloc = ScoreboardBloc(FakeTts());
-        await tick();
-
-        bloc.add(SaveInsultEvent(''));
-        await tick();
-        expectStateAndHydratedState(
-          bloc,
-          equals(initialScoreboardState),
-        );
-
-        bloc.add(SaveInsultEvent(null));
-        await tick();
-
-        expectStateAndHydratedState(
-          bloc,
-          equals(initialScoreboardState),
-        );
-      });
-
-      test(
-          'should emit proper state with insults and scores when both are update',
-          () async {
-        final bloc = ScoreboardBloc(FakeTts());
-        await tick();
-
-        bloc
-          ..add(SaveInsultEvent('be better'))
-          ..add(IncreaseScoreEvent(playerId: 1));
-        await tick();
-        await tick();
-
-        final updatedState = ScoreboardState(
-          Game(
-            players: [
-              testPlayer1.copyWith(score: 1, roundScore: 1),
-              testPlayer2.copyWith(score: 0, roundScore: 0),
-            ],
-            gamePointParams: _initialPointParams,
-          ),
-          insults: const ['be better'],
-        );
-
-        await tick();
-
-        expectStateAndHydratedState(
-          bloc,
-          updatedState,
-        );
-      });
-    });
-
     group('NextTurnEvent', () {
       test(
           'Should emit roundWinner based on player with highest round points, not total score',
@@ -530,7 +339,7 @@ void main() {
           ],
         );
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const ['any insult']));
         await tick();
         await tick();
 
@@ -593,7 +402,7 @@ void main() {
           ],
         );
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const ['any insult']));
         await tick();
         await tick();
 
@@ -620,12 +429,13 @@ void main() {
                 ],
                 gamePointParams: _initialPointParams,
               ),
-              insults: const [r'$HI$ you are good. $LOW$ you are bad.'],
             ),
           );
         await tick();
 
-        bloc.add(NextTurnEvent());
+        bloc.add(
+          NextTurnEvent(const [r'$HI$ you are good. $LOW$ you are bad.']),
+        );
         await tick();
 
         expect(
@@ -648,12 +458,39 @@ void main() {
                 ],
                 gamePointParams: _initialPointParams,
               ),
-              insults: const [],
             ),
           );
         await tick();
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const <String>[]));
+        await tick();
+
+        expect(
+          fakeTts.fakeTsEvents,
+          isEmpty,
+        );
+      });
+
+      test(
+          'Should not call tts.speak if areInsultsEnabled is false when NextTurnEvent added',
+          () async {
+        final fakeTts = FakeTts();
+        final bloc = ScoreboardBloc(fakeTts)
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 10),
+                  testPlayer2.copyWith(score: 5),
+                ],
+                gamePointParams: _initialPointParams,
+              ),
+              areInsultsEnabled: false,
+            ),
+          );
+        await tick();
+
+        bloc.add(NextTurnEvent(const ['anything']));
         await tick();
 
         expect(
@@ -681,7 +518,7 @@ void main() {
         bloc.add(IncreaseScoreEvent(playerId: 1));
         await tick();
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const <String>[]));
         await tick();
 
         expectStateAndHydratedState(
@@ -713,13 +550,13 @@ void main() {
         bloc.add(IncreaseScoreEvent(playerId: 2));
         await tick();
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const <String>[]));
         await tick();
 
         bloc.add(IncreaseScoreEvent(playerId: 1));
         await tick();
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const <String>[]));
         await tick();
 
         expectStateAndHydratedState(
@@ -733,7 +570,7 @@ void main() {
         bloc.add(IncreaseScoreEvent(playerId: 2));
         await tick();
 
-        bloc.add(NextTurnEvent());
+        bloc.add(NextTurnEvent(const <String>[]));
         await tick();
 
         expectStateAndHydratedState(
@@ -767,7 +604,7 @@ void main() {
 
     group('ResetGameEvent', () {
       test(
-          'Should rest scores and rounds but keep insults and gamePointParams when ResetGameEvent added',
+          'Should reset scores and rounds but keep gamePointParams when ResetGameEvent added',
           () async {
         final inProgressState = ScoreboardState(
           Game(
@@ -781,7 +618,7 @@ void main() {
               roundCount: 10,
             ),
           ),
-          insults: const ['I should not be deleted when resetting game'],
+          isGameInProgress: true,
         );
 
         final bloc = ScoreboardBloc(FakeTts())..emit(inProgressState);
@@ -797,7 +634,6 @@ void main() {
         expectStateAndHydratedState(
           bloc,
           initialScoreboardState.copyWith(
-            insults: const ['I should not be deleted when resetting game'],
             game: initialScoreboardState.game.copyWith(
               gamePointParams: GamePointParams(
                 winningScore: 100,
@@ -808,7 +644,7 @@ void main() {
       });
 
       test(
-          'Should rest scores and rounds but keep NAMES, insults and gamePointParams when ResetGameEvent added with shouldKeepNames: true',
+          'Should reset scores and rounds but keep NAMES and gamePointParams when ResetGameEvent added with shouldKeepNames: true',
           () async {
         final inProgressState = ScoreboardState(
           Game(
@@ -822,7 +658,6 @@ void main() {
               roundCount: 10,
             ),
           ),
-          insults: const ['I should not be deleted when resetting game'],
         );
 
         final bloc = ScoreboardBloc(FakeTts())..emit(inProgressState);
@@ -838,7 +673,7 @@ void main() {
         expectStateAndHydratedState(
           bloc,
           initialScoreboardState.copyWith(
-            insults: const ['I should not be deleted when resetting game'],
+            isGameInProgress: true,
             game: initialScoreboardState.game.copyWith(
               players: [
                 testPlayer1.copyWith(playerName: 'Nick', score: 0),
@@ -847,35 +682,6 @@ void main() {
               gamePointParams: GamePointParams(
                 winningScore: 100,
               ),
-            ),
-          ),
-        );
-      });
-    });
-
-    group('DeleteInsultEvent', () {
-      test('Should remove insult when DeleteInsultEvent added', () async {
-        final stateWithInsults = ScoreboardState(
-          Game(
-            gamePointParams: _initialPointParams,
-          ),
-          insults: const [
-            'insult1',
-            'insult2',
-          ],
-        );
-
-        final bloc = ScoreboardBloc(FakeTts())..emit(stateWithInsults);
-        await tick();
-
-        bloc.add(DeleteInsultEvent('insult1'));
-        await tick();
-
-        expectStateAndHydratedState(
-          bloc,
-          equals(
-            stateWithInsults.copyWith(
-              insults: const ['insult2'],
             ),
           ),
         );

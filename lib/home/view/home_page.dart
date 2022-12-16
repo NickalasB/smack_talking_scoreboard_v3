@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/default_insult_l10n_retriever.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
@@ -19,7 +21,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    context.addScoreboardEvent(
+    context.addAppEvent(
       LoadDefaultInsultsEvent(
         defaultInsults: localizedDefaultInsults(
           context,
@@ -133,7 +135,7 @@ class _StartGameFormState extends State<StartGameForm> {
               label: strings.letsGo,
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  context.readScoreboard.add(
+                  context.addScoreboardEvent(
                     StartGameEvent(
                       player1: Player(
                         playerId: 1,
@@ -151,13 +153,15 @@ class _StartGameFormState extends State<StartGameForm> {
                       ),
                     ),
                   );
-                  navigator.pushReplacement(
-                    MaterialPageRoute<void>(
-                      builder: (context) {
-                        return const ScoreboardPage();
-                      },
-                    ),
-                  );
+                  navigator
+                    ..pop()
+                    ..push(
+                      MaterialPageRoute<void>(
+                        builder: (context) {
+                          return const ScoreboardPage();
+                        },
+                      ),
+                    );
                 }
               },
             )

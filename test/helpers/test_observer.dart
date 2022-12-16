@@ -9,6 +9,9 @@ typedef OnObservation = void Function(
 
 /// A trivial observer for testing the navigator.
 class TestObserver extends NavigatorObserver {
+  Route<dynamic>? previousRoute;
+  Route<dynamic>? newRoute;
+
   OnObservation? onPushed;
   bool didPushRoute = false;
 
@@ -21,23 +24,35 @@ class TestObserver extends NavigatorObserver {
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    this.previousRoute = previousRoute;
+    newRoute = route;
+
     didPushRoute = true;
     onPushed?.call(route, previousRoute);
   }
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    this.previousRoute = previousRoute;
+    newRoute = route;
+
     didPopRoute = true;
     onPopped?.call(route, previousRoute);
   }
 
   @override
   void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    this.previousRoute = previousRoute;
+    newRoute = route;
+
     onRemoved?.call(route, previousRoute);
   }
 
   @override
   void didReplace({Route<dynamic>? oldRoute, Route<dynamic>? newRoute}) {
+    previousRoute = oldRoute;
+    this.newRoute = newRoute;
+
     onReplaced?.call(newRoute, oldRoute);
   }
 

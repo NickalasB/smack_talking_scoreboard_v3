@@ -7,6 +7,8 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
@@ -274,7 +276,7 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ScoreboardView(),
-          scoreboardState: initialScoreboardState.copyWith(
+          appState: const AppState().copyWith(
             insults: [
               'insult1',
               'insult2',
@@ -289,12 +291,11 @@ void main() {
         await when.userSwipesHorizontally(find.text('insult1'));
         await when.pumpAndSettle();
 
-        expect(
-          then.harness.scoreBloc.addedEvents,
-          [DeleteInsultEvent('insult1')],
-        );
-
-        then.findsNoWidget(find.text('insult1'));
+        then
+          ..addedAppBlocEvents(
+            containsAll([DeleteInsultEvent('insult1')]),
+          )
+          ..findsNoWidget(find.text('insult1'));
       }),
     );
 
@@ -303,7 +304,7 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ScoreboardView(),
-          scoreboardState: initialScoreboardState.copyWith(
+          appState: const AppState().copyWith(
             insults: [
               'insult1',
             ],
@@ -329,7 +330,7 @@ void main() {
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ScoreboardView(),
-          scoreboardState: initialScoreboardState.copyWith(
+          appState: const AppState().copyWith(
             insults: [
               'insult1',
             ],
@@ -363,7 +364,7 @@ void main() {
 
         expect(
           then.harness.scoreBloc.addedEvents,
-          [NextTurnEvent()],
+          [NextTurnEvent(const <String>[])],
         );
       }),
     );

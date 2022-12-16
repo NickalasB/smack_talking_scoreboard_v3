@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:given_when_then/given_when_then.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
@@ -25,14 +28,18 @@ Future<void> Function(WidgetTester) appHarness(
 class AppHarness extends WidgetTestHarness with FakeScoreboardDependenciesData {
   AppHarness(super.tester);
   FakeScoreBloc scoreBloc = FakeScoreBloc(initialScoreboardState);
+  FakeAppBloc appBloc = FakeAppBloc(const AppState());
   TestObserver navigationObserver = TestObserver();
 }
 
 extension AppGiven on WidgetTestGiven<AppHarness> {
   Future<void> pumpWidget(Widget child) async {
     await harness.tester.pumpMaterialWidget(
-      BlocProvider<ScoreboardBloc>(
-        create: (context) => harness.scoreBloc,
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
+          BlocProvider<AppBloc>(create: (context) => harness.appBloc),
+        ],
         child: Builder(
           builder: (context) {
             return child;
@@ -45,8 +52,11 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
 
   Future<void> pumpWidgetWithDependencies(Widget child) async {
     await harness.tester.pumpMaterialWidget(
-      BlocProvider<ScoreboardBloc>(
-        create: (context) => harness.scoreBloc,
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
+          BlocProvider<AppBloc>(create: (context) => harness.appBloc),
+        ],
         child: Builder(
           builder: (context) {
             return ScoreboardPageDependencies(
@@ -61,12 +71,21 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
 
   Future<void> pumpWidgetWithState(
     Widget child, {
-    required ScoreboardState scoreboardState,
+    ScoreboardState? scoreboardState,
+    AppState? appState,
   }) async {
-    harness.scoreBloc = FakeScoreBloc(scoreboardState);
+    if (scoreboardState != null) {
+      harness.scoreBloc = FakeScoreBloc(scoreboardState);
+    }
+    if (appState != null) {
+      harness.appBloc = FakeAppBloc(appState);
+    }
     await harness.tester.pumpMaterialWidget(
-      BlocProvider<ScoreboardBloc>(
-        create: (context) => harness.scoreBloc,
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
+          BlocProvider<AppBloc>(create: (context) => harness.appBloc),
+        ],
         child: Builder(
           builder: (context) {
             return child;
@@ -79,6 +98,11 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
 
   Future<void> scoreBoardState(ScoreboardState state) async {
     harness.scoreBloc.emit(state);
+    await tick();
+  }
+
+  Future<void> appState(AppState state) async {
+    harness.appBloc.emit(state);
     await tick();
   }
 }
@@ -118,6 +142,10 @@ extension AppThen on WidgetTestThen<AppHarness> {
 
   void addedScoreBlocEvents(Matcher matcher) {
     expect(harness.scoreBloc.addedEvents, matcher);
+  }
+
+  void addedAppBlocEvents(Matcher matcher) {
+    expect(harness.appBloc.addedEvents, matcher);
   }
 }
 
@@ -187,4 +215,8 @@ class FakeScoreBloc extends FakeBloc<ScoreboardEvent, ScoreboardState>
 
   @override
   Tts get tts => FakeTts();
+}
+
+class FakeAppBloc extends FakeBloc<AppEvent, AppState> implements AppBloc {
+  FakeAppBloc(super.initialState);
 }

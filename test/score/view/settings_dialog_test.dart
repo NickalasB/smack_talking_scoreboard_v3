@@ -2,7 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
@@ -13,7 +13,7 @@ void main() {
   testWidgets(
     'Should disable Done button when no insults have been added',
     appHarness((given, when, then) async {
-      await given.pumpWidget(SettingsButton(given.harness.scoreBloc));
+      await given.pumpWidget(SettingsButton(given.harness.appBloc));
 
       await when.userTaps(scoreboardPage.settingsButton);
       await when.pumpAndSettle();
@@ -33,7 +33,7 @@ void main() {
   testWidgets(
     'Should add SaveInsultEvent when hitting dialog done button',
     appHarness((given, when, then) async {
-      await given.pumpWidget(SettingsButton(given.harness.scoreBloc));
+      await given.pumpWidget(SettingsButton(given.harness.appBloc));
 
       await when.userTaps(scoreboardPage.settingsButton);
       await when.pumpAndSettle();
@@ -53,9 +53,8 @@ void main() {
 
       await when.idle();
 
-      expect(
-        then.harness.scoreBloc.addedEvents,
-        [SaveInsultEvent(r'$HI$ anything')],
+      then.addedAppBlocEvents(
+        containsAll([SaveInsultEvent(r'$HI$ anything')]),
       );
     }),
   );
@@ -63,7 +62,7 @@ void main() {
   testWidgets(
     'Should save insult in correct order regardless of order of adding text/hi/low',
     appHarness((given, when, then) async {
-      await given.pumpWidget(SettingsButton(given.harness.scoreBloc));
+      await given.pumpWidget(SettingsButton(given.harness.appBloc));
 
       await when.userTaps(scoreboardPage.settingsButton);
       await when.pumpAndSettle();
@@ -112,9 +111,10 @@ void main() {
       await when.userTaps(scoreboardPage.doneButton);
       await when.pumpAndSettle();
 
-      expect(
-        then.harness.scoreBloc.addedEvents,
-        [SaveInsultEvent(r'$HI$ 0 $LOW$ 1 $LOW$ 2 $HI$ 3')],
+      then.addedAppBlocEvents(
+        containsAll(
+          [SaveInsultEvent(r'$HI$ 0 $LOW$ 1 $LOW$ 2 $HI$ 3')],
+        ),
       );
     }),
   );
