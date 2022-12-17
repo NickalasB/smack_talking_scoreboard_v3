@@ -54,10 +54,12 @@ void main() {
         );
 
         unawaited(
-          when.harness.launchExitGameDialog(
-            globalKey.currentContext!,
-            scoreboardBloc: FakeScoreBloc(initialScoreboardState),
-          ),
+          ScoreboardPageDependencies.of(globalKey.currentContext!)!
+              .data
+              .launchExitGameDialog(
+                globalKey.currentContext!,
+                scoreboardBloc: FakeScoreBloc(initialScoreboardState),
+              ),
         );
 
         await when.tester.pump();
@@ -74,11 +76,13 @@ void main() {
         );
 
         unawaited(
-          when.harness.launchGameWinnerDialog(
-            globalKey.currentContext!,
-            testPlayer1,
-            scoreboardBloc: FakeScoreBloc(initialScoreboardState),
-          ),
+          ScoreboardPageDependencies.of(globalKey.currentContext!)!
+              .data
+              .launchGameWinnerDialog(
+                globalKey.currentContext!,
+                testPlayer1,
+                scoreboardBloc: FakeScoreBloc(initialScoreboardState),
+              ),
         );
 
         await when.tester.pump();
