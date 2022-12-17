@@ -14,7 +14,6 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/game_winner_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/reset_game_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page_dependencies.dart';
@@ -45,18 +44,6 @@ class ScoreboardView extends StatelessWidget {
     final roundWinnerText = round.roundWinner != null
         ? strings.playerNumber(round.roundWinner!.playerId)
         : '';
-
-    final gameWinner = context.selectScoreboard.state.game.gameWinner;
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      if (gameWinner != null) {
-        await _launchGameWinnerDialog(
-          context,
-          gameWinner,
-          scoreboardBloc: context.readScoreboard,
-        );
-      }
-    });
 
     return WillPopScope(
       onWillPop: () async {
@@ -91,20 +78,8 @@ class ScoreboardView extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Flexible(
-                      child: SettingsButton(
-                        context.readApp,
-                      ),
-                    ),
-                    Flexible(
-                      child: ChangeTurnButton(
-                        onTap: context.isGameOver
-                            ? null
-                            : () => context.readScoreboard.add(
-                                  NextTurnEvent(context.readApp.state.insults),
-                                ),
-                      ),
-                    ),
+                    Flexible(child: SettingsButton(context.readApp)),
+                    const Flexible(child: ChangeTurnButton()),
                     const Flexible(child: VolumeButton()),
                   ],
                 ),
@@ -115,23 +90,6 @@ class ScoreboardView extends StatelessWidget {
       ),
     );
   }
-}
-
-Future<void> _launchGameWinnerDialog(
-  BuildContext context,
-  Player winningPlayer, {
-  required ScoreboardBloc scoreboardBloc,
-}) async {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false,
-    builder: (context) {
-      return BlocProvider.value(
-        value: scoreboardBloc,
-        child: GameWinnerDialog(winningPlayer),
-      );
-    },
-  );
 }
 
 class PlayerScore extends StatelessWidget {

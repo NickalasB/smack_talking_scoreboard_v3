@@ -5,16 +5,17 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/ui_components/circular_button.dart';
 
 import '../../harness.dart';
 import '../../helpers/test_helpers.dart';
@@ -235,30 +236,6 @@ void main() {
     );
   });
 
-  group('GameWinnerDialogTest', () {
-    testGoldens(
-      'Should launch GameWinnerDialog when pressing change turn button when a user has won the game',
-      appHarness((given, when, then) async {
-        await given.pumpWidgetWithState(
-          const ScoreboardView(),
-          scoreboardState: initialScoreboardState.copyWith(
-            game: initialScoreboardState.game.copyWith(gameWinner: testPlayer1),
-          ),
-        );
-
-        await when.userTaps(scoreboardPage.changeTurnButton);
-        await when.pump();
-
-        then.findsWidget(scoreboardPage.gameWinnerDialog);
-
-        await then.multiScreenGoldensMatch(
-          'game_winner_dialog',
-          devices: [Device.phone],
-        );
-      }),
-    );
-  });
-
   group('Settings Button', () {
     testWidgets(
       'Should launch Settings Bottom sheet when clicking on settings button',
@@ -379,7 +356,10 @@ void main() {
 
         then.findsWidget(
           find.byWidgetPredicate(
-            (widget) => widget is ChangeTurnButton && widget.onTap == null,
+            (widget) =>
+                widget is CircularButton &&
+                widget.key == const Key('change_turn_button') &&
+                widget.onTap == null,
           ),
         );
       }),
@@ -408,6 +388,37 @@ void main() {
         then
           ..findsWidget(find.text('Round: 2'))
           ..findsWidget(find.text('Round Winner: Player 2'));
+      }),
+    );
+
+    testWidgets(
+      'Should call launchGameWinnerDialog when game has winner',
+      appHarness((given, when, then) async {
+        final gameWithoutWinner = Game(
+          players: [testPlayer1, testPlayer2],
+          gamePointParams: initialScoreboardState.game.gamePointParams,
+        );
+        await given.pumpWidgetWithDependencies(
+          const ScoreboardView(),
+        );
+
+        await given.scoreBoardState(
+          initialScoreboardState.copyWith(game: gameWithoutWinner),
+        );
+
+        expect(then.harness.launchGameWinnerDialogCompleters, isEmpty);
+
+        when.harness.scoreBloc.emit(
+          initialScoreboardState.copyWith(
+            game: gameWithoutWinner.copyWith(gameWinner: testPlayer2),
+          ),
+        );
+
+        await when.userTaps(scoreboardPage.changeTurnButton);
+        await when.pumpAndSettle();
+        when.launchGameWinnerDialogCompletes(withPlayer: testPlayer2);
+
+        expect(then.harness.launchGameWinnerDialogCompleters, isNotEmpty);
       }),
     );
   });

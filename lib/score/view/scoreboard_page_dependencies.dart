@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/exit_game_dialog.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/game_winner_dialog.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 
-//ignore:one_member_abstracts
 abstract class ScoreboardPageDependenciesData {
   Future<bool?> launchExitGameDialog(
     BuildContext context, {
+    required ScoreboardBloc scoreboardBloc,
+  });
+
+  Future<void> launchGameWinnerDialog(
+    BuildContext context,
+    Player winningPlayer, {
     required ScoreboardBloc scoreboardBloc,
   });
 }
@@ -32,7 +39,12 @@ class ScoreboardPageDependencies extends InheritedWidget {
 }
 
 mixin NavigationMixin implements ScoreboardPageDependenciesData {
-  // TODO(me): this IS covered in a test but code coverage says it's not. Test = Should launch ExitGameDialog when launchExitGameDialog called
+  ///
+  /// These two functions ARE covered in tests inside scoreboard_page_dependencies_test.dart
+  /// but code-coverage won't pick it up for some reason
+  /// This issue is closed but it seems related https://github.com/flutter/flutter/issues/31856
+  ///
+
   // coverage:ignore-start
   @override
   Future<bool?> launchExitGameDialog(
@@ -46,6 +58,26 @@ mixin NavigationMixin implements ScoreboardPageDependenciesData {
         return BlocProvider.value(
           value: scoreboardBloc,
           child: const ExitGameDialog(),
+        );
+      },
+    );
+  }
+  // coverage:ignore-end
+
+  // coverage:ignore-start
+  @override
+  Future<void> launchGameWinnerDialog(
+    BuildContext context,
+    Player winningPlayer, {
+    required ScoreboardBloc scoreboardBloc,
+  }) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return BlocProvider.value(
+          value: scoreboardBloc,
+          child: GameWinnerDialog(winningPlayer),
         );
       },
     );
