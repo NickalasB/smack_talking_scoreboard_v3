@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:page_object/page_object.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
 import 'package:smack_talking_scoreboard_v3/score/score.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/exit_game_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/game_winner_dialog.dart';
 
@@ -28,7 +27,7 @@ class ScoreBoardPageObject extends PageObject {
   Finder insultTextField({int at = 0}) =>
       find.byKey(Key('insult_text_field_$at'));
 
-  Finder get changeTurnButton => find.byType(ChangeTurnButton);
+  Finder get changeTurnButton => find.byKey(const Key('change_turn_button'));
 
   Finder get resetScoreDialog => find.byKey(const Key('reset_score_dialog'));
 

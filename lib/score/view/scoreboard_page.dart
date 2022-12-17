@@ -78,20 +78,8 @@ class ScoreboardView extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Flexible(
-                      child: SettingsButton(
-                        context.readApp,
-                      ),
-                    ),
-                    Flexible(
-                      child: ChangeTurnButton(
-                        onTap: context.isGameOver
-                            ? null
-                            : () => context.readScoreboard.add(
-                                  NextTurnEvent(context.readApp.state.insults),
-                                ),
-                      ),
-                    ),
+                    Flexible(child: SettingsButton(context.readApp)),
+                    const Flexible(child: ChangeTurnButton()),
                     const Flexible(child: VolumeButton()),
                   ],
                 ),

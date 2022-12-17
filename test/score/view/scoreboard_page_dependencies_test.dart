@@ -17,7 +17,6 @@ import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_but
 import '../../harness.dart';
 import '../../helpers/pump_material_widget.dart';
 import '../../helpers/test_helpers.dart';
-import 'scoreboard_page_objects.dart';
 
 void main() {
   testWidgets(
@@ -47,13 +46,19 @@ void main() {
 
   group('NavigationMixin', () {
     testWidgets(
-      'Should launch ExitGameDialog when device back button pressed from ScoreboardView',
+      'Should launch ExitGameDialog when launchExitGameDialog called',
       integrationHarness((given, when, then) async {
+        final globalKey = GlobalKey();
         await given.pumpWidgetWithRealDependencies(
-          const ScoreboardView(),
+          ScoreboardView(key: globalKey),
         );
 
-        unawaited(when.deviceBackButtonPressedResult());
+        unawaited(
+          when.harness.launchExitGameDialog(
+            globalKey.currentContext!,
+            scoreboardBloc: FakeScoreBloc(initialScoreboardState),
+          ),
+        );
 
         await when.tester.pump();
         expect(find.byType(ExitGameDialog), findsOneWidget);
@@ -61,24 +66,22 @@ void main() {
     );
 
     testWidgets(
-      'Should launch GameWinnerDialog when pressing ChangeTurn Button if game has winner',
+      'Should launch GameWinnerDialog when launchGameWinnerDialog called',
       integrationHarness((given, when, then) async {
-        await tick();
+        final globalKey = GlobalKey();
         await given.pumpWidgetWithRealDependencies(
-          const ScoreboardView(),
+          ScoreboardView(key: globalKey),
         );
 
-        given.harness.scoreBloc.emit(
-          initialScoreboardState.copyWith(
-            game: initialScoreboardState.game.copyWith(
-              gameWinner: testPlayer1,
-            ),
+        unawaited(
+          when.harness.launchGameWinnerDialog(
+            globalKey.currentContext!,
+            testPlayer1,
+            scoreboardBloc: FakeScoreBloc(initialScoreboardState),
           ),
         );
 
-        await when.tester.tap(scoreboardPage.changeTurnButton);
-        await when.tester.pumpAndSettle();
-
+        await when.tester.pump();
         expect(find.byType(GameWinnerDialog), findsOneWidget);
       }),
     );

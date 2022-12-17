@@ -5,16 +5,17 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/ui_components/circular_button.dart';
 
 import '../../harness.dart';
 import '../../helpers/test_helpers.dart';
@@ -355,7 +356,10 @@ void main() {
 
         then.findsWidget(
           find.byWidgetPredicate(
-            (widget) => widget is ChangeTurnButton && widget.onTap == null,
+            (widget) =>
+                widget is CircularButton &&
+                widget.key == const Key('change_turn_button') &&
+                widget.onTap == null,
           ),
         );
       }),

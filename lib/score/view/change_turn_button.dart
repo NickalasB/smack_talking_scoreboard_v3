@@ -8,10 +8,7 @@ import 'package:smack_talking_scoreboard_v3/score/view/ui_components/circular_bu
 class ChangeTurnButton extends StatefulWidget {
   const ChangeTurnButton({
     super.key,
-    required this.onTap,
   });
-
-  final VoidCallback? onTap;
 
   @override
   State<ChangeTurnButton> createState() => _ChangeTurnButtonState();
@@ -26,19 +23,21 @@ class _ChangeTurnButtonState extends State<ChangeTurnButton> {
 
   @override
   Widget build(BuildContext context) {
+    final isGameOver = context.isGameOver;
     return CircularButton(
-      onTap: () {
-        context.readScoreboard.add(
-          NextTurnEvent(context.readApp.state.insults),
-        );
+      key: const Key('change_turn_button'),
+      onTap: isGameOver
+          ? null
+          : () {
+              context.readScoreboard.add(
+                NextTurnEvent(context.readApp.state.insults),
+              );
 
-        _checkIfGameHasWinner();
-      },
+              _checkIfGameHasWinner();
+            },
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: widget.onTap != null
-              ? Colors.green
-              : Theme.of(context).disabledColor,
+          color: isGameOver ? Theme.of(context).disabledColor : Colors.green,
           shape: BoxShape.circle,
         ),
         child: const Center(
