@@ -39,6 +39,13 @@ class ScoreboardPageDependencies extends InheritedWidget {
 }
 
 mixin NavigationMixin implements ScoreboardPageDependenciesData {
+  ///
+  /// These two functions ARE covered in tests inside scoreboard_page_dependencies_test.dart
+  /// but code-coverage won't pick it up for some reason
+  /// This issue is closed but it seems related https://github.com/flutter/flutter/issues/31856
+  ///
+
+  // coverage:ignore-start
   @override
   Future<bool?> launchExitGameDialog(
     BuildContext context, {
@@ -55,7 +62,9 @@ mixin NavigationMixin implements ScoreboardPageDependenciesData {
       },
     );
   }
+  // coverage:ignore-start
 
+  // coverage:ignore-start
   @override
   Future<void> launchGameWinnerDialog(
     BuildContext context,
@@ -73,4 +82,5 @@ mixin NavigationMixin implements ScoreboardPageDependenciesData {
       },
     );
   }
+// coverage:ignore-end
 }
