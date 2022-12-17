@@ -62,7 +62,7 @@ mixin NavigationMixin implements ScoreboardPageDependenciesData {
       },
     );
   }
-  // coverage:ignore-start
+  // coverage:ignore-end
 
   // coverage:ignore-start
   @override
