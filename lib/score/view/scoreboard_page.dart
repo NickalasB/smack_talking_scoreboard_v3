@@ -45,6 +45,74 @@ class ScoreboardView extends StatelessWidget {
         ? strings.playerNumber(round.roundWinner!.playerId)
         : '';
 
+    Widget portraitView() {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 8),
+          // TODO(nibradshaw): this is just placeholder UI
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(strings.roundNumber(round.roundCount)),
+              Text(strings.roundWinner(roundWinnerText)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Expanded(child: PlayerScore(player: players.first)),
+          const SizedBox(height: 16),
+          Expanded(child: PlayerScore(player: players[1])),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(child: SettingsButton(context.readApp)),
+              const Flexible(child: ChangeTurnButton()),
+              const Flexible(child: VolumeButton()),
+            ],
+          ),
+        ],
+      );
+    }
+
+    Widget landScapeView() {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 8),
+          // TODO(nibradshaw): this is just placeholder UI
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(strings.roundNumber(round.roundCount)),
+              Text(strings.roundWinner(roundWinnerText)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(child: PlayerScore(player: players.first)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(child: SettingsButton(context.readApp)),
+                      const Flexible(child: ChangeTurnButton()),
+                      const Flexible(child: VolumeButton()),
+                    ],
+                  ),
+                ),
+                Expanded(child: PlayerScore(player: players[1])),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
+      );
+    }
+
     return WillPopScope(
       onWillPop: () async {
         final shouldExitGame = await ScoreboardPageDependencies.of(context)
@@ -59,31 +127,12 @@ class ScoreboardView extends StatelessWidget {
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 8),
-                // TODO(nibradshaw): this is just placeholder UI
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(strings.roundNumber(round.roundCount)),
-                    Text(strings.roundWinner(roundWinnerText)),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Expanded(child: PlayerScore(player: players.first)),
-                const SizedBox(height: 16),
-                Expanded(child: PlayerScore(player: players[1])),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(child: SettingsButton(context.readApp)),
-                    const Flexible(child: ChangeTurnButton()),
-                    const Flexible(child: VolumeButton()),
-                  ],
-                ),
-              ],
+            child: OrientationBuilder(
+              builder: (context, orientation) {
+                return orientation == Orientation.landscape
+                    ? landScapeView()
+                    : portraitView();
+              },
             ),
           ),
         ),
