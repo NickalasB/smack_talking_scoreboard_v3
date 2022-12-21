@@ -13,14 +13,9 @@ const defaultHiLowText = 'HI/LOW';
 const defaultHiText = 'HI';
 const defaultLowText = 'LOW';
 
-class SettingsDialog extends StatefulWidget {
-  const SettingsDialog({super.key});
+class AddInsultsDialog extends StatelessWidget {
+  const AddInsultsDialog({super.key});
 
-  @override
-  State<SettingsDialog> createState() => _SettingsDialogState();
-}
-
-class _SettingsDialogState extends State<SettingsDialog> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -37,6 +32,33 @@ class _SettingsDialogState extends State<SettingsDialog> {
             ),
             Expanded(
               child: BottomSheetContent(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ManageInsultsDialog extends StatelessWidget {
+  const ManageInsultsDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: SizedBox(
+        height: 500,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: const [
+            BottomSheetHeader(
+              key: Key('mange_insults_bottom_sheet'),
+            ),
+            Expanded(
+              child: DismissibleInsultList(),
             ),
           ],
         ),
@@ -142,10 +164,6 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                   label: defaultLowText,
                 ),
               ],
-            ),
-            const Divider(thickness: 2),
-            const Expanded(
-              child: DismissibleInsultList(),
             ),
             const Divider(thickness: 2),
             Padding(
