@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:page_object/page_object.dart';
@@ -22,8 +21,12 @@ class ScoreBoardPageObject extends PageObject {
 
   Finder get volume => find.byKey(const Key('volume_button'));
 
-  Finder get settingsBottomSheet =>
-      find.byKey(const Key('settings_bottom_sheet'));
+  // TODO(nibradshaw): delete these as they now belong to HomePage
+  Finder get addInsultsBottomSheet =>
+      find.byKey(const Key('add_insults_bottom_sheet'));
+
+  Finder get manageInsultsBottomSheet =>
+      find.byKey(const Key('mange_insults_bottom_sheet'));
 
   Finder insultTextField({int at = 0}) =>
       find.byKey(Key('insult_text_field_$at'));
@@ -55,6 +58,12 @@ class HomePageObjects extends PageObject {
   Finder menuItem({required String label}) => find.byWidgetPredicate(
         (widget) => widget is PopupMenuItem<String> && widget.value == label,
       );
+
+  Finder get addInsultsBottomSheet =>
+      find.byKey(const Key('add_insults_bottom_sheet'));
+
+  Finder get manageInsultsBottomSheet =>
+      find.byKey(const Key('mange_insults_bottom_sheet'));
 
   Finder get getStartedButton => find.byKey(const Key('get_started_button'));
 

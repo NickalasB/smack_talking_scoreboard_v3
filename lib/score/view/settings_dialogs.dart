@@ -13,8 +13,8 @@ const defaultHiLowText = 'HI/LOW';
 const defaultHiText = 'HI';
 const defaultLowText = 'LOW';
 
-class AddInsultsDialog extends StatelessWidget {
-  const AddInsultsDialog({super.key});
+class AddInsultsBottomSheet extends StatelessWidget {
+  const AddInsultsBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class AddInsultsDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: const [
             BottomSheetHeader(
-              key: Key('settings_bottom_sheet'),
+              key: Key('add_insults_bottom_sheet'),
             ),
             Expanded(
               child: BottomSheetContent(),

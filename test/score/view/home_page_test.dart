@@ -23,20 +23,52 @@ void main() {
       }),
     );
 
-    testWidgets(
-      'Should launch Settings PopUp when hitting AppPopupMenuButton',
-      appHarness((given, when, then) async {
-        await given.pumpWidget(const HomePage());
+    group('Settings Popup', () {
+      testWidgets(
+        'Should launch Settings PopUp when hitting AppPopupMenuButton',
+        appHarness((given, when, then) async {
+          await given.pumpWidget(const HomePage());
 
-        await when.userTaps(homePage.menuButton);
+          await when.userTaps(homePage.menuButton);
 
-        await when.pumpAndSettle();
+          await when.pumpAndSettle();
 
-        then
-          ..findsWidget(homePage.menuItem(label: 'Manage Insults'))
-          ..findsWidget(homePage.menuItem(label: 'Add Insults'));
-      }),
-    );
+          then
+            ..findsWidget(homePage.menuItem(label: 'Manage Insults'))
+            ..findsWidget(homePage.menuItem(label: 'Add Insults'));
+        }),
+      );
+
+      testWidgets(
+        'Should launch AddInsultsBottomSheet when hitting AddInsults menu item',
+        appHarness((given, when, then) async {
+          await given.pumpWidget(const AppPopupMenuButton());
+
+          await when.userTaps(find.byType(AppPopupMenuButton));
+          await when.pumpAndSettle();
+
+          await when.userTaps(homePage.menuItem(label: 'Add Insults'));
+          await when.pumpAndSettle();
+
+          then.findsWidget(homePage.addInsultsBottomSheet);
+        }),
+      );
+
+      testWidgets(
+        'Should launch ManageInsultsBottomSheet when hitting AddInsults menu item',
+        appHarness((given, when, then) async {
+          await given.pumpWidget(const AppPopupMenuButton());
+
+          await when.userTaps(find.byType(AppPopupMenuButton));
+          await when.pumpAndSettle();
+
+          await when.userTaps(homePage.menuItem(label: 'Manage Insults'));
+          await when.pumpAndSettle();
+
+          then.findsWidget(homePage.manageInsultsBottomSheet);
+        }),
+      );
+    });
 
     group('StartGameForm', () {
       testGoldens(

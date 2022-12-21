@@ -27,7 +27,7 @@ class SettingsButton extends StatelessWidget {
                 create: (context) => InsultCreatorBloc(),
               )
             ],
-            child: const AddInsultsDialog(),
+            child: const AddInsultsBottomSheet(),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),

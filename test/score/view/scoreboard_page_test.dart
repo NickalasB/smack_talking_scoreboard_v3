@@ -238,13 +238,13 @@ void main() {
 
   group('Settings Button', () {
     testWidgets(
-      'Should launch Settings Bottom sheet when clicking on settings button',
+      'Should launch AddInsults Bottom sheet when clicking on settings button',
       appHarness((given, when, then) async {
         await given.pumpWidget(const ScoreboardView());
         await when.userTaps(scoreboardPage.settingsButton);
         await when.pumpAndSettle();
 
-        then.findsWidget(scoreboardPage.settingsBottomSheet);
+        then.findsWidget(scoreboardPage.addInsultsBottomSheet);
       }),
     );
 
