@@ -18,6 +18,18 @@
       }
     }
   },
+  "appTitle": "Smack Talking Scoreboard",
+  "@appTitle": {
+    "description": "The title of this app"
+  },
+  "addInsults": "Add Insults",
+  "@addInsults": {
+    "description": "Menu item label for adding additional insults"
+  },
+  "manageInsults": "Manage Insults",
+  "@manageInsults": {
+    "description": "Menu item label for viewing/deleting insults"
+  },
   "addYourOwnSmackTalk": "Add Your Own Smack Talk!",
   "@addYourOwnSmackTalk": {
     "description": "title for settings bottom sheet"
