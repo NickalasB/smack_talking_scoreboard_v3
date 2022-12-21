@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/settings_dialog.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/settings_dialogs.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/circular_button.dart';
 
 class SettingsButton extends StatelessWidget {
@@ -27,7 +27,7 @@ class SettingsButton extends StatelessWidget {
                 create: (context) => InsultCreatorBloc(),
               )
             ],
-            child: const SettingsDialog(),
+            child: const AddInsultsDialog(),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
