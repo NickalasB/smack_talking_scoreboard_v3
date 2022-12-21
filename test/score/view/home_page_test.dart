@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
+import 'package:smack_talking_scoreboard_v3/home/view/start_game_form.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 
@@ -19,6 +20,21 @@ void main() {
         await when.pumpAndSettle();
 
         then.findsWidget(find.byType(StartGameForm));
+      }),
+    );
+
+    testWidgets(
+      'Should launch Settings PopUp when hitting AppPopupMenuButton',
+      appHarness((given, when, then) async {
+        await given.pumpWidget(const HomePage());
+
+        await when.userTaps(homePage.menuButton);
+
+        await when.pumpAndSettle();
+
+        then
+          ..findsWidget(homePage.menuItem(label: 'Manage Insults'))
+          ..findsWidget(homePage.menuItem(label: 'Add Insults'));
       }),
     );
 

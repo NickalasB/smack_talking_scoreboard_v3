@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:page_object/page_object.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
@@ -48,6 +49,12 @@ class ScoreBoardPageObject extends PageObject {
 
 class HomePageObjects extends PageObject {
   HomePageObjects() : super(find.byType(HomePage));
+
+  Finder get menuButton => find.byKey(const Key('menu_button'));
+
+  Finder menuItem({required String label}) => find.byWidgetPredicate(
+        (widget) => widget is PopupMenuItem<String> && widget.value == label,
+      );
 
   Finder get getStartedButton => find.byKey(const Key('get_started_button'));
 
