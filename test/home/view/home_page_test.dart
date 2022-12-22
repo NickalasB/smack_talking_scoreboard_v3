@@ -32,6 +32,27 @@ void main() {
         then.findsWidgets(find.byType(Dismissible), widgetCount: 23);
       }),
     );
+
+    testWidgets(
+      'Should navigate to ScoreboardPage when StartGameForm fully filled out when LetsGoButton tapped',
+      appHarness((given, when, then) async {
+        await given.harness.tester.pumpWidget(const App());
+
+        await when.userTaps(homePage.getStartedButton);
+        await when.pumpAndSettle();
+
+        await when.userTypes('User 1', homePage.player1TextInput);
+        await when.userTypes('User 2', homePage.player2TextInput);
+        await when.userTypes('1', homePage.winningScoreTextInput);
+        await when.userTypes('2', homePage.winByTextInput);
+        await when.userTypes('3', homePage.pointsPerScoreTextInput);
+
+        await when.userTaps(homePage.letsGoButton);
+        await when.pumpAndSettle();
+
+        then.findsWidget(scoreboardPage);
+      }),
+    );
   });
 
   group('HomePage', () {
