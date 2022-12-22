@@ -8,7 +8,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
@@ -17,7 +16,6 @@ import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/reset_game_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page_dependencies.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
 
 class ScoreboardPage extends StatelessWidget with NavigationMixin {
@@ -64,10 +62,9 @@ class ScoreboardView extends StatelessWidget {
           Expanded(child: PlayerScore(player: players[1])),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(child: SettingsButton(context.readApp)),
-              const Flexible(child: ChangeTurnButton()),
-              const Flexible(child: VolumeButton()),
+            children: const [
+              Flexible(child: ChangeTurnButton()),
+              Flexible(child: VolumeButton()),
             ],
           ),
         ],
@@ -97,10 +94,9 @@ class ScoreboardView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(child: SettingsButton(context.readApp)),
-                      const Flexible(child: ChangeTurnButton()),
-                      const Flexible(child: VolumeButton()),
+                    children: const [
+                      Flexible(child: ChangeTurnButton()),
+                      Flexible(child: VolumeButton()),
                     ],
                   ),
                 ),

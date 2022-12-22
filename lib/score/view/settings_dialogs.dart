@@ -112,7 +112,7 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.readApp;
+    final appBloc = context.readApp;
     final l10 = context.l10n;
 
     return Builder(
@@ -172,7 +172,7 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
                 key: const Key('done_button'),
                 onPressed: isValidInsult
                     ? () {
-                        bloc.add(SaveInsultEvent(constructedInsult));
+                        appBloc.add(SaveInsultEvent(constructedInsult));
                         Navigator.of(context).pop();
                       }
                     : null,

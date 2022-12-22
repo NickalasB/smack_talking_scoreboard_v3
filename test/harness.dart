@@ -42,6 +42,9 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
         providers: [
           BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
           BlocProvider<AppBloc>(create: (context) => harness.appBloc),
+          BlocProvider<InsultCreatorBloc>(
+            create: (context) => harness.insultCreatorBloc,
+          ),
         ],
         child: Builder(
           builder: (context) {
@@ -156,6 +159,10 @@ extension AppThen on WidgetTestThen<AppHarness> {
 
   void addedAppBlocEvents(Matcher matcher) {
     expect(harness.appBloc.addedEvents, matcher);
+  }
+
+  void addedInsultCreatorEvents(Matcher matcher) {
+    expect(harness.insultCreatorBloc.addedEvents, matcher);
   }
 }
 

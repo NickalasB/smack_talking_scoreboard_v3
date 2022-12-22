@@ -3,7 +3,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
+import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/settings_dialogs.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
 import '../../harness.dart';
@@ -13,10 +14,8 @@ void main() {
   testWidgets(
     'Should disable Done button when no insults have been added',
     appHarness((given, when, then) async {
-      await given.pumpWidget(SettingsButton(given.harness.appBloc));
+      await given.pumpWidget(const AddInsultsBottomSheet());
 
-      await when.userTaps(scoreboardPage.settingsButton);
-      await when.pumpAndSettle();
       await when.pumpAndSettle();
 
       then.findsWidget(
@@ -33,12 +32,13 @@ void main() {
   testWidgets(
     'Should add SaveInsultEvent when hitting dialog done button',
     appHarness((given, when, then) async {
-      await given.pumpWidget(SettingsButton(given.harness.appBloc));
+      await given.pumpWidget(const AppPopupMenuButton());
 
-      await when.userTaps(scoreboardPage.settingsButton);
+      await when.userTaps(find.byType(AppPopupMenuButton));
       await when.pumpAndSettle();
 
-      then.findsWidget(scoreboardPage.addInsultsBottomSheet);
+      await when.userTaps(homePage.menuItem(label: 'Add Insults'));
+      await when.pumpAndSettle();
 
       await when.userTypes('anything', scoreboardPage.insultTextField());
       await when.pumpAndSettle();
@@ -62,9 +62,13 @@ void main() {
   testWidgets(
     'Should save insult in correct order regardless of order of adding text/hi/low',
     appHarness((given, when, then) async {
-      await given.pumpWidget(SettingsButton(given.harness.appBloc));
+      await given.pumpWidget(const AppPopupMenuButton());
+      await when.pumpAndSettle();
 
-      await when.userTaps(scoreboardPage.settingsButton);
+      await when.userTaps(find.byType(AppPopupMenuButton));
+      await when.pumpAndSettle();
+
+      await when.userTaps(homePage.menuItem(label: 'Add Insults'));
       await when.pumpAndSettle();
 
       await when.userTaps(scoreboardPage.addMoreInsultButton);
