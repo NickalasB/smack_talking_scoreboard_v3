@@ -31,7 +31,7 @@ class AddInsultsBottomSheet extends StatelessWidget {
               key: Key('add_insults_bottom_sheet'),
             ),
             Expanded(
-              child: BottomSheetContent(),
+              child: AddInsultsContent(),
             ),
           ],
         ),
@@ -40,8 +40,8 @@ class AddInsultsBottomSheet extends StatelessWidget {
   }
 }
 
-class ManageInsultsDialog extends StatelessWidget {
-  const ManageInsultsDialog({super.key});
+class ManageInsultsBottomSheet extends StatelessWidget {
+  const ManageInsultsBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -91,16 +91,16 @@ class BottomSheetHeader extends StatelessWidget {
   }
 }
 
-class BottomSheetContent extends StatefulWidget {
-  const BottomSheetContent({
+class AddInsultsContent extends StatefulWidget {
+  const AddInsultsContent({
     super.key,
   });
 
   @override
-  State<BottomSheetContent> createState() => _BottomSheetContentState();
+  State<AddInsultsContent> createState() => _AddInsultsContentState();
 }
 
-class _BottomSheetContentState extends State<BottomSheetContent> {
+class _AddInsultsContentState extends State<AddInsultsContent> {
   final Set<PlayerPlusTextInput> inputAndPlayerList = {};
 
   @override

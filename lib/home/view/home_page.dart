@@ -90,7 +90,7 @@ class AppPopupMenuButton extends StatelessWidget {
             value: strings.addInsults,
             child: Text(strings.addInsults),
             onTap: () async {
-              _showSettingsDialog(
+              _showSettingsBottomSheet(
                 context,
                 child: MultiBlocProvider(
                   providers: [
@@ -108,11 +108,11 @@ class AppPopupMenuButton extends StatelessWidget {
           PopupMenuItem<String>(
             value: strings.manageInsults,
             child: Text(strings.manageInsults),
-            onTap: () async => _showSettingsDialog(
+            onTap: () async => _showSettingsBottomSheet(
               context,
               child: BlocProvider.value(
                 value: context.readApp,
-                child: const ManageInsultsDialog(),
+                child: const ManageInsultsBottomSheet(),
               ),
             ),
           )
@@ -122,7 +122,7 @@ class AppPopupMenuButton extends StatelessWidget {
   }
 }
 
-void _showSettingsDialog(
+void _showSettingsBottomSheet(
   BuildContext context, {
   required Widget child,
 }) {

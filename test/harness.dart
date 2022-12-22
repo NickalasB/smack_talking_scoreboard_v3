@@ -6,6 +6,7 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/score.dart';
@@ -27,8 +28,10 @@ Future<void> Function(WidgetTester) appHarness(
 
 class AppHarness extends WidgetTestHarness with FakeScoreboardDependenciesData {
   AppHarness(super.tester);
-  FakeScoreBloc scoreBloc = FakeScoreBloc(initialScoreboardState);
   FakeAppBloc appBloc = FakeAppBloc(const AppState());
+  FakeScoreBloc scoreBloc = FakeScoreBloc(initialScoreboardState);
+  FakeInsultCreatorBloc insultCreatorBloc =
+      FakeInsultCreatorBloc(const InsultCreatorState(''));
   TestObserver navigationObserver = TestObserver();
 }
 
@@ -73,6 +76,7 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
     Widget child, {
     ScoreboardState? scoreboardState,
     AppState? appState,
+    InsultCreatorState? insultCreatorState,
   }) async {
     if (scoreboardState != null) {
       harness.scoreBloc = FakeScoreBloc(scoreboardState);
@@ -80,11 +84,17 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
     if (appState != null) {
       harness.appBloc = FakeAppBloc(appState);
     }
+    if (insultCreatorState != null) {
+      harness.insultCreatorBloc = FakeInsultCreatorBloc(insultCreatorState);
+    }
     await harness.tester.pumpMaterialWidget(
       MultiBlocProvider(
         providers: [
           BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
           BlocProvider<AppBloc>(create: (context) => harness.appBloc),
+          BlocProvider<InsultCreatorBloc>(
+            create: (context) => harness.insultCreatorBloc,
+          ),
         ],
         child: Builder(
           builder: (context) {
@@ -223,4 +233,10 @@ class FakeScoreBloc extends FakeBloc<ScoreboardEvent, ScoreboardState>
 
 class FakeAppBloc extends FakeBloc<AppEvent, AppState> implements AppBloc {
   FakeAppBloc(super.initialState);
+}
+
+class FakeInsultCreatorBloc
+    extends FakeBloc<InsultCreatorEvent, InsultCreatorState>
+    implements InsultCreatorBloc {
+  FakeInsultCreatorBloc(super.initialState);
 }
