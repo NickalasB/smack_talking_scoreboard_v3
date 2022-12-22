@@ -38,7 +38,7 @@ void main() {
       await when.userTaps(scoreboardPage.settingsButton);
       await when.pumpAndSettle();
 
-      then.findsWidget(scoreboardPage.settingsBottomSheet);
+      then.findsWidget(scoreboardPage.addInsultsBottomSheet);
 
       await when.userTypes('anything', scoreboardPage.insultTextField());
       await when.pumpAndSettle();

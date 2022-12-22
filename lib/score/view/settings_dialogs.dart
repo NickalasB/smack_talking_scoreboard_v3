@@ -13,14 +13,9 @@ const defaultHiLowText = 'HI/LOW';
 const defaultHiText = 'HI';
 const defaultLowText = 'LOW';
 
-class SettingsDialog extends StatefulWidget {
-  const SettingsDialog({super.key});
+class AddInsultsBottomSheet extends StatelessWidget {
+  const AddInsultsBottomSheet({super.key});
 
-  @override
-  State<SettingsDialog> createState() => _SettingsDialogState();
-}
-
-class _SettingsDialogState extends State<SettingsDialog> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -33,10 +28,37 @@ class _SettingsDialogState extends State<SettingsDialog> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: const [
             BottomSheetHeader(
-              key: Key('settings_bottom_sheet'),
+              key: Key('add_insults_bottom_sheet'),
             ),
             Expanded(
-              child: BottomSheetContent(),
+              child: AddInsultsContent(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ManageInsultsBottomSheet extends StatelessWidget {
+  const ManageInsultsBottomSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: SizedBox(
+        height: 500,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: const [
+            BottomSheetHeader(
+              key: Key('mange_insults_bottom_sheet'),
+            ),
+            Expanded(
+              child: DismissibleInsultList(),
             ),
           ],
         ),
@@ -69,16 +91,16 @@ class BottomSheetHeader extends StatelessWidget {
   }
 }
 
-class BottomSheetContent extends StatefulWidget {
-  const BottomSheetContent({
+class AddInsultsContent extends StatefulWidget {
+  const AddInsultsContent({
     super.key,
   });
 
   @override
-  State<BottomSheetContent> createState() => _BottomSheetContentState();
+  State<AddInsultsContent> createState() => _AddInsultsContentState();
 }
 
-class _BottomSheetContentState extends State<BottomSheetContent> {
+class _AddInsultsContentState extends State<AddInsultsContent> {
   final Set<PlayerPlusTextInput> inputAndPlayerList = {};
 
   @override
@@ -142,10 +164,6 @@ class _BottomSheetContentState extends State<BottomSheetContent> {
                   label: defaultLowText,
                 ),
               ],
-            ),
-            const Divider(thickness: 2),
-            const Expanded(
-              child: DismissibleInsultList(),
             ),
             const Divider(thickness: 2),
             Padding(
