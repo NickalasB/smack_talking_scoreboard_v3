@@ -162,7 +162,7 @@ class PlayerScore extends StatelessWidget {
         Container(
           constraints: const BoxConstraints(minHeight: 48),
           decoration: BoxDecoration(
-            border: Border.all(),
+            border: Border.all(color: theme.textTheme.bodyMedium!.color!),
           ),
           child: Center(
             child: Text(
@@ -203,11 +203,12 @@ class PlayerScore extends StatelessWidget {
                   },
             child: DecoratedBox(
               decoration: BoxDecoration(
-                border: Border.all(),
+                border: Border.all(color: theme.textTheme.bodyMedium!.color!),
               ),
               child: FittedBox(
                 child: Text(
                   score.toString(),
+                  style: TextStyle(color: theme.primaryColor),
                 ),
               ),
             ),

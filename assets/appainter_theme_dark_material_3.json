@@ -12,8 +12,8 @@
     "colorScheme": {
       "background": "#ff121212",
       "brightness": "dark",
-      "error": "#ffcf6679",
-      "errorContainer": "#ffcf6679",
+      "error": "#E79190",
+      "errorContainer": "#E79190",
       "inversePrimary": "#ff000000",
       "inverseSurface": "#ffffffff",
       "onBackground": "#ffffffff",
@@ -87,7 +87,7 @@
   "colorScheme": {
     "background": "#ff121212",
     "brightness": "dark",
-    "error": "#ffcf6679",
+    "error": "#E79190",
     "errorContainer": "#ffcf6679",
     "inversePrimary": "#ff000000",
     "inverseSurface": "#ffffffff",
@@ -118,7 +118,7 @@
   "dialogBackgroundColor": "#ff424242",
   "disabledColor": "#62ffffff",
   "dividerColor": "#1fffffff",
-  "errorColor": "#ffd32f2f",
+  "errorColor": "#E79190",
   "focusColor": "#1fffffff",
   "highlightColor": "#40cccccc",
   "hintColor": "#99ffffff",
