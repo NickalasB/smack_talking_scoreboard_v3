@@ -20,7 +20,14 @@ import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 const homeRouteName = '/';
 
 class App extends StatelessWidget {
-  const App({super.key});
+  const App({
+    super.key,
+    required this.lightTheme,
+    required this.darkTheme,
+  });
+
+  final ThemeData lightTheme;
+  final ThemeData darkTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +40,8 @@ class App extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          appBarTheme: const AppBarTheme(color: Color(0xFF13B9FF)),
-          colorScheme: ColorScheme.fromSwatch(
-            accentColor: const Color(0xFF13B9FF),
-          ),
-        ),
+        theme: lightTheme,
+        darkTheme: darkTheme,
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,

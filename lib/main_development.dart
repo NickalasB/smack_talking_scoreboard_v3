@@ -9,5 +9,10 @@ import 'package:smack_talking_scoreboard_v3/app/app.dart';
 import 'package:smack_talking_scoreboard_v3/bootstrap.dart';
 
 void main() {
-  bootstrap(() => const App());
+  bootstrap(
+    ({required lightTheme, required darkTheme}) => App(
+      lightTheme: lightTheme,
+      darkTheme: darkTheme,
+    ),
+  );
 }

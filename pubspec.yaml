@@ -23,6 +23,7 @@ dependencies:
   intl: ^0.17.0
   json_annotation: ^4.7.0
   json_serializable: ^6.5.4
+  json_theme: ^4.0.0
   path_provider: ^2.0.11
 
 dev_dependencies:
@@ -35,5 +36,7 @@ dev_dependencies:
   very_good_analysis: ^3.1.0
 
 flutter:
+  assets:
+    - assets/
   uses-material-design: true
   generate: true
