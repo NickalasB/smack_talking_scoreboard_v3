@@ -15,22 +15,16 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return MaterialButton(
-      height: kMinInteractiveDimension,
-      onPressed: onPressed,
-      disabledColor: theme.disabledColor,
-      color: isFilled ? theme.primaryColor : null,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
-        side: BorderSide(
-          color: onPressed != null ? theme.primaryColor : theme.disabledColor,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 124),
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStatePropertyAll(theme.colorScheme.primary),
+          foregroundColor: MaterialStatePropertyAll(theme.colorScheme.surface),
+          textStyle: const MaterialStatePropertyAll(TextStyle(fontSize: 24)),
         ),
-      ),
-      child: Text(
-        label,
-        style: theme.textTheme.titleLarge?.copyWith(
-          color: isFilled ? theme.canvasColor : theme.primaryColor,
-        ),
+        onPressed: onPressed,
+        child: Text(label),
       ),
     );
   }
