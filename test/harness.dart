@@ -147,6 +147,7 @@ extension AppThen on WidgetTestThen<AppHarness> {
       customPump: shouldSkipPumpAndSettle
           ? (_) async {}
           : (tester) async {
+              // This is needed to allow time to switch to dark mode
               await tester.pump(kThemeAnimationDuration);
               await tester.pump(Duration.zero);
             },
