@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/app/view/app_theme.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
@@ -22,12 +23,7 @@ const homeRouteName = '/';
 class App extends StatelessWidget {
   const App({
     super.key,
-    required this.lightTheme,
-    required this.darkTheme,
   });
-
-  final ThemeData lightTheme;
-  final ThemeData darkTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +36,8 @@ class App extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: lightTheme,
-        darkTheme: darkTheme,
+        theme: AppTheme.theme(),
+        darkTheme: AppTheme.theme(brightness: Brightness.dark),
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
