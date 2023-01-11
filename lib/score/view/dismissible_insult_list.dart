@@ -50,9 +50,14 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
                           DeleteInsultEvent(insult),
                         );
                       },
-                      background: deleteBackground(Alignment.centerLeft),
-                      secondaryBackground:
-                          deleteBackground(Alignment.centerRight),
+                      background: deleteBackground(
+                        theme,
+                        Alignment.centerLeft,
+                      ),
+                      secondaryBackground: deleteBackground(
+                        theme,
+                        Alignment.centerRight,
+                      ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: ConstrainedBox(
@@ -84,8 +89,12 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
     );
   }
 
-  Widget deleteBackground(AlignmentGeometry alignmentGeometry) => ColoredBox(
-        color: Colors.red,
+  Widget deleteBackground(
+    ThemeData theme,
+    AlignmentGeometry alignmentGeometry,
+  ) =>
+      ColoredBox(
+        color: theme.errorColor,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Align(
