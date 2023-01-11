@@ -6,15 +6,11 @@
 // https://opensource.org/licenses/MIT.
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:json_theme/json_theme.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AppBlocObserver extends BlocObserver {
@@ -32,9 +28,8 @@ class AppBlocObserver extends BlocObserver {
 }
 
 Future<void> bootstrap(
-    FutureOr<Widget> Function(
-            {required ThemeData lightTheme, required ThemeData darkTheme})
-        builder) async {
+  FutureOr<Widget> builder,
+) async {
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
@@ -50,19 +45,7 @@ Future<void> bootstrap(
         storageDirectory: await getApplicationDocumentsDirectory(),
       );
 
-      final lightThemeString = await rootBundle.loadString(
-        'assets/appainter_theme_material_3.json',
-      );
-      final lightThemeJson = jsonDecode(lightThemeString);
-      final lightTheme = ThemeDecoder.decodeThemeData(lightThemeJson)!;
-
-      final darkThemeString = await rootBundle.loadString(
-        'assets/appainter_theme_dark_material_3.json',
-      );
-      final darkThemeJson = jsonDecode(darkThemeString);
-      final darkTheme = ThemeDecoder.decodeThemeData(darkThemeJson)!;
-
-      runApp(await builder(lightTheme: lightTheme, darkTheme: darkTheme));
+      runApp(await builder);
     },
     (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
   );
