@@ -138,15 +138,26 @@ extension AppThen on WidgetTestThen<AppHarness> {
     return multiScreenGolden(
       tester,
       testName,
-      devices: devices,
-      customPump: shouldSkipPumpAndSettle ? (_) async {} : null,
+      devices: devices ??
+          [
+            Device.phone.dark(),
+            Device.phone,
+            Device.tabletLandscape,
+          ],
+      customPump: shouldSkipPumpAndSettle
+          ? (_) async {}
+          : (tester) async {
+              await tester.pump(kThemeAnimationDuration);
+              await tester.pump(Duration.zero);
+            },
     );
   }
 
-  Future<void> screenMatchesGolden(Finder finder, String name) async {
-    await expectLater(
-      finder,
-      matchesGoldenFile('./goldens/$name.png'),
+  Future<void> screenMatchesGoldenFile(String name, {Finder? finder}) async {
+    await screenMatchesGolden(
+      tester,
+      name,
+      finder: finder,
     );
   }
 
