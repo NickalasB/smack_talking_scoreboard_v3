@@ -36,7 +36,7 @@ class AppHarness extends WidgetTestHarness with FakeScoreboardDependenciesData {
 }
 
 extension AppGiven on WidgetTestGiven<AppHarness> {
-  Future<void> pumpWidget(Widget child) async {
+  Future<void> pumpWidget(Widget child, {Brightness? brightness}) async {
     await harness.tester.pumpMaterialWidget(
       MultiBlocProvider(
         providers: [
@@ -50,6 +50,7 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
         ),
       ),
       navigatorObserver: harness.navigationObserver,
+      brightness: brightness,
     );
   }
 
@@ -77,6 +78,7 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
     ScoreboardState? scoreboardState,
     AppState? appState,
     InsultCreatorState? insultCreatorState,
+    Brightness brightness = Brightness.light,
   }) async {
     if (scoreboardState != null) {
       harness.scoreBloc = FakeScoreBloc(scoreboardState);
@@ -103,6 +105,7 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
         ),
       ),
       navigatorObserver: harness.navigationObserver,
+      brightness: brightness,
     );
   }
 
@@ -154,11 +157,22 @@ extension AppThen on WidgetTestThen<AppHarness> {
     );
   }
 
-  Future<void> screenMatchesGoldenFile(String name, {Finder? finder}) async {
+  Future<void> screenMatchesGoldenFile(
+    String name, {
+    Finder? finder,
+    bool shouldSkipPumpAndSettle = false,
+  }) async {
     await screenMatchesGolden(
       tester,
       name,
       finder: finder,
+      customPump: shouldSkipPumpAndSettle
+          ? (_) async {}
+          : (tester) async {
+              // This is needed to allow time to switch to dark mode
+              await tester.pump(kThemeAnimationDuration);
+              await tester.pump();
+            },
     );
   }
 

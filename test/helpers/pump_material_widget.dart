@@ -15,6 +15,7 @@ extension PumpMaterialWidget on WidgetTester {
   Future<void> pumpMaterialWidget(
     Widget widget, {
     NavigatorObserver? navigatorObserver,
+    Brightness? brightness,
   }) {
     return pumpWidget(
       MaterialApp(
@@ -23,7 +24,8 @@ extension PumpMaterialWidget on WidgetTester {
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
         ],
-        theme: AppTheme.theme(),
+        // it's easier for some goldens to be pumped with dark theme instead of switching
+        theme: AppTheme.theme(brightness: brightness ?? Brightness.light),
         darkTheme: AppTheme.theme(brightness: Brightness.dark),
         supportedLocales: AppLocalizations.supportedLocales,
         home: Material(child: widget),

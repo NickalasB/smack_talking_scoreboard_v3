@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
@@ -35,52 +37,60 @@ void main() {
       }),
     );
 
-    testGoldens(
-      'Should display correct background color and icon when user swipes insult LEFT from Settings BottomSheet',
-      appHarness((given, when, then) async {
-        await given.pumpWidgetWithState(
-          const ManageInsultsBottomSheet(),
-          appState: const AppState().copyWith(
-            insults: [
-              'insult1',
-            ],
-          ),
-        );
-        await when.pumpAndSettle();
+    for (final brightness in Brightness.values) {
+      testGoldens(
+        'Should display correct background color and icon when user swipes insult LEFT from Settings BottomSheet_${brightness.name}',
+        appHarness((given, when, then) async {
+          await given.pumpWidgetWithState(
+            const ManageInsultsBottomSheet(),
+            appState: const AppState().copyWith(
+              insults: [
+                'insult1',
+              ],
+            ),
+            brightness: brightness,
+          );
+          await when.pumpAndSettle();
 
-        then.findsWidget(find.text('insult1'));
+          then.findsWidget(find.text('insult1'));
 
-        await when.userSwipesHorizontally(find.text('insult1'), dx: -500);
+          await when.userSwipesHorizontally(find.text('insult1'), dx: -500);
 
-        await then.multiScreenGoldensMatch(
-          'swipe_to_delete_insult_left',
-          shouldSkipPumpAndSettle: true,
-        );
-      }),
-    );
+          await then.multiScreenGoldensMatch(
+            'swipe_to_delete_insult_left',
+            shouldSkipPumpAndSettle: true,
+            devices: [Device.phone.copyWith(name: 'phone_${brightness.name}')],
+          );
+        }),
+      );
+    }
 
-    testGoldens(
-      'Should display correct background color and icon when user swipes insult RIGHT from Settings BottomSheet',
-      appHarness((given, when, then) async {
-        await given.pumpWidgetWithState(
-          const ManageInsultsBottomSheet(),
-          appState: const AppState().copyWith(
-            insults: [
-              'insult1',
-            ],
-          ),
-        );
-        await when.pumpAndSettle();
+    for (final brightness in Brightness.values) {
+      testGoldens(
+        'Should display correct background color and icon when user swipes insult RIGHT from Settings BottomSheet_${brightness.name}',
+        appHarness((given, when, then) async {
+          await given.pumpWidgetWithState(
+            const ManageInsultsBottomSheet(),
+            appState: const AppState().copyWith(
+              insults: [
+                'insult1',
+              ],
+            ),
+            brightness: brightness,
+          );
+          await when.pumpAndSettle();
 
-        then.findsWidget(find.text('insult1'));
+          then.findsWidget(find.text('insult1'));
 
-        await when.userSwipesHorizontally(find.text('insult1'), dx: 500);
+          await when.userSwipesHorizontally(find.text('insult1'), dx: 500);
 
-        await then.multiScreenGoldensMatch(
-          'swipe_to_delete_insult_right',
-          shouldSkipPumpAndSettle: true,
-        );
-      }),
-    );
+          await then.multiScreenGoldensMatch(
+            'swipe_to_delete_insult_right',
+            shouldSkipPumpAndSettle: true,
+            devices: [Device.phone.copyWith(name: 'phone_${brightness.name}')],
+          );
+        }),
+      );
+    }
   });
 }

@@ -15,7 +15,10 @@ void main() {
     testGoldens(
       'Should look right',
       appHarness((given, when, then) async {
-        await given.pumpWidget(GameWinnerDialog(testPlayer1));
+        await given.pumpWidget(GameWinnerDialog(
+          testPlayer1,
+          shouldPlayAtLaunch: false,
+        ));
 
         await then.multiScreenGoldensMatch(
           'game_winner_dialog',

@@ -139,7 +139,7 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 const DraggableHiLowScore(
                   draggableKey: Key('hi_draggable'),
