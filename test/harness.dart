@@ -140,16 +140,16 @@ extension AppThen on WidgetTestThen<AppHarness> {
       testName,
       devices: devices ??
           [
-            Device.phone.dark(),
             Device.phone,
             Device.tabletLandscape,
+            Device.phone.dark(),
           ],
       customPump: shouldSkipPumpAndSettle
           ? (_) async {}
           : (tester) async {
               // This is needed to allow time to switch to dark mode
               await tester.pump(kThemeAnimationDuration);
-              await tester.pump(Duration.zero);
+              await tester.pump();
             },
     );
   }

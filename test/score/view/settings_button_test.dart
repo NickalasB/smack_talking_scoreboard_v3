@@ -26,7 +26,6 @@ void main() {
 
         await then.multiScreenGoldensMatch(
           'settings_dialog',
-          devices: [Device.phone],
         );
       }),
     );

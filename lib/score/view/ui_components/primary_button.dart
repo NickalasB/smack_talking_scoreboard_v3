@@ -15,17 +15,15 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minWidth: 124),
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStatePropertyAll(theme.colorScheme.primary),
-          foregroundColor: MaterialStatePropertyAll(theme.colorScheme.surface),
-          textStyle: const MaterialStatePropertyAll(TextStyle(fontSize: 24)),
-        ),
-        onPressed: onPressed,
-        child: Text(label),
+    return ElevatedButton(
+      style: ButtonStyle(
+        minimumSize:
+            const MaterialStatePropertyAll(Size(124, kMinInteractiveDimension)),
+        backgroundColor: MaterialStatePropertyAll(theme.colorScheme.primary),
+        foregroundColor: MaterialStatePropertyAll(theme.colorScheme.surface),
       ),
+      onPressed: onPressed,
+      child: Text(label),
     );
   }
 }

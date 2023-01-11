@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     return Builder(
       builder: (context) {
         return Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
           appBar: AppBar(
             title: Text(strings.appTitle),
             actions: const [

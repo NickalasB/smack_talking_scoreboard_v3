@@ -19,7 +19,6 @@ void main() {
 
         await then.multiScreenGoldensMatch(
           'game_winner_dialog',
-          devices: [Device.phone],
         );
       }),
     );

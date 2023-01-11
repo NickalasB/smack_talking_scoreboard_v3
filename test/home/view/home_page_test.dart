@@ -4,7 +4,7 @@
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/view/app.dart';
@@ -124,9 +124,6 @@ void main() {
 
           await then.multiScreenGoldensMatch(
             'start_game_form',
-            devices: [
-              Device.phone,
-            ],
           );
         }),
       );

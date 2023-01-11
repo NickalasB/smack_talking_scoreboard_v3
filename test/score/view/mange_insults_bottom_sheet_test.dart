@@ -54,7 +54,6 @@ void main() {
 
         await then.multiScreenGoldensMatch(
           'swipe_to_delete_insult_left',
-          devices: [Device.phone],
           shouldSkipPumpAndSettle: true,
         );
       }),
@@ -79,7 +78,6 @@ void main() {
 
         await then.multiScreenGoldensMatch(
           'swipe_to_delete_insult_right',
-          devices: [Device.phone],
           shouldSkipPumpAndSettle: true,
         );
       }),

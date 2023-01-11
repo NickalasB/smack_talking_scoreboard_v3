@@ -124,6 +124,7 @@ class ScoreboardView extends StatelessWidget {
         return shouldExitGame ?? false;
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
