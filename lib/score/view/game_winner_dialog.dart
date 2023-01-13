@@ -82,7 +82,6 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
                 Navigator.of(context).pop();
               },
               label: strings.yes,
-              minWidth: 120,
             ),
             PrimaryButton.outlined(
               key: const Key('game_winner_no_button'),
@@ -93,7 +92,6 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
               label: strings.no,
-              minWidth: 120,
             ),
           ],
           actionsAlignment: MainAxisAlignment.spaceEvenly,

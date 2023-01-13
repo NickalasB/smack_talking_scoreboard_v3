@@ -6,14 +6,14 @@ class PrimaryButton extends StatelessWidget {
     this.onPressed,
     required this.label,
     required bool isFilled,
-    this.minWidth = 64,
+    this.minWidth = 120,
   }) : _isFilled = isFilled;
 
   factory PrimaryButton.filled({
     Key? key,
     VoidCallback? onPressed,
     required String label,
-    double minWidth = 64,
+    double minWidth = 120,
   }) {
     return PrimaryButton._(
       key: key,
@@ -28,7 +28,7 @@ class PrimaryButton extends StatelessWidget {
     Key? key,
     VoidCallback? onPressed,
     required String label,
-    double minWidth = 64,
+    double minWidth = 120,
   }) {
     return PrimaryButton._(
       key: key,
@@ -47,17 +47,15 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final filledStyle = ButtonStyle(
-      minimumSize:
-          MaterialStatePropertyAll(Size(minWidth, kMinInteractiveDimension)),
-      backgroundColor: MaterialStatePropertyAll(theme.colorScheme.primary),
-      foregroundColor: MaterialStatePropertyAll(theme.colorScheme.surface),
+    final filledStyle = ElevatedButton.styleFrom(
+      minimumSize: Size(minWidth, kMinInteractiveDimension),
+      backgroundColor: theme.colorScheme.primary,
+      foregroundColor: theme.colorScheme.surface,
     );
 
-    final outlinedStyle = ButtonStyle(
-      minimumSize:
-          MaterialStatePropertyAll(Size(minWidth, kMinInteractiveDimension)),
-      foregroundColor: MaterialStatePropertyAll(theme.colorScheme.primary),
+    final outlinedStyle = OutlinedButton.styleFrom(
+      minimumSize: Size(minWidth, kMinInteractiveDimension),
+      foregroundColor: theme.colorScheme.primary,
     );
     final onPressed = this.onPressed;
     final child = Text(label);

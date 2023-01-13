@@ -168,7 +168,7 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
             const Divider(thickness: 2),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: PrimaryButton.outlined(
+              child: PrimaryButton.filled(
                 key: const Key('done_button'),
                 onPressed: isValidInsult
                     ? () {
@@ -314,18 +314,20 @@ class DraggableHiLowScore extends StatelessWidget {
     return Draggable<String>(
       key: draggableKey,
       data: label,
-      feedback: PrimaryButton(
+      feedback: PrimaryButton.outlined(
         onPressed: () {}, // coverage:ignore-line
         label: label,
-        child: PrimaryButton.outlined(
+        minWidth: 64,
       ),
       childWhenDragging: PrimaryButton.outlined(
         onPressed: () {}, // coverage:ignore-line
         label: label,
+        minWidth: 64,
       ),
       child: PrimaryButton.filled(
         onPressed: () {}, // coverage:ignore-line
         label: label,
+        minWidth: 64,
       ),
     );
   }

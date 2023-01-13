@@ -33,7 +33,6 @@ class ExitGameDialog extends StatelessWidget {
             Navigator.of(context).popAndPushNamed(homeRouteName, result: true);
           },
           label: strings.yes,
-          minWidth: 120,
         ),
         PrimaryButton.outlined(
           key: const Key('exit_game_no_button'),
@@ -41,7 +40,6 @@ class ExitGameDialog extends StatelessWidget {
             Navigator.of(context).pop(false);
           },
           label: strings.no,
-          minWidth: 120,
         ),
       ],
       actionsAlignment: MainAxisAlignment.spaceEvenly,
