@@ -36,8 +36,8 @@ class App extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.theme(),
-        darkTheme: AppTheme.theme(brightness: Brightness.dark),
+        theme: appTheme(),
+        darkTheme: appTheme(brightness: Brightness.dark),
         localizationsDelegates: const [
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,

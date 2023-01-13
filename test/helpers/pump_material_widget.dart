@@ -25,8 +25,8 @@ extension PumpMaterialWidget on WidgetTester {
           GlobalMaterialLocalizations.delegate,
         ],
         // it's easier for some goldens to be pumped with dark theme instead of switching
-        theme: AppTheme.theme(brightness: brightness ?? Brightness.light),
-        darkTheme: AppTheme.theme(brightness: Brightness.dark),
+        theme: appTheme(brightness: brightness ?? Brightness.light),
+        darkTheme: appTheme(brightness: Brightness.dark),
         supportedLocales: AppLocalizations.supportedLocales,
         home: Material(child: widget),
         navigatorObservers:
