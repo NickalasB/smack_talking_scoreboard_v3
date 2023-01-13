@@ -26,20 +26,22 @@ class ExitGameDialog extends StatelessWidget {
         ],
       ),
       actions: [
-        PrimaryButton(
+        PrimaryButton.filled(
           key: const Key('exit_game_yes_button'),
           onPressed: () {
             context.addScoreboardEvent(ResetGameEvent(shouldKeepNames: false));
             Navigator.of(context).popAndPushNamed(homeRouteName, result: true);
           },
           label: strings.yes,
+          minWidth: 120,
         ),
-        PrimaryButton(
+        PrimaryButton.outlined(
           key: const Key('exit_game_no_button'),
           onPressed: () {
             Navigator.of(context).pop(false);
           },
           label: strings.no,
+          minWidth: 120,
         ),
       ],
       actionsAlignment: MainAxisAlignment.spaceEvenly,

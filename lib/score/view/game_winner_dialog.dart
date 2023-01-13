@@ -74,7 +74,7 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
             ),
           ),
           actions: [
-            PrimaryButton(
+            PrimaryButton.filled(
               key: const Key('game_winner_yes_button'),
               onPressed: () {
                 context
@@ -82,8 +82,9 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
                 Navigator.of(context).pop();
               },
               label: strings.yes,
+              minWidth: 120,
             ),
-            PrimaryButton(
+            PrimaryButton.outlined(
               key: const Key('game_winner_no_button'),
               onPressed: () {
                 context.addScoreboardEvent(
@@ -92,6 +93,7 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
               label: strings.no,
+              minWidth: 120,
             ),
           ],
           actionsAlignment: MainAxisAlignment.spaceEvenly,

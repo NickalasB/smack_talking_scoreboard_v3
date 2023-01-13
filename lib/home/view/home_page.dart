@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           body: Center(
-            child: PrimaryButton(
+            child: PrimaryButton.filled(
               key: const Key('get_started_button'),
               label: strings.getStarted,
               onPressed: () async {
