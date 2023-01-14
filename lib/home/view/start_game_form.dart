@@ -69,7 +69,7 @@ class _StartGameFormState extends State<StartGameForm> {
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 16),
-            PrimaryButton(
+            PrimaryButton.filled(
               key: const Key('lets_go_button'),
               label: strings.letsGo,
               onPressed: () {

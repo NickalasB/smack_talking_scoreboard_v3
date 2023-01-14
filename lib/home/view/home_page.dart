@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     return Builder(
       builder: (context) {
         return Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
           appBar: AppBar(
             title: Text(strings.appTitle),
             actions: const [
@@ -44,7 +45,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           body: Center(
-            child: PrimaryButton(
+            child: PrimaryButton.filled(
               key: const Key('get_started_button'),
               label: strings.getStarted,
               onPressed: () async {

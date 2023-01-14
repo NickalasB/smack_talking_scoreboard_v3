@@ -22,14 +22,14 @@ class ResetGameDialog extends StatelessWidget {
       ),
       content: const SizedBox(height: 24),
       actions: [
-        PrimaryButton(
+        PrimaryButton.filled(
           onPressed: () {
             context.addScoreboardEvent(ResetGameEvent(shouldKeepNames: true));
             Navigator.of(context).pop();
           },
           label: strings.yes,
         ),
-        PrimaryButton(
+        PrimaryButton.outlined(
           onPressed: () {
             Navigator.of(context).pop();
           },

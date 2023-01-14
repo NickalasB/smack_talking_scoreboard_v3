@@ -9,7 +9,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -27,7 +27,9 @@ class AppBlocObserver extends BlocObserver {
   }
 }
 
-Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
+Future<void> bootstrap(
+  FutureOr<Widget> builder,
+) async {
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
@@ -42,7 +44,8 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       HydratedBloc.storage = await HydratedStorage.build(
         storageDirectory: await getApplicationDocumentsDirectory(),
       );
-      runApp(await builder());
+
+      runApp(await builder);
     },
     (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
   );

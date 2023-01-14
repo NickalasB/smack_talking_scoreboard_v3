@@ -7,10 +7,15 @@ import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
 class GameWinnerDialog extends StatefulWidget {
-  const GameWinnerDialog(this.winningPlayer)
-      : super(key: const Key('game_winner_dialog'));
+  const GameWinnerDialog(
+    this.winningPlayer, {
+    this.shouldPlayAtLaunch = true,
+  }) : super(key: const Key('game_winner_dialog'));
 
   final Player winningPlayer;
+  // need this for Golden tests
+  @visibleForTesting
+  final bool shouldPlayAtLaunch;
 
   @override
   State<GameWinnerDialog> createState() => _GameWinnerDialogState();
@@ -23,7 +28,9 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
   @override
   void initState() {
     super.initState();
-    confettiController.play();
+    if (widget.shouldPlayAtLaunch) {
+      confettiController.play();
+    }
   }
 
   @override
@@ -67,7 +74,7 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
             ),
           ),
           actions: [
-            PrimaryButton(
+            PrimaryButton.filled(
               key: const Key('game_winner_yes_button'),
               onPressed: () {
                 context
@@ -76,7 +83,7 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
               },
               label: strings.yes,
             ),
-            PrimaryButton(
+            PrimaryButton.outlined(
               key: const Key('game_winner_no_button'),
               onPressed: () {
                 context.addScoreboardEvent(

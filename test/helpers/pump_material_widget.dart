@@ -8,12 +8,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:smack_talking_scoreboard_v3/app/view/app_theme.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 
 extension PumpMaterialWidget on WidgetTester {
   Future<void> pumpMaterialWidget(
     Widget widget, {
     NavigatorObserver? navigatorObserver,
+    Brightness? brightness,
   }) {
     return pumpWidget(
       MaterialApp(
@@ -22,6 +24,9 @@ extension PumpMaterialWidget on WidgetTester {
           AppLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
         ],
+        // it's easier for some goldens to be pumped with dark theme instead of switching
+        theme: appTheme(brightness: brightness ?? Brightness.light),
+        darkTheme: appTheme(brightness: Brightness.dark),
         supportedLocales: AppLocalizations.supportedLocales,
         home: Material(child: widget),
         navigatorObservers:
