@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/ui_components/circular_button.dart';
 
 class VolumeButton extends StatelessWidget {
   const VolumeButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isVolumeOn = context.selectScoreboard.state.areInsultsEnabled;
-    final volumeIcon =
-        isVolumeOn ? const Icon(Icons.volume_up) : const Icon(Icons.volume_off);
-    return CircularButton(
+    return IconButton(
       key: const Key('volume_button'),
-      onTap: () {
+      onPressed: () {
         context.addScoreboardEvent(ToggleInsultVolumeEvent());
       },
-      child: volumeIcon,
+      isSelected: context.selectScoreboard.state.areInsultsEnabled,
+      selectedIcon: const Icon(
+        Icons.volume_up_outlined,
+      ),
+      icon: const Icon(
+        Icons.volume_off_outlined,
+      ),
     );
   }
 }

@@ -327,6 +327,19 @@ void main() {
       }),
     );
   });
+
+  group('BackButton', () {
+    testWidgets(
+      'should launch ExitGameDialog when hitting the back button',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithDependencies(const ScoreboardView());
+        await when.userTaps(find.byType(BackButton));
+        await when.pumpAndSettle();
+
+        expect(then.harness.launchExitGameCompleters, hasLength(1));
+      }),
+    );
+  });
 }
 
 ScoreboardState _stateWithAGameWinner = initialScoreboardState.copyWith(

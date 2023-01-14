@@ -218,7 +218,7 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
   }
 
   void exitGameDialogReturns({required bool shouldExitGame}) {
-    harness.exitGameCompleters[0].complete(shouldExitGame);
+    harness.launchExitGameCompleters[0].complete(shouldExitGame);
   }
 
   void launchGameWinnerDialogCompletes({int at = 0, Player? withPlayer}) {

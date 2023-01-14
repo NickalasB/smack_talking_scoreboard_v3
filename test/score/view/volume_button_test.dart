@@ -26,7 +26,8 @@ void main() {
 
         then.findsWidget(
           find.byWidgetPredicate(
-            (widget) => widget is Icon && widget.icon == Icons.volume_up,
+            (widget) =>
+                widget is Icon && widget.icon == Icons.volume_up_outlined,
           ),
         );
       }),
@@ -44,7 +45,8 @@ void main() {
 
         then.findsWidget(
           find.byWidgetPredicate(
-            (widget) => widget is Icon && widget.icon == Icons.volume_off,
+            (widget) =>
+                widget is Icon && widget.icon == Icons.volume_off_outlined,
           ),
         );
       }),

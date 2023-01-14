@@ -16,6 +16,7 @@ import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/reset_game_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page_dependencies.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
 
 class ScoreboardPage extends StatelessWidget with NavigationMixin {
   const ScoreboardPage({super.key});
@@ -134,20 +135,7 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
       ),
       centerTitle: true,
       title: Text(strings.roundNumber(round.roundCount)),
-      actions: [
-        IconButton(
-          onPressed: () {
-            context.addScoreboardEvent(ToggleInsultVolumeEvent());
-          },
-          isSelected: context.selectScoreboard.state.areInsultsEnabled,
-          selectedIcon: const Icon(
-            Icons.volume_up_outlined,
-          ),
-          icon: const Icon(
-            Icons.volume_off_outlined,
-          ),
-        )
-      ],
+      actions: const [VolumeButton()],
     );
   }
 
