@@ -35,12 +35,7 @@ class ScoreboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final game = context.selectScoreboard.state.game;
-    final round = game.round;
     final players = game.players;
-    final strings = AppLocalizations.of(context);
-    final roundWinnerText = round.roundWinner != null
-        ? strings.playerNumber(round.roundWinner!.playerId)
-        : '';
 
     Widget portraitView() {
       return Column(
