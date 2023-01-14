@@ -3,12 +3,14 @@ import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/score.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/ui_components/circular_button.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
 class ChangeTurnButton extends StatefulWidget {
   const ChangeTurnButton({
     super.key,
+    this.isLandscape = false,
   });
+  final bool isLandscape;
 
   @override
   State<ChangeTurnButton> createState() => _ChangeTurnButtonState();
@@ -23,10 +25,27 @@ class _ChangeTurnButtonState extends State<ChangeTurnButton> {
 
   @override
   Widget build(BuildContext context) {
+    const next = 'NEXT';
+    final theme = Theme.of(context);
+
+    final horizontalNext = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: next.characters
+          .map(
+            (s) => Text(
+              s,
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.canvasColor,
+              ),
+            ),
+          )
+          .toList(),
+    );
+
     final isGameOver = context.isGameOver;
-    return CircularButton(
+    return PrimaryButton.filled(
       key: const Key('change_turn_button'),
-      onTap: isGameOver
+      onPressed: isGameOver
           ? null
           : () {
               context.readScoreboard.add(
@@ -35,22 +54,8 @@ class _ChangeTurnButtonState extends State<ChangeTurnButton> {
 
               _checkIfGameHasWinner();
             },
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: isGameOver ? Theme.of(context).disabledColor : Colors.green,
-          shape: BoxShape.circle,
-        ),
-        child: const Center(
-          child: Text(
-            r'#$%!',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
+      label: widget.isLandscape ? null : next,
+      child: widget.isLandscape ? horizontalNext : null,
     );
   }
 

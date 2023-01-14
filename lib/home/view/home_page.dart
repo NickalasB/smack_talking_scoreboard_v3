@@ -40,6 +40,8 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
           appBar: AppBar(
             title: Text(strings.appTitle),
+            automaticallyImplyLeading: false,
+            centerTitle: true,
             actions: const [
               AppPopupMenuButton(key: Key('menu_button')),
             ],
