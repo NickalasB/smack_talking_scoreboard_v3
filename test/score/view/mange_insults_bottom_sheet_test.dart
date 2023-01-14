@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/settings_dialogs.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/settings.dart';
 
 import '../../harness.dart';
 
