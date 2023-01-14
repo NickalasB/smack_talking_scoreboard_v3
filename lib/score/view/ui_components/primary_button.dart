@@ -4,15 +4,21 @@ class PrimaryButton extends StatelessWidget {
   const PrimaryButton._({
     super.key,
     this.onPressed,
-    required this.label,
+    this.label,
+    this.child,
     required bool isFilled,
     this.minWidth = 120,
-  }) : _isFilled = isFilled;
+  })  : assert(
+          label != null || child != null,
+          'Button must have a label or a child!',
+        ),
+        _isFilled = isFilled;
 
   factory PrimaryButton.filled({
     Key? key,
     VoidCallback? onPressed,
-    required String label,
+    Widget? child,
+    String? label,
     double minWidth = 120,
   }) {
     return PrimaryButton._(
@@ -21,13 +27,15 @@ class PrimaryButton extends StatelessWidget {
       label: label,
       isFilled: true,
       minWidth: minWidth,
+      child: child,
     );
   }
 
   factory PrimaryButton.outlined({
     Key? key,
     VoidCallback? onPressed,
-    required String label,
+    Widget? child,
+    String? label,
     double minWidth = 120,
   }) {
     return PrimaryButton._(
@@ -36,11 +44,13 @@ class PrimaryButton extends StatelessWidget {
       label: label,
       isFilled: false,
       minWidth: minWidth,
+      child: child,
     );
   }
 
   final VoidCallback? onPressed;
-  final String label;
+  final String? label;
+  final Widget? child;
   final bool _isFilled;
   final double minWidth;
 
@@ -58,18 +68,18 @@ class PrimaryButton extends StatelessWidget {
       foregroundColor: theme.colorScheme.primary,
     );
     final onPressed = this.onPressed;
-    final child = Text(label);
+    final buttonChild = label != null ? Text(label!) : child!;
 
     return _isFilled
         ? ElevatedButton(
             style: filledStyle,
             onPressed: onPressed,
-            child: child,
+            child: buttonChild,
           )
         : OutlinedButton(
             style: outlinedStyle,
             onPressed: onPressed,
-            child: child,
+            child: buttonChild,
           );
   }
 }

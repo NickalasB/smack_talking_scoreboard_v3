@@ -42,6 +42,9 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
         providers: [
           BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
           BlocProvider<AppBloc>(create: (context) => harness.appBloc),
+          BlocProvider<InsultCreatorBloc>(
+            create: (context) => harness.insultCreatorBloc,
+          ),
         ],
         child: Builder(
           builder: (context) {
@@ -183,6 +186,10 @@ extension AppThen on WidgetTestThen<AppHarness> {
   void addedAppBlocEvents(Matcher matcher) {
     expect(harness.appBloc.addedEvents, matcher);
   }
+
+  void addedInsultCreatorEvents(Matcher matcher) {
+    expect(harness.insultCreatorBloc.addedEvents, matcher);
+  }
 }
 
 extension AppWhen on WidgetTestWhen<AppHarness> {
@@ -211,7 +218,7 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
   }
 
   void exitGameDialogReturns({required bool shouldExitGame}) {
-    harness.exitGameCompleters[0].complete(shouldExitGame);
+    harness.launchExitGameCompleters[0].complete(shouldExitGame);
   }
 
   void launchGameWinnerDialogCompletes({int at = 0, Player? withPlayer}) {

@@ -8,7 +8,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
@@ -17,7 +16,6 @@ import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/reset_game_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page_dependencies.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/settings_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
 
 class ScoreboardPage extends StatelessWidget with NavigationMixin {
@@ -38,38 +36,22 @@ class ScoreboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final game = context.selectScoreboard.state.game;
-    final round = game.round;
     final players = game.players;
-    final strings = AppLocalizations.of(context);
-    final roundWinnerText = round.roundWinner != null
-        ? strings.playerNumber(round.roundWinner!.playerId)
-        : '';
 
     Widget portraitView() {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 8),
-          // TODO(nibradshaw): this is just placeholder UI
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(strings.roundNumber(round.roundCount)),
-              Text(strings.roundWinner(roundWinnerText)),
-            ],
-          ),
-          const SizedBox(height: 8),
           Expanded(child: PlayerScore(player: players.first)),
-          const SizedBox(height: 16),
-          Expanded(child: PlayerScore(player: players[1])),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(child: SettingsButton(context.readApp)),
-              const Flexible(child: ChangeTurnButton()),
-              const Flexible(child: VolumeButton()),
-            ],
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: FractionallySizedBox(
+              widthFactor: .75,
+              child: ChangeTurnButton(),
+            ),
           ),
+          Expanded(child: PlayerScore(player: players[1])),
         ],
       );
     }
@@ -78,37 +60,26 @@ class ScoreboardView extends StatelessWidget {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 8),
-          // TODO(nibradshaw): this is just placeholder UI
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(strings.roundNumber(round.roundCount)),
-              Text(strings.roundWinner(roundWinnerText)),
-            ],
-          ),
-          const SizedBox(height: 8),
           Expanded(
             child: Row(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(child: PlayerScore(player: players.first)),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(child: SettingsButton(context.readApp)),
-                      const Flexible(child: ChangeTurnButton()),
-                      const Flexible(child: VolumeButton()),
-                    ],
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 24),
+                  child: FractionallySizedBox(
+                    heightFactor: .65,
+                    child: SizedBox(
+                      width: 48,
+                      child: ChangeTurnButton(isLandscape: true),
+                    ),
                   ),
                 ),
                 Expanded(child: PlayerScore(player: players[1])),
               ],
             ),
           ),
-          const SizedBox(height: 8),
         ],
       );
     }
@@ -125,9 +96,10 @@ class ScoreboardView extends StatelessWidget {
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+        appBar: const MyAppBar(),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.all(16),
             child: OrientationBuilder(
               builder: (context, orientation) {
                 return orientation == Orientation.landscape
@@ -140,6 +112,35 @@ class ScoreboardView extends StatelessWidget {
       ),
     );
   }
+}
+
+class MyAppBar extends StatelessWidget with PreferredSizeWidget {
+  const MyAppBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final game = context.selectScoreboard.state.game;
+    final round = game.round;
+
+    final strings = AppLocalizations.of(context);
+
+    return AppBar(
+      leading: BackButton(
+        onPressed: () {
+          ScoreboardPageDependencies.of(context)?.data.launchExitGameDialog(
+                context,
+                scoreboardBloc: context.readScoreboard,
+              );
+        },
+      ),
+      centerTitle: true,
+      title: Text(strings.roundNumber(round.roundCount)),
+      actions: const [VolumeButton()],
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size(double.infinity, kToolbarHeight);
 }
 
 class PlayerScore extends StatelessWidget {

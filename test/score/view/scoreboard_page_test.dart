@@ -13,7 +13,7 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/game.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/ui_components/circular_button.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
 import '../../harness.dart';
 import '../../helpers/test_helpers.dart';
@@ -264,9 +264,9 @@ void main() {
         then.findsWidget(
           find.byWidgetPredicate(
             (widget) =>
-                widget is CircularButton &&
+                widget is PrimaryButton &&
                 widget.key == const Key('change_turn_button') &&
-                widget.onTap == null,
+                widget.onPressed == null,
           ),
         );
       }),
@@ -292,9 +292,7 @@ void main() {
           ),
         );
 
-        then
-          ..findsWidget(find.text('Round: 2'))
-          ..findsWidget(find.text('Round Winner: Player 2'));
+        then.findsWidget(find.text('Round: 2'));
       }),
     );
 
@@ -326,6 +324,19 @@ void main() {
         when.launchGameWinnerDialogCompletes(withPlayer: testPlayer2);
 
         expect(then.harness.launchGameWinnerDialogCompleters, isNotEmpty);
+      }),
+    );
+  });
+
+  group('BackButton', () {
+    testWidgets(
+      'should launch ExitGameDialog when hitting the back button',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithDependencies(const ScoreboardView());
+        await when.userTaps(find.byType(BackButton));
+        await when.pumpAndSettle();
+
+        expect(then.harness.launchExitGameCompleters, hasLength(1));
       }),
     );
   });

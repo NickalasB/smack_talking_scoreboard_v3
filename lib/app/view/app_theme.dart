@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 ThemeData appTheme({
   Brightness brightness = Brightness.light,
-}) =>
-    ThemeData(
-      colorScheme:
-          brightness == Brightness.light ? _lightColorScheme : _darkColorScheme,
-      useMaterial3: true,
-    );
+}) {
+  final appColorScheme = colorScheme(brightness);
+  return ThemeData(
+    colorScheme: appColorScheme,
+    useMaterial3: true,
+    appBarTheme: AppBarTheme(
+      elevation: 4,
+      color: appColorScheme.surfaceVariant,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: appColorScheme.surfaceTint,
+      ),
+    ),
+  );
+}
 
-final _lightColorScheme = ColorScheme.fromSeed(
-  seedColor: const Color(0xff00497e),
-);
-final _darkColorScheme = ColorScheme.fromSeed(
-  seedColor: const Color(0xff6692b2),
-  brightness: Brightness.dark,
-);
+ColorScheme colorScheme(Brightness brightness) => ColorScheme.fromSeed(
+      seedColor: brightness == Brightness.dark
+          ? const Color(0xff6692b2)
+          : const Color(0xff00497e),
+      brightness: brightness,
+    );
