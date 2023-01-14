@@ -1,37 +1,75 @@
 import 'package:flutter/material.dart';
 
 class PrimaryButton extends StatelessWidget {
-  const PrimaryButton({
+  const PrimaryButton._({
     super.key,
     this.onPressed,
     required this.label,
-    this.isFilled = true,
-  });
+    required bool isFilled,
+    this.minWidth = 120,
+  }) : _isFilled = isFilled;
+
+  factory PrimaryButton.filled({
+    Key? key,
+    VoidCallback? onPressed,
+    required String label,
+    double minWidth = 120,
+  }) {
+    return PrimaryButton._(
+      key: key,
+      onPressed: onPressed,
+      label: label,
+      isFilled: true,
+      minWidth: minWidth,
+    );
+  }
+
+  factory PrimaryButton.outlined({
+    Key? key,
+    VoidCallback? onPressed,
+    required String label,
+    double minWidth = 120,
+  }) {
+    return PrimaryButton._(
+      key: key,
+      onPressed: onPressed,
+      label: label,
+      isFilled: false,
+      minWidth: minWidth,
+    );
+  }
 
   final VoidCallback? onPressed;
   final String label;
-  final bool isFilled;
+  final bool _isFilled;
+  final double minWidth;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return MaterialButton(
-      height: kMinInteractiveDimension,
-      onPressed: onPressed,
-      disabledColor: theme.disabledColor,
-      color: isFilled ? theme.primaryColor : null,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
-        side: BorderSide(
-          color: onPressed != null ? theme.primaryColor : theme.disabledColor,
-        ),
-      ),
-      child: Text(
-        label,
-        style: theme.textTheme.titleLarge?.copyWith(
-          color: isFilled ? theme.canvasColor : theme.primaryColor,
-        ),
-      ),
+    final filledStyle = ElevatedButton.styleFrom(
+      minimumSize: Size(minWidth, kMinInteractiveDimension),
+      backgroundColor: theme.colorScheme.primary,
+      foregroundColor: theme.colorScheme.surface,
     );
+
+    final outlinedStyle = OutlinedButton.styleFrom(
+      minimumSize: Size(minWidth, kMinInteractiveDimension),
+      foregroundColor: theme.colorScheme.primary,
+    );
+    final onPressed = this.onPressed;
+    final child = Text(label);
+
+    return _isFilled
+        ? ElevatedButton(
+            style: filledStyle,
+            onPressed: onPressed,
+            child: child,
+          )
+        : OutlinedButton(
+            style: outlinedStyle,
+            onPressed: onPressed,
+            child: child,
+          );
   }
 }

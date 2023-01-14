@@ -120,6 +120,7 @@ class ScoreboardView extends StatelessWidget {
         return shouldExitGame ?? false;
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -158,13 +159,13 @@ class PlayerScore extends StatelessWidget {
         Container(
           constraints: const BoxConstraints(minHeight: 48),
           decoration: BoxDecoration(
-            border: Border.all(),
+            border: Border.all(color: theme.colorScheme.inverseSurface),
           ),
           child: Center(
             child: Text(
               player.playerName,
               style: theme.textTheme.headlineLarge?.copyWith(
-                color: theme.primaryColor,
+                color: theme.colorScheme.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -199,11 +200,12 @@ class PlayerScore extends StatelessWidget {
                   },
             child: DecoratedBox(
               decoration: BoxDecoration(
-                border: Border.all(),
+                border: Border.all(color: theme.colorScheme.inverseSurface),
               ),
               child: FittedBox(
                 child: Text(
                   score.toString(),
+                  style: TextStyle(color: theme.colorScheme.primary),
                 ),
               ),
             ),

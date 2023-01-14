@@ -17,7 +17,6 @@ void main() {
 
         await then.multiScreenGoldensMatch(
           'exit_screen_dialog',
-          devices: [Device.phone],
         );
       }),
     );

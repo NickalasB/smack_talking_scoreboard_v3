@@ -109,7 +109,7 @@ class _TestScoreboardDependencies extends StatelessWidget with NavigationMixin {
         data: this,
         child: Builder(
           builder: (context) {
-            return PrimaryButton(
+            return PrimaryButton.filled(
               label: 'test',
               onPressed: () async {
                 await ScoreboardPageDependencies.of(context)

@@ -26,7 +26,7 @@ class ExitGameDialog extends StatelessWidget {
         ],
       ),
       actions: [
-        PrimaryButton(
+        PrimaryButton.filled(
           key: const Key('exit_game_yes_button'),
           onPressed: () {
             context.addScoreboardEvent(ResetGameEvent(shouldKeepNames: false));
@@ -34,7 +34,7 @@ class ExitGameDialog extends StatelessWidget {
           },
           label: strings.yes,
         ),
-        PrimaryButton(
+        PrimaryButton.outlined(
           key: const Key('exit_game_no_button'),
           onPressed: () {
             Navigator.of(context).pop(false);
