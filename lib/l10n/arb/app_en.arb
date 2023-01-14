@@ -141,5 +141,13 @@
   "exitGame": "Exit Game?",
   "@exitGame": {
     "description": "Title for exit game dialog"
+  },
+  "draggableToolTipLow": "Drag me to the box above to insert the LOW scorer's name",
+  "@draggableToolTipLow": {
+    "description": "Tooltip for draggable LOW scorer widget on add insult screen"
+  },
+  "draggableToolTipHi": "Drag me to the box above to insert the HI scorer's name",
+  "@draggableToolTipHi": {
+    "description": "Tooltip for draggable HI scorer widget on add insult screen"
   }
 }

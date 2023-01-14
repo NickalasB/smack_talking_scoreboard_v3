@@ -144,6 +144,7 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
                 const DraggableHiLowScore(
                   draggableKey: Key('hi_draggable'),
                   label: defaultHiText,
+                  isHighScorer: true,
                 ),
                 PrimaryButton.outlined(
                   key: const Key('add_more_insult_text_button'),
@@ -162,6 +163,7 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
                 const DraggableHiLowScore(
                   draggableKey: Key('low_draggable'),
                   label: defaultLowText,
+                  isHighScorer: false,
                 ),
               ],
             ),
@@ -204,6 +206,7 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
   String draggedText = defaultHiLowText;
   late String fullInsultInfo;
   final focusNode = FocusNode()..requestFocus();
+  bool canAcceptDraggable = false;
 
   @override
   void initState() {
@@ -238,6 +241,7 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
         DecoratedBox(
           decoration: BoxDecoration(
             border: Border.all(color: theme.disabledColor),
+            color: canAcceptDraggable ? theme.primaryColor : null,
           ),
           child: SizedBox(
             height: kTextTabBarHeight,
@@ -263,9 +267,19 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
                   ),
                 );
               },
-              onWillAccept: (date) {
+              onWillAccept: (data) {
                 HapticFeedback.heavyImpact();
+                setState(() {
+                  canAcceptDraggable = true;
+                  draggedText = data!;
+                });
                 return true;
+              },
+              onLeave: (data) {
+                setState(() {
+                  canAcceptDraggable = false;
+                  draggedText = defaultHiLowText;
+                });
               },
               onAccept: (String data) {
                 draggedText = data;
@@ -305,29 +319,80 @@ class DraggableHiLowScore extends StatelessWidget {
   const DraggableHiLowScore({
     required this.draggableKey,
     required this.label,
+    required this.isHighScorer,
   });
 
   final String label;
   final Key draggableKey;
+  final bool isHighScorer;
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final strings = context.l10n;
+    final draggableFeedbackChild = PrimaryButton.filled(
+      label: label,
+      minWidth: 64,
+      onPressed: () {}, // coverage:ignore-line
+    );
+
     return Draggable<String>(
       key: draggableKey,
       data: label,
-      feedback: PrimaryButton.outlined(
-        onPressed: () {}, // coverage:ignore-line
-        label: label,
-        minWidth: 64,
+      feedbackOffset: const Offset(0, -50),
+      dragAnchorStrategy: (_, __, ___) => const Offset(25, 75),
+      feedback: Opacity(
+        opacity: 0.5,
+        child: Container(
+          padding: const EdgeInsets.only(bottom: 100),
+          child: Material(
+            color: Colors.transparent,
+            child: Transform.rotate(
+              angle: isHighScorer ? .20 : -.20,
+              child: draggableFeedbackChild,
+            ),
+          ),
+        ),
       ),
       childWhenDragging: PrimaryButton.outlined(
-        onPressed: () {}, // coverage:ignore-line
         label: label,
         minWidth: 64,
+        onPressed: () {}, // coverage:ignore-line
       ),
-      child: PrimaryButton.filled(
-        onPressed: () {}, // coverage:ignore-line
-        label: label,
-        minWidth: 64,
+      child: Material(
+        child: Tooltip(
+          message: isHighScorer
+              ? strings.draggableToolTipHi
+              : strings.draggableToolTipLow,
+          preferBelow: false,
+          verticalOffset: 40,
+          textAlign: TextAlign.center,
+          margin: isHighScorer
+              ? const EdgeInsets.only(right: 120)
+              : const EdgeInsets.only(left: 120),
+          showDuration: const Duration(seconds: 3),
+          excludeFromSemantics: true,
+          triggerMode: TooltipTriggerMode.tap,
+          child: Container(
+            constraints: const BoxConstraints(
+              minWidth: 64,
+              minHeight: kMinInteractiveDimension,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              color: theme.buttonTheme.colorScheme?.primary,
+            ),
+            child: Center(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: theme.colorScheme.surface,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
