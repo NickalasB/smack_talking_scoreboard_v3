@@ -238,55 +238,49 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
 
     return Wrap(
       children: [
-        DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border.all(color: theme.disabledColor),
-            color: canAcceptDraggable ? theme.primaryColor : null,
-          ),
-          child: SizedBox(
-            height: kTextTabBarHeight,
-            width: kTextTabBarHeight,
-            child: DragTarget<String>(
-              key: Key('hi_low_drag_target_${widget.index}'),
-              builder: (
-                BuildContext context,
-                List<dynamic> accepted,
-                List<dynamic> rejected,
-              ) {
-                return Align(
-                  alignment: Alignment.centerLeft,
-                  widthFactor: 1,
-                  child: Center(
-                    child: Text(
-                      draggedText,
-                      style: draggedText != defaultHiLowText
-                          ? theme.textTheme.titleLarge
-                          : theme.textTheme.titleLarge
-                              ?.copyWith(color: theme.disabledColor),
+        DragTarget<String>(
+          key: Key('hi_low_drag_target_${widget.index}'),
+          builder: (
+            BuildContext context,
+            List<dynamic> accepted,
+            List<dynamic> rejected,
+          ) {
+            return Align(
+              alignment: Alignment.centerLeft,
+              widthFactor: 1,
+              child: canAcceptDraggable
+                  ? PrimaryButton.filled(
+                      label: draggedText,
+                      minWidth: 64,
+                      onPressed: () {}, // coverage:ignore-line
+                    )
+                  : PrimaryButton.outlined(
+                      label: draggedText,
+                      minWidth: 64,
                     ),
-                  ),
-                );
-              },
-              onWillAccept: (data) {
-                HapticFeedback.heavyImpact();
-                setState(() {
-                  canAcceptDraggable = true;
-                  draggedText = data!;
-                });
-                return true;
-              },
-              onLeave: (data) {
-                setState(() {
-                  canAcceptDraggable = false;
-                  draggedText = defaultHiLowText;
-                });
-              },
-              onAccept: (String data) {
-                draggedText = data;
-                createInsultEvent();
-              },
-            ),
-          ),
+            );
+          },
+          onWillAccept: (data) {
+            HapticFeedback.heavyImpact();
+            setState(() {
+              canAcceptDraggable = true;
+              draggedText = data!;
+            });
+            return true;
+          },
+          onLeave: (data) {
+            setState(() {
+              canAcceptDraggable = false;
+              draggedText = defaultHiLowText;
+            });
+          },
+          onAccept: (String data) {
+            setState(() {
+              draggedText = data;
+            });
+
+            createInsultEvent();
+          },
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -328,13 +322,7 @@ class DraggableHiLowScore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final strings = context.l10n;
-    final draggableFeedbackChild = PrimaryButton.filled(
-      label: label,
-      minWidth: 64,
-      onPressed: () {}, // coverage:ignore-line
-    );
 
     return Draggable<String>(
       key: draggableKey,
@@ -349,7 +337,7 @@ class DraggableHiLowScore extends StatelessWidget {
             color: Colors.transparent,
             child: Transform.rotate(
               angle: isHighScorer ? .20 : -.20,
-              child: draggableFeedbackChild,
+              child: HiLoWidget(label: label),
             ),
           ),
         ),
@@ -373,24 +361,40 @@ class DraggableHiLowScore extends StatelessWidget {
           showDuration: const Duration(seconds: 3),
           excludeFromSemantics: true,
           triggerMode: TooltipTriggerMode.tap,
-          child: Container(
-            constraints: const BoxConstraints(
-              minWidth: 64,
-              minHeight: kMinInteractiveDimension,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
-              color: theme.buttonTheme.colorScheme?.primary,
-            ),
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: theme.colorScheme.surface,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+          child: HiLoWidget(label: label),
+        ),
+      ),
+    );
+  }
+}
+
+class HiLoWidget extends StatelessWidget {
+  const HiLoWidget({
+    super.key,
+    required this.label,
+  });
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      constraints: const BoxConstraints(
+        minWidth: 64,
+        minHeight: kMinInteractiveDimension,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        color: theme.buttonTheme.colorScheme?.primary,
+      ),
+      child: Center(
+        child: Text(
+          label,
+          style: TextStyle(
+            color: theme.colorScheme.surface,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
