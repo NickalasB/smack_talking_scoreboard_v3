@@ -10,6 +10,7 @@ import 'package:smack_talking_scoreboard_v3/app/app.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 
 import '../../harness.dart';
+import '../../home/view/home_page_objects.dart';
 import '../../score/view/scoreboard_page_objects.dart';
 
 void main() {

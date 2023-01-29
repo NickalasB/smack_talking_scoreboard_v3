@@ -15,6 +15,7 @@ import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 
 import '../../harness.dart';
 import '../../score/view/scoreboard_page_objects.dart';
+import 'home_page_objects.dart';
 
 void main() {
   group('IntegrationTest', () {
