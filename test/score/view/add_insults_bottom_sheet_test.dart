@@ -121,6 +121,36 @@ void main() {
   );
 
   testWidgets(
+    'Should reset HI/LOW drag target when user drags draggable to target but moves off target',
+    appHarness((given, when, then) async {
+      await given.pumpWidget(const AppPopupMenuButton());
+
+      await when.userTaps(find.byType(AppPopupMenuButton));
+      await when.pumpAndSettle();
+
+      await when.userTaps(homePage.menuItem(label: 'Add Insults'));
+      await when.pumpAndSettle();
+
+      await when.userTypes('anything', addInsultPage.insultTextField());
+      await when.pumpAndSettle();
+
+      await when.userDragsWidgetToTargetThenOffTarget(
+        draggable: addInsultPage.hiDraggable,
+        target: addInsultPage.hiLowDragTarget(),
+      );
+
+      then.findsWidget(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is PrimaryButton &&
+              widget.key == const Key('save_button') &&
+              widget.onPressed == null,
+        ),
+      );
+    }),
+  );
+
+  testWidgets(
     'Should save insult in correct order regardless of order of adding text/hi/low',
     appHarness((given, when, then) async {
       await given.pumpWidget(const AppPopupMenuButton());

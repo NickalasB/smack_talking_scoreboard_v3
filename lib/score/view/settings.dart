@@ -300,23 +300,16 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
           },
           onWillAccept: (data) {
             HapticFeedback.heavyImpact();
-            setState(() {
-              canAcceptDraggable = true;
-              draggedText = data!;
-            });
+            canAcceptDraggable = true;
+            draggedText = data!;
             return true;
           },
           onLeave: (data) {
-            setState(() {
-              canAcceptDraggable = false;
-              draggedText = defaultHiLowText;
-            });
+            canAcceptDraggable = false;
+            draggedText = defaultHiLowText;
           },
           onAccept: (String data) {
-            setState(() {
-              draggedText = data;
-            });
-
+            draggedText = data;
             createInsultEvent();
           },
         ),
