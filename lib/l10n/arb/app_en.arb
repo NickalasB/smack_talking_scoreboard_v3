@@ -158,8 +158,12 @@
   "@draggableToolTipHi": {
     "description": "Tooltip for draggable HI scorer widget on add insult screen"
   },
-  "createInsultHint": "Start typing your insult above. Click and drag HI or LOW to the HI/LOW above, to insert the name of the winning(HI), or losing(LOW), player",
+  "createInsultHint": "Click and drag HI or LOW to the HI/LOW above, to insert the name of the winning(HI), or losing(LOW), player",
   "@createInsultHint": {
     "description": "Hint text for instructions on how to create insults"
+  },
+  "initialInsultHint": "type an insult already!",
+  "@initialInsultHint": {
+    "description": "Insult input hint"
   }
 }

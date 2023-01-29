@@ -109,7 +109,12 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    inputAndPlayerList.add(PlayerPlusTextInput(initialInsultTextController));
+    inputAndPlayerList.add(
+      PlayerPlusTextInput(
+        initialInsultTextController,
+        initialHintText: context.l10n.initialInsultHint,
+      ),
+    );
   }
 
   @override
@@ -230,11 +235,13 @@ class PlayerPlusTextInput extends StatefulWidget {
   const PlayerPlusTextInput(
     this.controller, {
     this.index = 0,
+    this.initialHintText,
     super.key,
   });
 
   final TextEditingController controller;
   final int index;
+  final String? initialHintText;
 
   @override
   State<PlayerPlusTextInput> createState() => _PlayerPlusTextInputState();
@@ -324,7 +331,8 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
                 key: Key('insult_text_field_${widget.index}'),
                 maxLines: null,
                 controller: widget.controller,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
+                  hintText: widget.initialHintText,
                   contentPadding: EdgeInsets.zero,
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
