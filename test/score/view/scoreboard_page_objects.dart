@@ -5,9 +5,11 @@ import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
 import 'package:smack_talking_scoreboard_v3/score/score.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/exit_game_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/game_winner_dialog.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/settings.dart';
 
-final scoreboardPage = ScoreBoardPageObject();
 final homePage = HomePageObjects();
+final scoreboardPage = ScoreBoardPageObject();
+final addInsultPage = AddInsultPage();
 final gameWinnerDialogPage = GameWinnerDialogPageObject();
 final exitGameDialogPage = ExitGameDialogPageObject();
 
@@ -28,22 +30,30 @@ class ScoreBoardPageObject extends PageObject {
   Finder get manageInsultsBottomSheet =>
       find.byKey(const Key('mange_insults_bottom_sheet'));
 
-  Finder insultTextField({int at = 0}) =>
-      find.byKey(Key('insult_text_field_$at'));
-
   Finder get changeTurnButton => find.byKey(const Key('change_turn_button'));
 
   Finder get resetScoreDialog => find.byKey(const Key('reset_score_dialog'));
 
   Finder get gameWinnerDialog => gameWinnerDialogPage;
+}
 
-  Finder get doneButton => find.byKey(const Key('done_button'));
+class AddInsultPage extends PageObject {
+  AddInsultPage() : super(find.byType(AddInsultsBottomSheet));
+
+  Finder get createInsultHint => find.byKey(const Key('create_insult_hint'));
+
+  Finder get saveButton => find.byKey(const Key('save_button'));
+
+  Finder get listenButton => find.byKey(const Key('listen_button'));
 
   Finder get addMoreInsultButton =>
       find.byKey(const Key('add_more_insult_text_button'));
 
   Finder hiLowDragTarget({int at = 0}) =>
       find.byKey(Key('hi_low_drag_target_$at'));
+
+  Finder insultTextField({int at = 0}) =>
+      find.byKey(Key('insult_text_field_$at'));
 
   Finder get hiDraggable => find.byKey(const Key('hi_draggable'));
 

@@ -28,7 +28,7 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
-                        context.l10n.emptyInsultsHint,
+                        context.l10n.createInsultHint,
                         style: theme.textTheme.titleMedium,
                         textAlign: TextAlign.center,
                       ),

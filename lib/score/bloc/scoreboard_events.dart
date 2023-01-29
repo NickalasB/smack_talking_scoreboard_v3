@@ -73,3 +73,11 @@ class ToggleInsultVolumeEvent extends ScoreboardEvent {
   @override
   List<Object?> get props => [];
 }
+
+class SpeakInsultEvent extends ScoreboardEvent {
+  SpeakInsultEvent(this.insult);
+
+  final String insult;
+  @override
+  List<Object?> get props => [insult];
+}

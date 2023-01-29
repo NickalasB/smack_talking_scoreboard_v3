@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/settings.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
@@ -12,25 +13,7 @@ import 'scoreboard_page_objects.dart';
 
 void main() {
   testWidgets(
-    'Should disable Done button when no insults have been added',
-    appHarness((given, when, then) async {
-      await given.pumpWidget(const AddInsultsBottomSheet());
-
-      await when.pumpAndSettle();
-
-      then.findsWidget(
-        find.byWidgetPredicate(
-          (widget) =>
-              widget is PrimaryButton &&
-              widget.key == const Key('done_button') &&
-              widget.onPressed == null,
-        ),
-      );
-    }),
-  );
-
-  testWidgets(
-    'Should add SaveInsultEvent when hitting dialog done button',
+    'Should show create insult hint when no insults started, then hide when user starts typing',
     appHarness((given, when, then) async {
       await given.pumpWidget(const AppPopupMenuButton());
 
@@ -40,15 +23,62 @@ void main() {
       await when.userTaps(homePage.menuItem(label: 'Add Insults'));
       await when.pumpAndSettle();
 
-      await when.userTypes('anything', scoreboardPage.insultTextField());
+      then.findsWidget(addInsultPage.createInsultHint);
+
+      await when.userTypes('anything', addInsultPage.insultTextField());
+      await when.pumpAndSettle();
+
+      then.findsNoWidget(addInsultPage.createInsultHint);
+    }),
+  );
+
+  testWidgets(
+    'Should disable Done button and Listen button when no insults have been added',
+    appHarness((given, when, then) async {
+      await given.pumpWidget(const AddInsultsBottomSheet());
+
+      await when.pumpAndSettle();
+
+      then
+        ..findsWidget(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is PrimaryButton &&
+                widget.key == const Key('save_button') &&
+                widget.onPressed == null,
+          ),
+        )
+        ..findsWidget(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is PrimaryButton &&
+                widget.key == const Key('listen_button') &&
+                widget.onPressed == null,
+          ),
+        );
+    }),
+  );
+
+  testWidgets(
+    'Should add SaveInsultEvent when hitting dialog save button',
+    appHarness((given, when, then) async {
+      await given.pumpWidget(const AppPopupMenuButton());
+
+      await when.userTaps(find.byType(AppPopupMenuButton));
+      await when.pumpAndSettle();
+
+      await when.userTaps(homePage.menuItem(label: 'Add Insults'));
+      await when.pumpAndSettle();
+
+      await when.userTypes('anything', addInsultPage.insultTextField());
       await when.pumpAndSettle();
 
       await when.userDragsWidgetTo(
-        draggable: scoreboardPage.hiDraggable,
-        target: scoreboardPage.hiLowDragTarget(),
+        draggable: addInsultPage.hiDraggable,
+        target: addInsultPage.hiLowDragTarget(),
       );
 
-      await when.userTaps(scoreboardPage.doneButton);
+      await when.userTaps(addInsultPage.saveButton);
       await when.pumpAndSettle();
 
       await when.idle();
@@ -71,54 +101,84 @@ void main() {
       await when.userTaps(homePage.menuItem(label: 'Add Insults'));
       await when.pumpAndSettle();
 
-      await when.userTaps(scoreboardPage.addMoreInsultButton);
+      await when.userTaps(addInsultPage.addMoreInsultButton);
       await when.pumpAndSettle();
 
-      await when.userTaps(scoreboardPage.addMoreInsultButton);
+      await when.userTaps(addInsultPage.addMoreInsultButton);
       await when.pumpAndSettle();
 
-      await when.userTaps(scoreboardPage.addMoreInsultButton);
+      await when.userTaps(addInsultPage.addMoreInsultButton);
       await when.pumpAndSettle();
 
-      await when.userTypes('0', scoreboardPage.insultTextField(at: 0));
+      await when.userTypes('0', addInsultPage.insultTextField(at: 0));
       await when.pumpAndSettle();
 
-      await when.userTypes('3', scoreboardPage.insultTextField(at: 3));
+      await when.userTypes('3', addInsultPage.insultTextField(at: 3));
       await when.pumpAndSettle();
 
-      await when.userTypes('1', scoreboardPage.insultTextField(at: 1));
+      await when.userTypes('1', addInsultPage.insultTextField(at: 1));
       await when.pumpAndSettle();
 
-      await when.userTypes('2', scoreboardPage.insultTextField(at: 2));
+      await when.userTypes('2', addInsultPage.insultTextField(at: 2));
       await when.pumpAndSettle();
 
       await when.userDragsWidgetTo(
-        draggable: scoreboardPage.lowDraggable,
-        target: scoreboardPage.hiLowDragTarget(at: 1),
+        draggable: addInsultPage.lowDraggable,
+        target: addInsultPage.hiLowDragTarget(at: 1),
       );
 
       await when.userDragsWidgetTo(
-        draggable: scoreboardPage.hiDraggable,
-        target: scoreboardPage.hiLowDragTarget(at: 3),
+        draggable: addInsultPage.hiDraggable,
+        target: addInsultPage.hiLowDragTarget(at: 3),
       );
 
       await when.userDragsWidgetTo(
-        draggable: scoreboardPage.lowDraggable,
-        target: scoreboardPage.hiLowDragTarget(at: 2),
+        draggable: addInsultPage.lowDraggable,
+        target: addInsultPage.hiLowDragTarget(at: 2),
       );
 
       await when.userDragsWidgetTo(
-        draggable: scoreboardPage.hiDraggable,
-        target: scoreboardPage.hiLowDragTarget(at: 0),
+        draggable: addInsultPage.hiDraggable,
+        target: addInsultPage.hiLowDragTarget(at: 0),
       );
 
-      await when.userTaps(scoreboardPage.doneButton);
+      await when.userTaps(addInsultPage.saveButton);
       await when.pumpAndSettle();
 
       then.addedAppBlocEvents(
         containsAll(
           [SaveInsultEvent(r'$HI$ 0 $LOW$ 1 $LOW$ 2 $HI$ 3')],
         ),
+      );
+    }),
+  );
+
+  testWidgets(
+    'Should add SpeakInsultEvent when hitting listen button',
+    appHarness((given, when, then) async {
+      await given.pumpWidget(const AppPopupMenuButton());
+
+      await when.userTaps(find.byType(AppPopupMenuButton));
+      await when.pumpAndSettle();
+
+      await when.userTaps(homePage.menuItem(label: 'Add Insults'));
+      await when.pumpAndSettle();
+
+      await when.userTypes('anything', addInsultPage.insultTextField());
+      await when.pumpAndSettle();
+
+      await when.userDragsWidgetTo(
+        draggable: addInsultPage.hiDraggable,
+        target: addInsultPage.hiLowDragTarget(),
+      );
+
+      await when.userTaps(addInsultPage.listenButton);
+      await when.pumpAndSettle();
+
+      await when.idle();
+
+      then.addedScoreBlocEvents(
+        containsAll([SpeakInsultEvent(r'$HI$ anything')]),
       );
     }),
   );

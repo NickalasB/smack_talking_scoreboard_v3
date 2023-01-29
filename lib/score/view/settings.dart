@@ -6,6 +6,8 @@ import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/dismissible_insult_list.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
@@ -102,12 +104,12 @@ class AddInsultsContent extends StatefulWidget {
 
 class _AddInsultsContentState extends State<AddInsultsContent> {
   final Set<PlayerPlusTextInput> inputAndPlayerList = {};
+  final initialInsultTextController = TextEditingController();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    inputAndPlayerList.add(PlayerPlusTextInput(TextEditingController()));
+    inputAndPlayerList.add(PlayerPlusTextInput(initialInsultTextController));
   }
 
   @override
@@ -119,6 +121,7 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
       builder: (context) {
         final insultCreatorBloc = context.selectInsultCreator;
         final constructedInsult = insultCreatorBloc.state.constructedInsult;
+        final scoreboardBloc = context.readScoreboard;
 
         final isValidInsult = constructedInsult.trim().isNotEmpty &&
             !constructedInsult.contains(r'$invalid');
@@ -138,48 +141,83 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
               ),
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                const DraggableHiLowScore(
-                  draggableKey: Key('hi_draggable'),
-                  label: defaultHiText,
-                  isHighScorer: true,
-                ),
-                PrimaryButton.outlined(
-                  key: const Key('add_more_insult_text_button'),
-                  onPressed: () {
-                    setState(() {
-                      inputAndPlayerList.add(
-                        PlayerPlusTextInput(
-                          TextEditingController(),
-                          index: inputAndPlayerList.length,
-                        ),
-                      );
-                    });
-                  },
-                  label: l10.add,
-                ),
-                const DraggableHiLowScore(
-                  draggableKey: Key('low_draggable'),
-                  label: defaultLowText,
-                  isHighScorer: false,
+            Column(
+              children: [
+                if (initialInsultTextController.text.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      l10.createInsultHint,
+                      key: const Key('create_insult_hint'),
+                      style: Theme.of(context).textTheme.titleLarge,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    const DraggableHiLowScore(
+                      draggableKey: Key('hi_draggable'),
+                      label: defaultHiText,
+                      isHighScorer: true,
+                    ),
+                    PrimaryButton.outlined(
+                      key: const Key('add_more_insult_text_button'),
+                      onPressed: () {
+                        setState(() {
+                          inputAndPlayerList.add(
+                            PlayerPlusTextInput(
+                              TextEditingController(),
+                              index: inputAndPlayerList.length,
+                            ),
+                          );
+                        });
+                      },
+                      label: l10.addToInsult,
+                    ),
+                    const DraggableHiLowScore(
+                      draggableKey: Key('low_draggable'),
+                      label: defaultLowText,
+                      isHighScorer: false,
+                    ),
+                  ],
                 ),
               ],
             ),
             const Divider(thickness: 2),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: PrimaryButton.filled(
-                key: const Key('done_button'),
-                onPressed: isValidInsult
-                    ? () {
-                        appBloc.add(SaveInsultEvent(constructedInsult));
-                        Navigator.of(context).pop();
-                      }
-                    : null,
-                label: l10.done,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: PrimaryButton.filled(
+                    key: const Key('save_button'),
+                    onPressed: isValidInsult
+                        ? () {
+                            appBloc.add(SaveInsultEvent(constructedInsult));
+                            Navigator.of(context).pop();
+                          }
+                        : null,
+                    label: l10.save,
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: PrimaryButton.outlined(
+                    key: const Key('listen_button'),
+                    onPressed: isValidInsult
+                        ? () {
+                            scoreboardBloc.add(
+                              SpeakInsultEvent(constructedInsult),
+                            );
+                          }
+                        : null,
+                    label: l10.listen,
+                  ),
+                ),
+              ],
             ),
           ],
         );
