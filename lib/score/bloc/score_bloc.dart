@@ -199,7 +199,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     );
   }
 
-  void _speak(SpeakInsultEvent event, Emitter<ScoreboardState> emit) {
+  void _speak(SpeakInsultEvent event, _) {
     final genericInsult = event.insult
         .replaceAll(hiPlayerInsultKey, 'winning player')
         .replaceAll(lowPlayerInsultKey, 'losing player');

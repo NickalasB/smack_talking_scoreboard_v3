@@ -687,6 +687,30 @@ void main() {
         );
       });
     });
+
+    group('SpeakInsultEvent', () {
+      test(
+        'Should replace playerInsultKeys with correct default text and speak',
+        () async {
+          final fakeTts = FakeTts();
+          ScoreboardBloc(fakeTts).add(
+            SpeakInsultEvent(
+              '$hiPlayerInsultKey you are awesome. $lowPlayerInsultKey you stink',
+            ),
+          );
+          await tick();
+
+          expect(
+            fakeTts.fakeTsEvents,
+            [
+              FakeSpeakEvent(
+                'winning player you are awesome. losing player you stink',
+              ),
+            ],
+          );
+        },
+      );
+    });
   });
 }
 
