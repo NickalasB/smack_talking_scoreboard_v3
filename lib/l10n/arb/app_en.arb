@@ -38,6 +38,14 @@
   "@done": {
     "description": "button label for when a user is finished"
   },
+  "save": "SAVE",
+  "@save": {
+    "description": "label for when a user wants to save something"
+  },
+  "listen": "LISTEN",
+  "@listen": {
+    "description": "button label for when a user wants to listen to added insult"
+  },
   "roundWinner": "Round Winner: {playerName}",
   "@roundWinner": {
     "description": "label for displaying the current winner of the previous round",
@@ -74,9 +82,9 @@
   "@add": {
     "description": "add, as in 'add this widget to this thing'"
   },
-  "emptyInsultsHint": "Click and drag the \"HI\" and \"LOW\" buttons to the\n\"HI/LOW\" box above, to create custom insults.\n\nLike this... [Low scorer] you are terrible. [Hi scorer] you are amazing",
-  "@emptyInsultsHint": {
-    "description": "A hint telling users how to add insults"
+  "addToInsult": "ADD TO INSULT",
+  "@addToInsult": {
+    "description": "Text for button to add more text to created insult"
   },
   "customInsults": "Custom Insults",
   "@customInsults": {
@@ -141,5 +149,21 @@
   "exitGame": "Exit Game?",
   "@exitGame": {
     "description": "Title for exit game dialog"
+  },
+  "draggableToolTipLow": "Drag me to the HI/LOW above to insert the LOW scorer's name",
+  "@draggableToolTipLow": {
+    "description": "Tooltip for draggable LOW scorer widget on add insult screen"
+  },
+  "draggableToolTipHi": "Drag me to the HI/LOW above to insert the HI scorer's name",
+  "@draggableToolTipHi": {
+    "description": "Tooltip for draggable HI scorer widget on add insult screen"
+  },
+  "createInsultHint": "Click and drag HI or LOW to the HI/LOW above, to insert the name of the winning(HI), or losing(LOW), player",
+  "@createInsultHint": {
+    "description": "Hint text for instructions on how to create insults"
+  },
+  "initialInsultHint": "type an insult already!",
+  "@initialInsultHint": {
+    "description": "Insult input hint"
   }
 }

@@ -233,9 +233,27 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
     final secondLocation = tester.getCenter(target);
 
     final gesture = await tester.startGesture(firstLocation);
-    await gesture.moveTo(secondLocation);
+    // Have to add 50 here as the feedbackOffset for the DraggableHiLowScore is
+    // set to Offset(0, -50)
+    await gesture.moveTo(Offset(secondLocation.dx, secondLocation.dy + 50));
 
     await gesture.up();
+    await pumpAndSettle();
+  }
+
+  Future<void> userDragsWidgetToTargetThenOffTarget({
+    required Finder draggable,
+    required Finder target,
+  }) async {
+    final firstLocation = tester.getCenter(draggable);
+    final secondLocation = tester.getCenter(target);
+
+    final gesture = await tester.startGesture(firstLocation);
+    // Have to add 50 here as the feedbackOffset for the DraggableHiLowScore is
+    // set to Offset(0, -50)
+    await gesture.moveTo(Offset(secondLocation.dx, secondLocation.dy + 50));
+
+    await gesture.moveTo(firstLocation);
     await pumpAndSettle();
   }
 

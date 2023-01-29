@@ -27,6 +27,8 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     on<ToggleInsultVolumeEvent>(_toggleInsultVolume);
 
     on<ResetGameEvent>(_resetGame);
+
+    on<SpeakInsultEvent>(_speak);
   }
   final Tts tts;
 
@@ -195,6 +197,13 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         game: newGame,
       ),
     );
+  }
+
+  void _speak(SpeakInsultEvent event, _) {
+    final genericInsult = event.insult
+        .replaceAll(hiPlayerInsultKey, 'winning player')
+        .replaceAll(lowPlayerInsultKey, 'losing player');
+    tts.speak(genericInsult);
   }
 
   @override
