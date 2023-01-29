@@ -86,8 +86,8 @@
   "@addToInsult": {
     "description": "Text for button to add more text to created insult"
   },
-  "customInsults": "Custom Insults",
-  "@customInsults": {
+  "savedInsults": "Your Saved Smack Talk",
+  "@savedInsults": {
     "description": "Title for custom insults column"
   },
   "pickYourPoison": "Pick Your Poison",
