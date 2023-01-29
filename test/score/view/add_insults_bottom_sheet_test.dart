@@ -33,6 +33,37 @@ void main() {
   );
 
   testWidgets(
+    'Should show tool tips when user taps draggable HI or LOW',
+    appHarness((given, when, then) async {
+      await given.pumpWidget(const AppPopupMenuButton());
+
+      await when.userTaps(find.byType(AppPopupMenuButton));
+      await when.pumpAndSettle();
+
+      await when.userTaps(homePage.menuItem(label: 'Add Insults'));
+      await when.pumpAndSettle();
+
+      await when.userTaps(addInsultPage.hiDraggable);
+      await when.pumpAndSettle();
+
+      then.findsWidget(
+        addInsultPage.toolTipMessage(
+          "Drag me to the HI/LOW above to insert the HI scorer's name",
+        ),
+      );
+
+      await when.userTaps(addInsultPage.lowDraggable);
+      await when.pumpAndSettle();
+
+      then.findsWidget(
+        addInsultPage.toolTipMessage(
+          "Drag me to the HI/LOW above to insert the LOW scorer's name",
+        ),
+      );
+    }),
+  );
+
+  testWidgets(
     'Should disable Done button and Listen button when no insults have been added',
     appHarness((given, when, then) async {
       await given.pumpWidget(const AddInsultsBottomSheet());

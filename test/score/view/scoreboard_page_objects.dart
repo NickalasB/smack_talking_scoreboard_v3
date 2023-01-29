@@ -42,6 +42,10 @@ class AddInsultPage extends PageObject {
 
   Finder get createInsultHint => find.byKey(const Key('create_insult_hint'));
 
+  Finder toolTipMessage(String message) => find.byWidgetPredicate(
+        (widget) => widget is Tooltip && widget.message == message,
+      );
+
   Finder get saveButton => find.byKey(const Key('save_button'));
 
   Finder get listenButton => find.byKey(const Key('listen_button'));
