@@ -51,10 +51,13 @@ void main() {
         );
         await when.pumpAndSettle();
 
-        await then.multiScreenGoldensMatch('styled_insults', devices: [
-          Device.phone,
-          Device.phone.dark(),
-        ]);
+        await then.multiScreenGoldensMatch(
+          'styled_insults',
+          devices: [
+            Device.phone,
+            Device.phone.dark(),
+          ],
+        );
       }),
     );
 
