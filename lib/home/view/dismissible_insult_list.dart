@@ -134,7 +134,8 @@ TextSpan replaceWordsWithStyledText(BuildContext context, String input) {
             ),
           ),
         );
-      } else if (word == lowPlayerInsultKey) {
+      }
+      if (word == lowPlayerInsultKey) {
         children.add(
           TextSpan(
             text: defaultLowText,
@@ -144,8 +145,6 @@ TextSpan replaceWordsWithStyledText(BuildContext context, String input) {
             ),
           ),
         );
-      } else {
-        children.add(TextSpan(text: word, style: bodyMediumStyle));
       }
       return '';
     },
