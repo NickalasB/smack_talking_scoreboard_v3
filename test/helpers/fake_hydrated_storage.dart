@@ -35,4 +35,9 @@ class FakeStorage implements Storage {
     final json = value as FakeScoreboardJson;
     storageMap.update(key, (value) => json, ifAbsent: () => json);
   }
+
+  @override
+  Future<void> close() {
+    throw UnimplementedError();
+  }
 }
