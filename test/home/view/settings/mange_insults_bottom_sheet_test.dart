@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
-import 'package:smack_talking_scoreboard_v3/score/view/settings.dart';
+import 'package:smack_talking_scoreboard_v3/home/view/settings.dart';
 
-import '../../harness.dart';
+import '../../../harness.dart';
 
 void main() {
   group('Manage Insults BottomSheet', () {
