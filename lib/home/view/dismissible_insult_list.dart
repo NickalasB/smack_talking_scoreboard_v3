@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/home/view/settings.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 
 class DismissibleInsultList extends StatefulWidget {
   const DismissibleInsultList({super.key});
@@ -34,10 +36,9 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
                 )
               ]
             : [
-                ...insults.map((e) {
-                  final insult = e;
+                ...insults.map((insult) {
                   return Dismissible(
-                    key: Key('insult_${insults.indexOf(e)}'),
+                    key: Key('insult_${insults.indexOf(insult)}'),
                     onDismissed: (direction) {
                       bloc.add(
                         DeleteInsultEvent(insult),
@@ -66,12 +67,18 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
                               alignment: AlignmentDirectional.centerStart,
                               child: Row(
                                 children: [
-                                  const Text('•'),
+                                  Text(
+                                    '•',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
                                   const SizedBox(width: 2),
                                   Flexible(
-                                    child: Text(
-                                      insult,
-                                      style: theme.textTheme.bodyLarge,
+                                    child: Text.rich(
+                                      replaceWordsWithStyledText(
+                                        context,
+                                        insult,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -105,4 +112,48 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
           ),
         ),
       );
+}
+
+TextSpan replaceWordsWithStyledText(BuildContext context, String input) {
+  final children = <TextSpan>[];
+
+  final theme = Theme.of(context);
+  final bodyMediumStyle = theme.textTheme.bodyMedium;
+
+  input.splitMapJoin(
+    RegExp(r'\$\w+\$'),
+    onMatch: (match) {
+      final word = match.group(0) ?? '';
+      if (word == hiPlayerInsultKey) {
+        children.add(
+          TextSpan(
+            text: defaultHiText,
+            style: bodyMediumStyle?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+        );
+      } else if (word == lowPlayerInsultKey) {
+        children.add(
+          TextSpan(
+            text: defaultLowText,
+            style: bodyMediumStyle?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.error,
+            ),
+          ),
+        );
+      } else {
+        children.add(TextSpan(text: word, style: bodyMediumStyle));
+      }
+      return '';
+    },
+    onNonMatch: (nonMatch) {
+      children.add(TextSpan(text: nonMatch, style: bodyMediumStyle));
+      return '';
+    },
+  );
+
+  return TextSpan(children: children);
 }
