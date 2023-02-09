@@ -37,6 +37,30 @@ void main() {
       }),
     );
 
+    testGoldens(
+      r'Should properly replace and style instances of $HI$ and $LOW$ within insults',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          const ManageInsultsBottomSheet(),
+          appState: const AppState().copyWith(
+            insults: [
+              r' $HI$ you are awesome. $LOW$ you are poop',
+              'Nothing to replace or style here'
+            ],
+          ),
+        );
+        await when.pumpAndSettle();
+
+        await then.multiScreenGoldensMatch(
+          'styled_insults',
+          devices: [
+            Device.phone,
+            Device.phone.dark(),
+          ],
+        );
+      }),
+    );
+
     for (final brightness in Brightness.values) {
       testGoldens(
         'Should display correct background color and icon when user swipes insult LEFT from Settings BottomSheet_${brightness.name}',

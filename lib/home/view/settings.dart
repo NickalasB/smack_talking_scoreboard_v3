@@ -28,11 +28,12 @@ class AddInsultsBottomSheet extends StatelessWidget {
         height: 500,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: const [
+          children: [
             BottomSheetHeader(
-              key: Key('add_insults_bottom_sheet'),
+              title: context.l10n.addYourOwnSmackTalk,
+              key: const Key('add_insults_bottom_sheet'),
             ),
-            Expanded(
+            const Expanded(
               child: AddInsultsContent(),
             ),
           ],
@@ -55,11 +56,12 @@ class ManageInsultsBottomSheet extends StatelessWidget {
         height: 500,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: const [
+          children: [
             BottomSheetHeader(
-              key: Key('mange_insults_bottom_sheet'),
+              title: context.l10n.savedInsults,
+              key: const Key('mange_insults_bottom_sheet'),
             ),
-            Expanded(
+            const Expanded(
               child: DismissibleInsultList(),
             ),
           ],
@@ -70,19 +72,22 @@ class ManageInsultsBottomSheet extends StatelessWidget {
 }
 
 class BottomSheetHeader extends StatelessWidget {
-  const BottomSheetHeader({super.key});
+  const BottomSheetHeader({
+    required this.title,
+    super.key,
+  });
+
+  final String title;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
     return Column(
       children: [
         const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Text(
-            l10n.addYourOwnSmackTalk,
+            title,
             style:
                 Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 28),
           ),

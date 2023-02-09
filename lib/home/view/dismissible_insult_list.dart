@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/home/view/settings.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 
 class DismissibleInsultList extends StatefulWidget {
   const DismissibleInsultList({super.key});
@@ -17,74 +19,79 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
     final insults = bloc.state.insults;
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: insults.isEmpty
-              ? [
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(
-                        context.l10n.createInsultHint,
-                        style: theme.textTheme.titleMedium,
-                        textAlign: TextAlign.center,
-                      ),
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: insults.isEmpty
+            ? [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      context.l10n.createInsultHint,
+                      style: theme.textTheme.titleMedium,
+                      textAlign: TextAlign.center,
                     ),
-                  )
-                ]
-              : [
-                  Text(
-                    context.l10n.customInsults,
-                    style: theme.textTheme.titleLarge,
                   ),
-                  const SizedBox(height: 8),
-                  ...insults.map((e) {
-                    final insult = e;
-                    return Dismissible(
-                      key: Key('insult_${insults.indexOf(e)}'),
-                      onDismissed: (direction) {
-                        bloc.add(
-                          DeleteInsultEvent(insult),
-                        );
-                      },
-                      background: deleteBackground(
-                        theme,
-                        Alignment.centerLeft,
-                      ),
-                      secondaryBackground: deleteBackground(
-                        theme,
-                        Alignment.centerRight,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            minHeight: kTextTabBarHeight,
+                )
+              ]
+            : [
+                ...insults.map((insult) {
+                  return Dismissible(
+                    key: Key('insult_${insults.indexOf(insult)}'),
+                    onDismissed: (direction) {
+                      bloc.add(
+                        DeleteInsultEvent(insult),
+                      );
+                    },
+                    background: deleteBackground(
+                      theme,
+                      Alignment.centerLeft,
+                    ),
+                    secondaryBackground: deleteBackground(
+                      theme,
+                      Alignment.centerRight,
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
                           ),
-                          child: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Row(
-                              children: [
-                                const Text('•'),
-                                const SizedBox(width: 2),
-                                Flexible(
-                                  child: Text(
-                                    insult,
-                                    style: theme.textTheme.bodyLarge,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              minHeight: kTextTabBarHeight,
+                            ),
+                            child: Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '•',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(width: 2),
+                                  Flexible(
+                                    child: Text.rich(
+                                      replaceWordsWithStyledText(
+                                        context,
+                                        insult,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  }),
-                ],
-        ),
+                        const Divider(),
+                      ],
+                    ),
+                  );
+                }),
+              ],
       ),
     );
   }
@@ -105,4 +112,47 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
           ),
         ),
       );
+}
+
+TextSpan replaceWordsWithStyledText(BuildContext context, String input) {
+  final children = <TextSpan>[];
+
+  final theme = Theme.of(context);
+  final bodyMediumStyle = theme.textTheme.bodyMedium;
+
+  input.splitMapJoin(
+    RegExp(r'\$\w+\$'),
+    onMatch: (match) {
+      final word = match.group(0) ?? '';
+      if (word == hiPlayerInsultKey) {
+        children.add(
+          TextSpan(
+            text: defaultHiText,
+            style: bodyMediumStyle?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+        );
+      }
+      if (word == lowPlayerInsultKey) {
+        children.add(
+          TextSpan(
+            text: defaultLowText,
+            style: bodyMediumStyle?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.error,
+            ),
+          ),
+        );
+      }
+      return '';
+    },
+    onNonMatch: (nonMatch) {
+      children.add(TextSpan(text: nonMatch, style: bodyMediumStyle));
+      return '';
+    },
+  );
+
+  return TextSpan(children: children);
 }
