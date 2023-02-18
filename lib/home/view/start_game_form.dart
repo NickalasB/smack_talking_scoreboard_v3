@@ -72,6 +72,7 @@ class _StartGameFormState extends State<StartGameForm> {
             PrimaryButton.filled(
               key: const Key('lets_go_button'),
               label: strings.letsGo,
+              textStyle: Theme.of(context).textTheme.headlineSmall,
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   context.addScoreboardEvent(
