@@ -31,6 +31,9 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
     if (widget.shouldPlayAtLaunch) {
       confettiController.play();
     }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.readScoreboard.add(GameOverEvent());
+    });
   }
 
   @override
