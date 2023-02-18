@@ -5,6 +5,7 @@ class PrimaryButton extends StatelessWidget {
     super.key,
     this.onPressed,
     this.label,
+    this.textStyle,
     this.child,
     required bool isFilled,
     this.minWidth = 120,
@@ -18,6 +19,7 @@ class PrimaryButton extends StatelessWidget {
     Key? key,
     VoidCallback? onPressed,
     Widget? child,
+    TextStyle? textStyle,
     String? label,
     double minWidth = 120,
   }) {
@@ -25,6 +27,7 @@ class PrimaryButton extends StatelessWidget {
       key: key,
       onPressed: onPressed,
       label: label,
+      textStyle: textStyle,
       isFilled: true,
       minWidth: minWidth,
       child: child,
@@ -36,12 +39,14 @@ class PrimaryButton extends StatelessWidget {
     VoidCallback? onPressed,
     Widget? child,
     String? label,
+    TextStyle? textStyle,
     double minWidth = 120,
   }) {
     return PrimaryButton._(
       key: key,
       onPressed: onPressed,
       label: label,
+      textStyle: textStyle,
       isFilled: false,
       minWidth: minWidth,
       child: child,
@@ -53,6 +58,7 @@ class PrimaryButton extends StatelessWidget {
   final Widget? child;
   final bool _isFilled;
   final double minWidth;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +67,13 @@ class PrimaryButton extends StatelessWidget {
       minimumSize: Size(minWidth, kMinInteractiveDimension),
       backgroundColor: theme.colorScheme.primary,
       foregroundColor: theme.colorScheme.surface,
+      textStyle: textStyle,
     );
 
     final outlinedStyle = OutlinedButton.styleFrom(
       minimumSize: Size(minWidth, kMinInteractiveDimension),
       foregroundColor: theme.colorScheme.primary,
+      textStyle: textStyle,
     );
     final onPressed = this.onPressed;
     final buttonChild = label != null ? Text(label!) : child!;
