@@ -51,6 +51,7 @@ class _HomePageState extends State<HomePage> {
             child: PrimaryButton.filled(
               key: const Key('get_started_button'),
               label: strings.getStarted,
+              textStyle: Theme.of(context).textTheme.headlineSmall,
               onPressed: () async {
                 await showDialog<void>(
                   context: context,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/score.dart';
@@ -25,8 +26,8 @@ class _ChangeTurnButtonState extends State<ChangeTurnButton> {
 
   @override
   Widget build(BuildContext context) {
-    const next = 'NEXT';
     final theme = Theme.of(context);
+    final next = context.l10n.next;
 
     final horizontalNext = Column(
       mainAxisSize: MainAxisSize.min,
@@ -55,6 +56,7 @@ class _ChangeTurnButtonState extends State<ChangeTurnButton> {
               _checkIfGameHasWinner();
             },
       label: widget.isLandscape ? null : next,
+      textStyle: Theme.of(context).textTheme.headlineSmall,
       child: widget.isLandscape ? horizontalNext : null,
     );
   }
