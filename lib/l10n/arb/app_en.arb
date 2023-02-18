@@ -126,6 +126,10 @@
   "@defaultFormError": {
     "description": "default error message on invalid text input"
   },
+  "zeroValueFormError": "Zero!? Really? Try harder",
+  "@zeroValueFormError": {
+    "description": "error message when text input is zero"
+  },
   "playerWins": "{winningPlayerName} WINS!!",
   "@playerWins": {
     "description": "dynamic title for winning player",

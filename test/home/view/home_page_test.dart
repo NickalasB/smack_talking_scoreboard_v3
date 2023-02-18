@@ -155,6 +155,26 @@ void main() {
         appHarness((given, when, then) async {
           await given.pumpWidget(const StartGameForm());
 
+          await when.userTypes('0', homePage.winByTextInput);
+          await when.pumpAndSettle();
+
+          await when.userTaps(homePage.letsGoButton);
+          await when.pumpAndSettle();
+
+          then.findsWidgets(
+            find.text('Zero!? Really? Try harder'),
+            widgetCount: 1,
+          );
+
+          expect(then.harness.scoreBloc.addedEvents, isEmpty);
+        }),
+      );
+
+      testWidgets(
+        "Should display zero value error for each textInput with a value of zero when when hitting Let's go button",
+        appHarness((given, when, then) async {
+          await given.pumpWidget(const StartGameForm());
+
           await when.userTaps(homePage.letsGoButton);
 
           await when.pumpAndSettle();
