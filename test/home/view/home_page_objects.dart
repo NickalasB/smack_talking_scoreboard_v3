@@ -12,8 +12,6 @@ class AddInsultPage extends PageObject {
 
   Finder get undoInsultButton => find.byKey(const Key('insult_undo_button'));
 
-  Finder get createInsultHint => find.byKey(const Key('create_insult_hint'));
-
   Finder toolTipMessage(String message) => find.byWidgetPredicate(
         (widget) => widget is Tooltip && widget.message == message,
       );

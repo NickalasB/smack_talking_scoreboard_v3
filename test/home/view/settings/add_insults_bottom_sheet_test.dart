@@ -14,26 +14,6 @@ import '../home_page_objects.dart';
 
 void main() {
   testWidgets(
-    'Should show create insult hint when no insults started, then hide when user starts typing',
-    appHarness((given, when, then) async {
-      await given.pumpWidget(const AppPopupMenuButton());
-
-      await when.userTaps(find.byType(AppPopupMenuButton));
-      await when.pumpAndSettle();
-
-      await when.userTaps(homePage.menuItem(label: 'Add Insults'));
-      await when.pumpAndSettle();
-
-      then.findsWidget(addInsultPage.createInsultHint);
-
-      await when.userTypes('anything', addInsultPage.insultTextField());
-      await when.pumpAndSettle();
-
-      then.findsNoWidget(addInsultPage.createInsultHint);
-    }),
-  );
-
-  testWidgets(
     'Should show tool tips when user taps draggable HI or LOW',
     appHarness((given, when, then) async {
       await given.pumpWidget(const AppPopupMenuButton());

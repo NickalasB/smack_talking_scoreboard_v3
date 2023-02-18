@@ -158,7 +158,7 @@
   "@draggableToolTipHi": {
     "description": "Tooltip for draggable HI scorer widget on add insult screen"
   },
-  "createInsultHint": "Click and drag HI or LOW to the HI/LOW above, to insert the name of the winning(HI), or losing(LOW), player",
+  "createInsultHint": "Good job! You deleted all the insults and disabled the only cool thing about this lame app!",
   "@createInsultHint": {
     "description": "Hint text for instructions on how to create insults"
   },

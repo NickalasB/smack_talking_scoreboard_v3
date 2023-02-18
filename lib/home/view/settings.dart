@@ -188,16 +188,6 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
             const SizedBox(height: 16),
             Column(
               children: [
-                if (initialInsultTextController.text.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      l10.createInsultHint,
-                      key: const Key('create_insult_hint'),
-                      style: Theme.of(context).textTheme.titleLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
