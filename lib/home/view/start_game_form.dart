@@ -143,6 +143,9 @@ class _GameFormField extends StatelessWidget {
         if (value == null || value.isEmpty) {
           return strings.defaultFormError;
         }
+        if (int.tryParse(value) == 0) {
+          return strings.zeroValueFormError;
+        }
         return null;
       },
       keyboardType: keyboardType,
