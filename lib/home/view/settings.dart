@@ -1,5 +1,6 @@
 // ignore_for_file:use_key_in_widget_constructors
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
@@ -145,7 +146,41 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
                 child: SingleChildScrollView(
                   child: Wrap(
                     runSpacing: 4,
-                    children: inputAndPlayerList.toList(),
+                    children: inputAndPlayerList.mapIndexed<Widget>((i, w) {
+                      if (i + 1 > 1 && i + 1 == inputAndPlayerList.length) {
+                        return Stack(
+                          children: [
+                            w,
+                            Positioned(
+                              right: 1,
+                              top: 1,
+                              child: SizedOverflowBox(
+                                size: const Size(24, 24),
+                                child: IconButton(
+                                  key: const Key('insult_undo_button'),
+                                  alignment: Alignment.topRight,
+                                  padding: EdgeInsets.zero,
+                                  icon: const Icon(
+                                    Icons.cancel_outlined,
+                                  ),
+                                  onPressed: () {
+                                    insultCreatorBloc.add(
+                                      CreateInsultEvent(
+                                        '',
+                                        index: inputAndPlayerList.length - 1,
+                                      ),
+                                    );
+                                    inputAndPlayerList
+                                        .remove(inputAndPlayerList.last);
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      return w;
+                    }).toList(),
                   ),
                 ),
               ),
@@ -220,7 +255,7 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
                     onPressed: isValidInsult
                         ? () {
                             scoreboardBloc.add(
-                              SpeakInsultEvent(constructedInsult),
+                              SpeakInsultEvent(constructedInsult.trim()),
                             );
                           }
                         : null,
@@ -279,6 +314,7 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
   @override
   void dispose() {
     widget.controller.removeListener(createInsultEvent);
+    focusNode.dispose();
     super.dispose();
   }
 

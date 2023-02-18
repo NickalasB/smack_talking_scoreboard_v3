@@ -10,6 +10,8 @@ final homePage = HomePageObjects();
 class AddInsultPage extends PageObject {
   AddInsultPage() : super(find.byType(AddInsultsBottomSheet));
 
+  Finder get undoInsultButton => find.byKey(const Key('insult_undo_button'));
+
   Finder get createInsultHint => find.byKey(const Key('create_insult_hint'));
 
   Finder toolTipMessage(String message) => find.byWidgetPredicate(
