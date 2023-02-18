@@ -26,6 +26,8 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     on<ToggleInsultVolumeEvent>(_toggleInsultVolume);
 
+    on<GameOverEvent>(_gameOverEvent);
+
     on<ResetGameEvent>(_resetGame);
 
     on<SpeakInsultEvent>(_speak);
@@ -195,6 +197,14 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
       state.copyWith(
         isGameInProgress: event.shouldKeepNames,
         game: newGame,
+      ),
+    );
+  }
+
+  void _gameOverEvent(GameOverEvent event, Emitter<ScoreboardState> emit) {
+    emit(
+      state.copyWith(
+        game: state.game.copyWith(gameWinner: null),
       ),
     );
   }

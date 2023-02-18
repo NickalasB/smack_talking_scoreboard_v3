@@ -29,6 +29,22 @@ void main() {
     );
 
     testWidgets(
+      'Should add GameOverEvent when first launched',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          GameWinnerDialog(testPlayer1),
+          scoreboardState: _testGameWinnerState(testPlayer1),
+        );
+
+        then.addedScoreBlocEvents(
+          containsAll(
+            [GameOverEvent()],
+          ),
+        );
+      }),
+    );
+
+    testWidgets(
       'Should add ResetGameEvent, keep names and pop when yes button pressed',
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
