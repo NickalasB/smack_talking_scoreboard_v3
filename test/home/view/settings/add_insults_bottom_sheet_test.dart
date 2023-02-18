@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/settings.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
@@ -240,6 +241,58 @@ void main() {
 
       then.addedScoreBlocEvents(
         containsAll([SpeakInsultEvent(r'$HI$ anything')]),
+      );
+    }),
+  );
+
+  testWidgets(
+    'Should remove last insult string when hitting undo button',
+    appHarness((given, when, then) async {
+      await given.pumpWidget(const AddInsultsBottomSheet());
+      await when.pumpAndSettle();
+
+      await when.userTypes('anything', addInsultPage.insultTextField());
+      await when.pumpAndSettle();
+
+      await when.userDragsWidgetTo(
+        draggable: addInsultPage.hiDraggable,
+        target: addInsultPage.hiLowDragTarget(),
+      );
+
+      await when.userTaps(addInsultPage.addMoreInsultButton);
+      await when.pumpAndSettle();
+
+      await when.userTypes(
+        'I should be deleted when undo button is pressed',
+        addInsultPage.insultTextField(at: 1),
+      );
+      await when.pumpAndSettle();
+
+      await when.userDragsWidgetTo(
+        draggable: addInsultPage.lowDraggable,
+        target: addInsultPage.hiLowDragTarget(at: 1),
+      );
+
+      then.addedInsultCreatorEvents(
+        const TypeMatcher<List<InsultCreatorEvent>>().having(
+          (p0) => p0.last,
+          'lastEvent',
+          CreateInsultEvent(
+            r'$LOW$ I should be deleted when undo button is pressed',
+            index: 1,
+          ),
+        ),
+      );
+
+      await when.userTaps(addInsultPage.undoInsultButton);
+      await when.pumpAndSettle();
+
+      then.addedInsultCreatorEvents(
+        const TypeMatcher<List<InsultCreatorEvent>>().having(
+          (p0) => p0.last,
+          'lastEvent',
+          CreateInsultEvent('', index: 1),
+        ),
       );
     }),
   );

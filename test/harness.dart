@@ -179,15 +179,15 @@ extension AppThen on WidgetTestThen<AppHarness> {
     );
   }
 
-  void addedScoreBlocEvents(Matcher matcher) {
+  void addedScoreBlocEvents(dynamic matcher) {
     expect(harness.scoreBloc.addedEvents, matcher);
   }
 
-  void addedAppBlocEvents(Matcher matcher) {
+  void addedAppBlocEvents(dynamic matcher) {
     expect(harness.appBloc.addedEvents, matcher);
   }
 
-  void addedInsultCreatorEvents(Matcher matcher) {
+  void addedInsultCreatorEvents(dynamic matcher) {
     expect(harness.insultCreatorBloc.addedEvents, matcher);
   }
 }
