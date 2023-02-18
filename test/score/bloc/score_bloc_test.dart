@@ -602,6 +602,25 @@ void main() {
       });
     });
 
+    group('GameOverEvent', () {
+      test('should null out gameWinner when adding GameOverEvent', () async {
+        final bloc = ScoreboardBloc(FakeTts())
+          ..emit(
+            initialScoreboardState.copyWith(
+              game:
+                  initialScoreboardState.game.copyWith(gameWinner: testPlayer1),
+            ),
+          );
+
+        expect(bloc.state.game.gameWinner, isNotNull);
+
+        bloc.add(GameOverEvent());
+        await tick();
+
+        expect(bloc.state.game.gameWinner, isNull);
+      });
+    });
+
     group('ResetGameEvent', () {
       test(
           'Should reset scores and rounds but keep gamePointParams when ResetGameEvent added',
