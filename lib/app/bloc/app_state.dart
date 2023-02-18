@@ -16,6 +16,7 @@ extension AppContext on BuildContext {
 class AppState extends Equatable {
   const AppState({
     this.insults = const [],
+    this.didCompleteInitialLoad = false,
   });
 
   factory AppState.fromJson(Map<String, dynamic> json) {
@@ -26,14 +27,18 @@ class AppState extends Equatable {
 
   AppState copyWith({
     List<String>? insults,
+    bool? didCompleteInitialLoad,
   }) {
     return AppState(
       insults: insults ?? this.insults,
+      didCompleteInitialLoad:
+          didCompleteInitialLoad ?? this.didCompleteInitialLoad,
     );
   }
 
   final List<String> insults;
+  final bool didCompleteInitialLoad;
 
   @override
-  List<Object?> get props => [insults];
+  List<Object?> get props => [insults, didCompleteInitialLoad];
 }

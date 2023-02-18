@@ -19,22 +19,36 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
         .where((insult) => !event.defaultInsults.contains(insult))
         .toList();
 
-    final userModifiedDefaultInsults = event.defaultInsults
-        .where((insult) => state.insults.contains(insult))
-        .toList();
-
-    final correctDefaultInsultsToUse = userModifiedDefaultInsults.isNotEmpty
-        ? userModifiedDefaultInsults
-        : event.defaultInsults;
+    final correctDefaultInsultsToUse =
+        _correctDefaultInsultsToUse(event.defaultInsults).toSet();
 
     return emit(
       state.copyWith(
         insults: [
           ...userAddedInsultsOnly.toSet(),
-          ...correctDefaultInsultsToUse.toSet(),
+          ...correctDefaultInsultsToUse,
         ],
+        didCompleteInitialLoad: correctDefaultInsultsToUse.isNotEmpty,
       ),
     );
+  }
+
+  List<String> _correctDefaultInsultsToUse(
+    List<String> defaultInsults,
+  ) {
+    final userModifiedDefaultInsults = defaultInsults
+        .where((insult) => state.insults.contains(insult))
+        .toList();
+
+    if (!state.didCompleteInitialLoad) {
+      return defaultInsults;
+    } else {
+      if (userModifiedDefaultInsults.isNotEmpty) {
+        return userModifiedDefaultInsults;
+      } else {
+        return [];
+      }
+    }
   }
 
   void _saveInsult(SaveInsultEvent event, Emitter<AppState> emit) {

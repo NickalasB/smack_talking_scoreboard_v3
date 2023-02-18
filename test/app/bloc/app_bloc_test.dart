@@ -32,6 +32,7 @@ void main() {
         equals(
           const AppState().copyWith(
             insults: const ['default1', 'default2'],
+            didCompleteInitialLoad: true,
           ),
         ),
       );
@@ -56,6 +57,47 @@ void main() {
         equals(
           const AppState().copyWith(
             insults: const ['userSavedInsult', 'default1', 'default2'],
+            didCompleteInitialLoad: true,
+          ),
+        ),
+      );
+    });
+
+    test(
+        'should emit state with empty default insults when a user has deleted them all',
+        () async {
+      final bloc = AppBloc()
+        ..add(
+          SaveInsultEvent('userSavedInsult'),
+        );
+      await tick();
+
+      bloc.add(
+        LoadDefaultInsultsEvent(
+          defaultInsults: const ['default1', 'default2'],
+        ),
+      );
+      await tick();
+
+      bloc.add(DeleteInsultEvent('default1'));
+      await tick();
+      bloc.add(DeleteInsultEvent('default2'));
+      await tick();
+      bloc.add(DeleteInsultEvent('userSavedInsult'));
+      await tick();
+
+      bloc.add(
+        LoadDefaultInsultsEvent(
+          defaultInsults: const ['default1', 'default2'],
+        ),
+      );
+
+      expectStateAndHydratedState(
+        bloc,
+        equals(
+          const AppState().copyWith(
+            insults: const [],
+            didCompleteInitialLoad: true,
           ),
         ),
       );
@@ -89,6 +131,7 @@ void main() {
         equals(
           const AppState().copyWith(
             insults: const ['userSavedInsult', 'default1', 'default2'],
+            didCompleteInitialLoad: true,
           ),
         ),
       );
@@ -121,6 +164,7 @@ void main() {
         equals(
           const AppState().copyWith(
             insults: const ['default2'],
+            didCompleteInitialLoad: true,
           ),
         ),
       );
