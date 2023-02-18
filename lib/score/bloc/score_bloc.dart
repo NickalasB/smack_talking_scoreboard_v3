@@ -4,6 +4,7 @@
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
+// ignore_for_file:avoid_redundant_argument_values
 import 'package:collection/collection.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
@@ -41,7 +42,6 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         game: state.game.copyWith(
           players: [event.player1, event.player2],
           gamePointParams: event.gamePointParams,
-          // ignore:avoid_redundant_argument_values
           gameWinner: null,
         ),
       ),
