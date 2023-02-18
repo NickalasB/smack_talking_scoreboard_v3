@@ -37,6 +37,25 @@ void main() {
       }),
     );
 
+    testWidgets(
+      'Should show empty state text when user has no insults',
+      appHarness((given, when, then) async {
+        await given.pumpWidgetWithState(
+          const ManageInsultsBottomSheet(),
+          appState: const AppState().copyWith(
+            insults: [],
+          ),
+        );
+        await when.pumpAndSettle();
+
+        then.findsWidget(
+          find.text(
+            'Good job! You deleted all the insults and disabled the only cool thing about this lame app!',
+          ),
+        );
+      }),
+    );
+
     testGoldens(
       r'Should properly replace and style instances of $HI$ and $LOW$ within insults',
       appHarness((given, when, then) async {
