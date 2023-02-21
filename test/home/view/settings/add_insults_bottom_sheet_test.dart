@@ -1,7 +1,8 @@
 // ignore_for_file:avoid_redundant_argument_values
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/settings.dart';
@@ -13,6 +14,63 @@ import '../../../harness.dart';
 import '../home_page_objects.dart';
 
 void main() {
+  testGoldens(
+    'Should look right',
+    appHarness((given, when, then) async {
+      await given.pumpWidget(const AppPopupMenuButton());
+
+      await when.userTaps(find.byType(AppPopupMenuButton));
+      await when.pumpAndSettle();
+
+      await when.userTaps(homePage.menuItem(label: 'Add Insults'));
+      await when.pumpAndSettle();
+
+      await then.multiScreenGoldensMatch('add_insult_bottom_sheet');
+    }),
+  );
+
+  testWidgets(
+    'Bottom sheet should be FractionallySizedBox with a height factor of .5 when Bottom View Inset is 0 (Keyboard is hidden)',
+    appHarness((given, when, then) async {
+      await given.pumpWidget(
+        const MediaQuery(
+          data: MediaQueryData(
+            viewInsets: EdgeInsets.zero,
+          ),
+          child: AddInsultsBottomSheet(),
+        ),
+      );
+
+      then.findsWidget(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is FractionallySizedBox && widget.heightFactor == .5,
+        ),
+      );
+    }),
+  );
+
+  testWidgets(
+    'Bottom sheet should be FractionallySizedBox with a height factor of .90 when Bottom View Inset is NOT 0 (Keyboard is visible)',
+    appHarness((given, when, then) async {
+      await given.pumpWidget(
+        const MediaQuery(
+          data: MediaQueryData(
+            viewInsets: EdgeInsets.only(bottom: 100),
+          ),
+          child: AddInsultsBottomSheet(),
+        ),
+      );
+
+      then.findsWidget(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is FractionallySizedBox && widget.heightFactor == .90,
+        ),
+      );
+    }),
+  );
+
   testWidgets(
     'Should show tool tips when user taps draggable HI or LOW',
     appHarness((given, when, then) async {
