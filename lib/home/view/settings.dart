@@ -21,14 +21,13 @@ class AddInsultsBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final offSetFromScreenBottom = MediaQuery.of(context).viewInsets.bottom;
-    print('Nick $offSetFromScreenBottom');
+    final bottomViewInset = MediaQuery.of(context).viewInsets.bottom;
     return Padding(
       padding: EdgeInsets.only(
-        bottom: offSetFromScreenBottom,
+        bottom: bottomViewInset,
       ),
       child: FractionallySizedBox(
-        heightFactor: offSetFromScreenBottom != 0 ? .90 : .5,
+        heightFactor: bottomViewInset != 0 ? .90 : .5,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -55,8 +54,8 @@ class ManageInsultsBottomSheet extends StatelessWidget {
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
-      child: SizedBox(
-        height: 500,
+      child: FractionallySizedBox(
+        heightFactor: .5,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
