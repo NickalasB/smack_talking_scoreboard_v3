@@ -15,6 +15,8 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart'
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
+import 'dismissible_insult_list.dart';
+
 const _numOfScrollingInsults = 8;
 
 class HomePage extends StatefulWidget {
@@ -106,9 +108,13 @@ class _HomePageState extends State<HomePage> {
                         controller: controller,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          return Text(
-                            '${_items[Random().nextInt(_items.length)]} ',
-                            style: Theme.of(context).textTheme.headlineLarge,
+                          return Text.rich(
+                            replaceWordsWithStyledText(
+                              context,
+                              '${_items[Random().nextInt(_items.length)]} ',
+                              textStyle:
+                                  Theme.of(context).textTheme.headlineLarge!,
+                            ),
                           );
                         },
                       ),
