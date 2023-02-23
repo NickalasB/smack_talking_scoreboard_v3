@@ -265,6 +265,14 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
     return tester.pump(duration);
   }
 
+  // Use this when the screen will never pumpAndSettle
+  // https://github.com/flutter/flutter/issues/60372#issuecomment-654634203
+  Future<void> pumpForInfiniteAnimation() async {
+    for (var count = 0; count < 2; count += 1) {
+      await pump(duration: const Duration(seconds: 3));
+    }
+  }
+
   Future<void> userTypes(String text, Finder finder) {
     return tester.enterText(finder, text);
   }

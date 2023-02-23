@@ -17,7 +17,11 @@ import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_but
 
 import 'dismissible_insult_list.dart';
 
-const _numOfScrollingInsults = 8;
+@visibleForTesting
+const numOfScrollingInsults = 8;
+
+@visibleForTesting
+const maxDefaultInsultIndex = 22;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,12 +33,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Timer? _timer;
   final List<ScrollController> _scrollControllers = [];
-  final List<String> _items = [];
+  final List<String> _insults = [];
 
   @override
   void initState() {
     super.initState();
-    for (var i = 0; i < _numOfScrollingInsults; i++) {
+    for (var i = 0; i < numOfScrollingInsults; i++) {
       _scrollControllers.add(ScrollController());
     }
   }
@@ -47,16 +51,16 @@ class _HomePageState extends State<HomePage> {
           LoadDefaultInsultsEvent(
             defaultInsults: localizedDefaultInsults(
               context,
-              maxDefaultInsultIndex: 22,
+              maxDefaultInsultIndex: maxDefaultInsultIndex,
             ),
           ),
         );
 
-    if (_items.isEmpty) {
-      _items.addAll(context.readApp.state.insults);
+    if (_insults.isEmpty) {
+      _insults.addAll(context.readApp.state.insults);
     }
     _timer ??= Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      for (var i = 0; i < _numOfScrollingInsults; i++) {
+      for (var i = 0; i < numOfScrollingInsults; i++) {
         if (_scrollControllers[i].hasClients) {
           _scrollControllers[i].animateTo(
             i.isEven
@@ -97,12 +101,13 @@ class _HomePageState extends State<HomePage> {
           ),
           body: Stack(
             children: [
-              if (_scrollControllers.isNotEmpty && _items.isNotEmpty)
+              if (_scrollControllers.isNotEmpty && _insults.isNotEmpty)
                 Column(
                   children:
                       _scrollControllers.mapIndexed<Widget>((i, controller) {
                     return Flexible(
                       child: ListView.builder(
+                        key: Key('home_page_insult_list_view_$i'),
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
                         controller: controller,
@@ -111,10 +116,12 @@ class _HomePageState extends State<HomePage> {
                           return Text.rich(
                             replaceWordsWithStyledText(
                               context,
-                              '${_items[Random().nextInt(_items.length)]} ',
+                              '${_insults[Random().nextInt(_insults.length)]} ',
                               textStyle:
                                   Theme.of(context).textTheme.headlineLarge!,
                             ),
+                            key: Key(
+                                'scrolling_insult_${index}_for_scroll_controller_$i'),
                           );
                         },
                       ),

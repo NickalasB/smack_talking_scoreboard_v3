@@ -6,6 +6,7 @@
 // https://opensource.org/licenses/MIT.
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:given_when_then/given_when_then.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/view/app.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
@@ -25,10 +26,10 @@ void main() {
         await given.pumpWidget(const App());
 
         await when.userTaps(homePage.menuButton);
-        await when.pumpAndSettle();
+        await when.pumpForInfiniteAnimation();
 
         await when.userTaps(homePage.menuItem(label: 'Manage Insults'));
-        await when.pumpAndSettle();
+        await when.pumpForInfiniteAnimation();
 
         then.findsWidgets(find.byType(Dismissible), widgetCount: 23);
       }),
@@ -40,7 +41,7 @@ void main() {
         await given.harness.tester.pumpWidget(const App());
 
         await when.userTaps(homePage.getStartedButton);
-        await when.pumpAndSettle();
+        await when.pumpForInfiniteAnimation();
 
         await when.userTypes('User 1', homePage.player1TextInput);
         await when.userTypes('User 2', homePage.player2TextInput);
@@ -52,6 +53,55 @@ void main() {
         await when.pumpAndSettle();
 
         then.findsWidget(scoreboardPage);
+      }),
+    );
+
+    testWidgets(
+      'Should show list of 8 scrolling insults ListsViews on screen',
+      appHarness((given, when, then) async {
+        await given.pumpWidget(const App());
+
+        await when.userTaps(homePage.menuButton);
+
+        then.findsNoScrollingInsults();
+
+        await when.pumpForInfiniteAnimation();
+
+        for (var count = 0; count < numOfScrollingInsults; count += 1) {
+          then.findsWidget(
+            find.byKey(Key('home_page_insult_list_view_$count')),
+          );
+        }
+
+        then
+          ..findsWidget(
+            find
+                .descendant(
+                  of: find.byType(ListView),
+                  matching: find.byWidgetPredicate(
+                    (widget) =>
+                        widget is Text &&
+                        widget.key
+                            .toString()
+                            .startsWith("[<'scrolling_insult_"),
+                  ),
+                )
+                .first,
+          )
+          ..findsWidget(
+            find
+                .descendant(
+                  of: find.byType(ListView),
+                  matching: find.byWidgetPredicate(
+                    (widget) =>
+                        widget is Text &&
+                        widget.key
+                            .toString()
+                            .startsWith("[<'scrolling_insult_"),
+                  ),
+                )
+                .last,
+          );
       }),
     );
   });
@@ -199,4 +249,26 @@ extension on TypeMatcher<StartGameEvent> {
 
   TypeMatcher<StartGameEvent> havingPlayer2(Player player2) =>
       isAStartGameEvent.having((p0) => p0.player2, 'player2', player2);
+}
+
+extension HomePageThen on WidgetTestThen<AppHarness> {
+  void findsNoScrollingInsults() {
+    findsNoWidget(_scrollingInsult);
+  }
+
+  void findsAllScrollingInsults() {
+    // assures the first insult is there
+    findsWidget(_scrollingInsult.last.first);
+    // assures the last insult is there
+    findsWidget(_scrollingInsult.last);
+  }
+
+  Finder get _scrollingInsult => find.descendant(
+        of: find.byType(ListView),
+        matching: find.byWidgetPredicate(
+          (widget) =>
+              widget is Text &&
+              widget.key.toString().startsWith("[<'scrolling_insult_"),
+        ),
+      );
 }
