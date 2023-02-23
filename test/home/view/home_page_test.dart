@@ -73,35 +73,7 @@ void main() {
           );
         }
 
-        then
-          ..findsWidget(
-            find
-                .descendant(
-                  of: find.byType(ListView),
-                  matching: find.byWidgetPredicate(
-                    (widget) =>
-                        widget is Text &&
-                        widget.key
-                            .toString()
-                            .startsWith("[<'scrolling_insult_"),
-                  ),
-                )
-                .first,
-          )
-          ..findsWidget(
-            find
-                .descendant(
-                  of: find.byType(ListView),
-                  matching: find.byWidgetPredicate(
-                    (widget) =>
-                        widget is Text &&
-                        widget.key
-                            .toString()
-                            .startsWith("[<'scrolling_insult_"),
-                  ),
-                )
-                .last,
-          );
+        then.findsAllScrollingInsults();
       }),
     );
   });
