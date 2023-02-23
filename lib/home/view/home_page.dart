@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/dismissible_insult_list.dart';
@@ -46,14 +45,14 @@ class _HomePageState extends State<HomePage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    context.watch<AppBloc>().add(
-          LoadDefaultInsultsEvent(
-            defaultInsults: localizedDefaultInsults(
-              context,
-              maxDefaultInsultIndex: maxDefaultInsultIndex,
-            ),
-          ),
-        );
+    context.watchApp.add(
+      LoadDefaultInsultsEvent(
+        defaultInsults: localizedDefaultInsults(
+          context,
+          maxDefaultInsultIndex: maxDefaultInsultIndex,
+        ),
+      ),
+    );
 
     if (_insults.isEmpty) {
       _insults.addAll(context.readApp.state.insults);
