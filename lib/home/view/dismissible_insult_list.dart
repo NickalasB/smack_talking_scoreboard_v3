@@ -78,6 +78,9 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
                                       replaceWordsWithStyledText(
                                         context,
                                         insult,
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!,
                                       ),
                                     ),
                                   ),
@@ -114,11 +117,14 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
       );
 }
 
-TextSpan replaceWordsWithStyledText(BuildContext context, String input) {
+TextSpan replaceWordsWithStyledText(
+  BuildContext context,
+  String input, {
+  required TextStyle textStyle,
+}) {
   final children = <TextSpan>[];
 
   final theme = Theme.of(context);
-  final bodyMediumStyle = theme.textTheme.bodyMedium;
 
   input.splitMapJoin(
     RegExp(r'\$\w+\$'),
@@ -128,7 +134,7 @@ TextSpan replaceWordsWithStyledText(BuildContext context, String input) {
         children.add(
           TextSpan(
             text: defaultHiText,
-            style: bodyMediumStyle?.copyWith(
+            style: textStyle.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.primary,
             ),
@@ -139,7 +145,7 @@ TextSpan replaceWordsWithStyledText(BuildContext context, String input) {
         children.add(
           TextSpan(
             text: defaultLowText,
-            style: bodyMediumStyle?.copyWith(
+            style: textStyle.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.error,
             ),
@@ -149,7 +155,7 @@ TextSpan replaceWordsWithStyledText(BuildContext context, String input) {
       return '';
     },
     onNonMatch: (nonMatch) {
-      children.add(TextSpan(text: nonMatch, style: bodyMediumStyle));
+      children.add(TextSpan(text: nonMatch, style: textStyle));
       return '';
     },
   );

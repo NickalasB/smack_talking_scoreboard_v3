@@ -28,7 +28,7 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
           ...userAddedInsultsOnly.toSet(),
           ...correctDefaultInsultsToUse,
         ],
-        didCompleteInitialLoad: correctDefaultInsultsToUse.isNotEmpty,
+        didCompleteInitialLoad: true,
       ),
     );
   }

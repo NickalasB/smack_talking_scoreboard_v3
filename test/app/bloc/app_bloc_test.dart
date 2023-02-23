@@ -91,6 +91,7 @@ void main() {
           defaultInsults: const ['default1', 'default2'],
         ),
       );
+      await tick();
 
       expectStateAndHydratedState(
         bloc,
