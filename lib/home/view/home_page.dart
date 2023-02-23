@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    context.watchApp.add(
+    context.readApp.add(
       LoadDefaultInsultsEvent(
         defaultInsults: localizedDefaultInsults(
           context,
@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
     );
 
     if (_insults.isEmpty) {
-      _insults.addAll(context.readApp.state.insults);
+      _insults.addAll(context.watchApp.state.insults);
     }
     _timer ??= Timer.periodic(const Duration(milliseconds: 100), (timer) {
       for (var i = 0; i < numOfScrollingInsults; i++) {
