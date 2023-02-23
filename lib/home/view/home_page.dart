@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/home/view/dismissible_insult_list.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/settings.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/start_game_form.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/default_insult_l10n_retriever.dart';
@@ -14,8 +15,6 @@ import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
-
-import 'dismissible_insult_list.dart';
 
 @visibleForTesting
 const numOfScrollingInsults = 8;
@@ -121,7 +120,8 @@ class _HomePageState extends State<HomePage> {
                                   Theme.of(context).textTheme.headlineLarge!,
                             ),
                             key: Key(
-                                'scrolling_insult_${index}_for_scroll_controller_$i'),
+                              'scrolling_insult_${index}_for_scroll_controller_$i',
+                            ),
                           );
                         },
                       ),
