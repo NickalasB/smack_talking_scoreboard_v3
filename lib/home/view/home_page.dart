@@ -111,15 +111,17 @@ class _HomePageState extends State<HomePage> {
                         controller: controller,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          return Text.rich(
-                            replaceWordsWithStyledText(
-                              context,
-                              '${_insults[Random().nextInt(_insults.length)]} ',
-                              textStyle:
-                                  Theme.of(context).textTheme.headlineLarge!,
-                            ),
-                            key: Key(
-                              'scrolling_insult_${index}_for_scroll_controller_$i',
+                          return Center(
+                            child: Text.rich(
+                              replaceWordsWithStyledText(
+                                context,
+                                '${_insults[Random().nextInt(_insults.length)]} ',
+                                textStyle:
+                                    Theme.of(context).textTheme.headlineLarge!,
+                              ),
+                              key: Key(
+                                'scrolling_insult_${index}_for_scroll_controller_$i',
+                              ),
                             ),
                           );
                         },

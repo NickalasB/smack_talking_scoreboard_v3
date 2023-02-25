@@ -99,7 +99,7 @@ class ScoreboardView extends StatelessWidget {
         appBar: const MyAppBar(),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(8),
             child: OrientationBuilder(
               builder: (context, orientation) {
                 return orientation == Orientation.landscape
@@ -164,7 +164,10 @@ class PlayerScore extends StatelessWidget {
         Container(
           constraints: const BoxConstraints(minHeight: 48),
           decoration: BoxDecoration(
-            border: Border.all(color: theme.colorScheme.inverseSurface),
+            border: Border.all(
+              color: theme.colorScheme.inverseSurface,
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
           ),
           child: Center(
             child: Text(
@@ -206,6 +209,7 @@ class PlayerScore extends StatelessWidget {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 border: Border.all(color: theme.colorScheme.inverseSurface),
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
               ),
               child: FittedBox(
                 child: Text(
