@@ -14,9 +14,11 @@ class VolumeButton extends StatelessWidget {
       },
       isSelected: context.selectScoreboard.state.areInsultsEnabled,
       selectedIcon: const Icon(
+        size: 36,
         Icons.volume_up_outlined,
       ),
       icon: const Icon(
+        size: 36,
         Icons.volume_off_outlined,
       ),
     );

@@ -67,6 +67,7 @@ class PrimaryButton extends StatelessWidget {
       minimumSize: Size(minWidth, kMinInteractiveDimension),
       backgroundColor: theme.colorScheme.primary,
       foregroundColor: theme.colorScheme.surface,
+      elevation: 2,
       textStyle: textStyle,
     );
 
