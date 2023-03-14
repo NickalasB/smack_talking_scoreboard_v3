@@ -540,7 +540,38 @@ void main() {
           }
         });
 
-        test('Should always emit same insult if there is only one saved',
+        test('Should emit null mostRecentInsult if there are no insults',
+            () async {
+          final fakeTts = FakeTts();
+          final bloc = ScoreboardBloc(fakeTts)
+            ..emit(
+              ScoreboardState(
+                Game(
+                  players: [
+                    testPlayer1.copyWith(score: 10),
+                    testPlayer2.copyWith(score: 5),
+                  ],
+                  gamePointParams: _initialPointParams,
+                  mostRecentInsult: null,
+                ),
+                areInsultsEnabled: true,
+              ),
+            );
+          await tick();
+
+          bloc.add(
+            NextTurnEvent(const []),
+          );
+          await tick();
+
+          expectStateAndHydratedState(
+            bloc,
+            isAScoreboardState.havingMostRecentInsult(null),
+          );
+        });
+
+        test(
+            'Should always emit same insult if there is only one, after insult changes',
             () async {
           final fakeTts = FakeTts();
           final bloc = ScoreboardBloc(fakeTts)

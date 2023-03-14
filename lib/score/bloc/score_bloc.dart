@@ -119,7 +119,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     final playersWithResetRoundScores = <Player>[];
 
-    String? newNonRepeatedInsult;
+    String? newInsult;
 
     for (final player in game.players) {
       playersWithResetRoundScores.add(player.copyWith(roundScore: 0));
@@ -127,15 +127,15 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     final insults = List<String>.from(event.insults);
     if (insults.isNotEmpty && state.areInsultsEnabled) {
-      newNonRepeatedInsult = _shuffledAndFormattedInsult(
+      newInsult = _shuffledAndFormattedInsult(
         insults,
         winningPlayer,
         losingPlayer,
       );
 
       if (insults.length > 1) {
-        while (state.game.mostRecentInsult == newNonRepeatedInsult) {
-          newNonRepeatedInsult = _shuffledAndFormattedInsult(
+        while (state.game.mostRecentInsult == newInsult) {
+          newInsult = _shuffledAndFormattedInsult(
             insults,
             winningPlayer,
             losingPlayer,
@@ -144,7 +144,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
       }
 
       tts.speak(
-        newNonRepeatedInsult ??
+        newInsult ??
             _shuffledAndFormattedInsult(
               insults,
               winningPlayer,
@@ -169,7 +169,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
             roundWinner: winningPlayer,
             roundCount: game.round.roundCount + 1,
           ),
-          mostRecentInsult: newNonRepeatedInsult,
+          mostRecentInsult: newInsult,
           gameWinner: gameWinnerOrNull,
         ),
       ),
