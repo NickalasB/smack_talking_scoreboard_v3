@@ -23,7 +23,7 @@ dependencies:
   intl: ^0.17.0
   json_annotation: ^4.7.0
   json_serializable: ^6.5.4
-  path_provider: ^2.0.12
+  path_provider: ^2.0.13
 
 dev_dependencies:
   bloc_test: ^9.1.1
