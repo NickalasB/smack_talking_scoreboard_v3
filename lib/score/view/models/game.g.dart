@@ -19,6 +19,7 @@ Game _$GameFromJson(Map<String, dynamic> json) => Game(
       gameWinner: json['gameWinner'] == null
           ? null
           : Player.fromJson(json['gameWinner'] as Map<String, dynamic>),
+      mostRecentInsult: json['mostRecentInsult'] as String?,
     );
 
 Map<String, dynamic> _$GameToJson(Game instance) => <String, dynamic>{
@@ -26,4 +27,5 @@ Map<String, dynamic> _$GameToJson(Game instance) => <String, dynamic>{
       'round': instance.round,
       'gamePointParams': instance.gamePointParams,
       'gameWinner': instance.gameWinner,
+      'mostRecentInsult': instance.mostRecentInsult,
     };
