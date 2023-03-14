@@ -143,14 +143,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         }
       }
 
-      tts.speak(
-        newInsult ??
-            _shuffledAndFormattedInsult(
-              insults,
-              winningPlayer,
-              losingPlayer,
-            ),
-      );
+      tts.speak(newInsult!);
     }
 
     final scores = players.map((e) => e.score);
