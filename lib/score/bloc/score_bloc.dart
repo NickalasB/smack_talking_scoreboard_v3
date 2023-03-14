@@ -118,18 +118,39 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         players.firstWhere((element) => element != winningPlayer);
 
     final playersWithResetRoundScores = <Player>[];
+
+    String? newNonRepeatedInsult;
+
     for (final player in game.players) {
       playersWithResetRoundScores.add(player.copyWith(roundScore: 0));
     }
 
     final insults = List<String>.from(event.insults);
     if (insults.isNotEmpty && state.areInsultsEnabled) {
-      final insultWithPlayerNamesInserted = (insults..shuffle())
-          .first
-          .replaceAll(hiPlayerInsultKey, winningPlayer.playerName)
-          .replaceAll(lowPlayerInsultKey, losingPlayer.playerName);
+      newNonRepeatedInsult = _shuffledAndFormattedInsult(
+        insults,
+        winningPlayer,
+        losingPlayer,
+      );
 
-      tts.speak(insultWithPlayerNamesInserted);
+      if (insults.length > 1) {
+        while (state.game.mostRecentInsult == newNonRepeatedInsult) {
+          newNonRepeatedInsult = _shuffledAndFormattedInsult(
+            insults,
+            winningPlayer,
+            losingPlayer,
+          );
+        }
+      }
+
+      tts.speak(
+        newNonRepeatedInsult ??
+            _shuffledAndFormattedInsult(
+              insults,
+              winningPlayer,
+              losingPlayer,
+            ),
+      );
     }
 
     final scores = players.map((e) => e.score);
@@ -148,10 +169,22 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
             roundWinner: winningPlayer,
             roundCount: game.round.roundCount + 1,
           ),
+          mostRecentInsult: newNonRepeatedInsult,
           gameWinner: gameWinnerOrNull,
         ),
       ),
     );
+  }
+
+  String _shuffledAndFormattedInsult(
+    List<String> insults,
+    Player winningPlayer,
+    Player losingPlayer,
+  ) {
+    return (insults..shuffle())
+        .first
+        .replaceAll(hiPlayerInsultKey, winningPlayer.playerName)
+        .replaceAll(lowPlayerInsultKey, losingPlayer.playerName);
   }
 
   void _toggleInsultVolume(

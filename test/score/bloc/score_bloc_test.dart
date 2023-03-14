@@ -499,6 +499,83 @@ void main() {
         );
       });
 
+      group('Insult randomness tests', () {
+        test('Should not emit same insult twice test', () async {
+          final repeatInsults =
+              List.generate(99, (index) => 'I should not repeat');
+          final allInsults = [...repeatInsults, 'It should always be me'];
+          for (var i = 0; i < 100; i++) {
+            final fakeTts = FakeTts();
+            final bloc = ScoreboardBloc(fakeTts)
+              ..emit(
+                ScoreboardState(
+                  Game(
+                    players: [
+                      testPlayer1.copyWith(score: 10),
+                      testPlayer2.copyWith(score: 5),
+                    ],
+                    gamePointParams: _initialPointParams,
+                    mostRecentInsult: 'I should not repeat',
+                  ),
+                  areInsultsEnabled: true,
+                ),
+              );
+            await tick();
+
+            bloc.add(
+              NextTurnEvent(allInsults),
+            );
+            await tick();
+
+            expect(
+              fakeTts.fakeTsEvents,
+              [FakeSpeakEvent('It should always be me')],
+            );
+
+            expectStateAndHydratedState(
+              bloc,
+              isAScoreboardState
+                  .havingMostRecentInsult('It should always be me'),
+            );
+          }
+        });
+
+        test('Should always emit same insult if there is only one saved',
+            () async {
+          final fakeTts = FakeTts();
+          final bloc = ScoreboardBloc(fakeTts)
+            ..emit(
+              ScoreboardState(
+                Game(
+                  players: [
+                    testPlayer1.copyWith(score: 10),
+                    testPlayer2.copyWith(score: 5),
+                  ],
+                  gamePointParams: _initialPointParams,
+                  mostRecentInsult: 'I should not repeat',
+                ),
+                areInsultsEnabled: true,
+              ),
+            );
+          await tick();
+
+          bloc.add(
+            NextTurnEvent(const ['A new single insult']),
+          );
+          await tick();
+
+          expect(
+            fakeTts.fakeTsEvents,
+            [FakeSpeakEvent('A new single insult')],
+          );
+
+          expectStateAndHydratedState(
+            bloc,
+            isAScoreboardState.havingMostRecentInsult('A new single insult'),
+          );
+        });
+      });
+
       test('Should emit gameWinner based on player with winningScore',
           () async {
         final bloc = ScoreboardBloc(FakeTts())
@@ -744,6 +821,13 @@ extension on TypeMatcher<ScoreboardState> {
         (p0) => p0.game.gameWinner,
         'gameWinner',
         player,
+      );
+
+  TypeMatcher<ScoreboardState> havingMostRecentInsult(String? insult) =>
+      isAScoreboardState.having(
+        (p0) => p0.game.mostRecentInsult,
+        'mostRecentInsult',
+        insult,
       );
 }
 

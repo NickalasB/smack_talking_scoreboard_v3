@@ -13,6 +13,7 @@ class Game extends Equatable {
     this.round = const Round(),
     required this.gamePointParams,
     this.gameWinner,
+    this.mostRecentInsult,
   });
 
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
@@ -24,12 +25,14 @@ class Game extends Equatable {
     Round? round,
     GamePointParams? gamePointParams,
     Player? gameWinner,
+    String? mostRecentInsult,
   }) {
     return Game(
       players: players ?? this.players,
       round: round ?? this.round,
       gamePointParams: gamePointParams ?? this.gamePointParams,
       gameWinner: gameWinner,
+      mostRecentInsult: mostRecentInsult ?? this.mostRecentInsult,
     );
   }
 
@@ -37,6 +40,7 @@ class Game extends Equatable {
   final Round round;
   final GamePointParams gamePointParams;
   final Player? gameWinner;
+  final String? mostRecentInsult;
 
   @override
   List<Object?> get props => [
@@ -44,5 +48,6 @@ class Game extends Equatable {
         round,
         gamePointParams,
         gameWinner,
+        mostRecentInsult,
       ];
 }
