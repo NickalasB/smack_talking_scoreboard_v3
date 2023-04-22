@@ -5,6 +5,8 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 // ignore_for_file:avoid_redundant_argument_values
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
@@ -34,6 +36,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     on<SpeakInsultEvent>(_speak);
   }
   final Tts tts;
+  final List<String?> _emittedInsults = [];
 
   void _startGame(StartGameEvent event, Emitter<ScoreboardState> emit) {
     return emit(
@@ -133,17 +136,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         losingPlayer,
       );
 
-      if (insults.length > 1) {
-        while (state.game.mostRecentInsult == newInsult) {
-          newInsult = _shuffledAndFormattedInsult(
-            insults,
-            winningPlayer,
-            losingPlayer,
-          );
-        }
-      }
-
-      tts.speak(newInsult!);
+      tts.speak(newInsult);
     }
 
     final scores = players.map((e) => e.score);
@@ -174,8 +167,18 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     Player winningPlayer,
     Player losingPlayer,
   ) {
-    return (insults..shuffle())
-        .first
+    String? randomInsult;
+    if (_emittedInsults.length == insults.length) {
+      _emittedInsults.clear();
+    }
+    do {
+      final randomIndex = Random().nextInt(insults.length);
+      randomInsult = insults[randomIndex];
+    } while (_emittedInsults.contains(randomInsult) ||
+        randomInsult == state.game.mostRecentInsult);
+
+    _emittedInsults.add(randomInsult);
+    return randomInsult
         .replaceAll(hiPlayerInsultKey, winningPlayer.playerName)
         .replaceAll(lowPlayerInsultKey, losingPlayer.playerName);
   }
