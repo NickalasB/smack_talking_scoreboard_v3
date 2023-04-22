@@ -540,6 +540,41 @@ void main() {
           }
         });
 
+        test(
+            'Should not repeat any insults until all insults have been emitted',
+            () async {
+          final allInsults = List.generate(2, (index) => 'String$index');
+
+          final fakeTts = FakeTts();
+          final bloc = ScoreboardBloc(fakeTts)
+            ..emit(
+              ScoreboardState(
+                Game(
+                  players: [
+                    testPlayer1.copyWith(score: 10),
+                    testPlayer2.copyWith(score: 5),
+                  ],
+                  gamePointParams: _initialPointParams,
+                ),
+                areInsultsEnabled: true,
+              ),
+            );
+
+          for (var i = 0; i < 100; i++) {
+            await tick();
+
+            final previousInsult = bloc.state.game.mostRecentInsult;
+
+            bloc.add(NextTurnEvent(allInsults));
+            await tick();
+
+            expect(
+              bloc.state.game.mostRecentInsult,
+              isNot(previousInsult),
+            );
+          }
+        });
+
         test('Should emit null mostRecentInsult if there are no insults',
             () async {
           final fakeTts = FakeTts();
