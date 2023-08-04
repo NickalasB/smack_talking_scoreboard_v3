@@ -8,8 +8,8 @@ typedef FakeScoreboardJson = Map<String, dynamic>?;
 
 class FakeStorage implements Storage {
   final storageMap = <String, FakeScoreboardJson>{};
-  final readForKeyCalls = [];
-  final writeForKeyCalls = [];
+  final readForKeyCalls = <String>[];
+  final writeForKeyCalls = <String>[];
 
   @override
   Future<void> clear() async {

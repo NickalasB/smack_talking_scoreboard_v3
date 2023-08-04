@@ -104,7 +104,7 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
     AlignmentGeometry alignmentGeometry,
   ) =>
       ColoredBox(
-        color: theme.errorColor,
+        color: theme.colorScheme.error,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Align(
