@@ -19,7 +19,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_tts: ^3.6.3
-  hydrated_bloc: ^9.1.0
+  hydrated_bloc: ^9.1.2
   intl: ^0.17.0
   json_annotation: ^4.7.0
   json_serializable: ^6.5.4
