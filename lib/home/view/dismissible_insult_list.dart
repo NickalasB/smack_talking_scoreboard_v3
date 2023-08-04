@@ -127,7 +127,7 @@ TextSpan replaceWordsWithStyledText(
   final theme = Theme.of(context);
 
   input.splitMapJoin(
-    RegExp(r'\$\w+\$'),
+    RegExp(r'##\w+##'),
     onMatch: (match) {
       final word = match.group(0) ?? '';
       if (word == hiPlayerInsultKey) {

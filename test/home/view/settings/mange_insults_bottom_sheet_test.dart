@@ -57,13 +57,13 @@ void main() {
     );
 
     testGoldens(
-      r'Should properly replace and style instances of $HI$ and $LOW$ within insults',
+      'Should properly replace and style instances of ##HI## and ##LOW## within insults',
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           const ManageInsultsBottomSheet(),
           appState: const AppState().copyWith(
             insults: [
-              r' $HI$ you are awesome. $LOW$ you are poop',
+              ' ##HI## you are awesome. ##LOW## you are poop',
               'Nothing to replace or style here'
             ],
           ),

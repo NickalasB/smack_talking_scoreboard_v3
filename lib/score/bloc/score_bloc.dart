@@ -14,8 +14,8 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
-const hiPlayerInsultKey = r'$HI$';
-const lowPlayerInsultKey = r'$LOW$';
+const hiPlayerInsultKey = '##HI##';
+const lowPlayerInsultKey = '##LOW##';
 
 class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   ScoreboardBloc(this.tts) : super(initialScoreboardState) {
