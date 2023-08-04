@@ -219,4 +219,9 @@ class _FakeTtsEngine implements FlutterTts {
   Future<dynamic> synthesizeToFile(String text, String fileName) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<dynamic> autoStopSharedSession(bool autoStop) {
+    throw UnimplementedError();
+  }
 }
