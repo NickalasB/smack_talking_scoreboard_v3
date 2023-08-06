@@ -474,8 +474,8 @@ void main() {
             ScoreboardState(
               Game(
                 players: [
-                  testPlayer1.copyWith(score: 10),
-                  testPlayer2.copyWith(score: 5),
+                  testPlayer1.copyWith(score: 10, roundScore: 10),
+                  testPlayer2.copyWith(score: 5, roundScore: 5),
                 ],
                 gamePointParams: _initialPointParams,
               ),
@@ -561,8 +561,8 @@ void main() {
                 ScoreboardState(
                   Game(
                     players: [
-                      testPlayer1.copyWith(score: 10),
-                      testPlayer2.copyWith(score: 5),
+                      testPlayer1.copyWith(score: 10, roundScore: 10),
+                      testPlayer2.copyWith(score: 5, roundScore: 5),
                     ],
                     gamePointParams: _initialPointParams,
                     mostRecentInsult: 'I should not repeat',
@@ -601,8 +601,8 @@ void main() {
               ScoreboardState(
                 Game(
                   players: [
-                    testPlayer1.copyWith(score: 10),
-                    testPlayer2.copyWith(score: 5),
+                    testPlayer1.copyWith(score: 10, roundScore: 10),
+                    testPlayer2.copyWith(score: 5, roundScore: 5),
                   ],
                   gamePointParams: _initialPointParams,
                 ),
@@ -614,6 +614,9 @@ void main() {
             await tick();
 
             final previousInsult = bloc.state.game.mostRecentInsult;
+
+            bloc.add(IncreaseScoreEvent(playerId: testPlayer1.playerId));
+            await tick();
 
             bloc.add(NextTurnEvent(allInsults));
             await tick();
@@ -636,8 +639,8 @@ void main() {
               ScoreboardState(
                 Game(
                   players: [
-                    testPlayer1.copyWith(score: 10),
-                    testPlayer2.copyWith(score: 5),
+                    testPlayer1.copyWith(score: 10, roundScore: 10),
+                    testPlayer2.copyWith(score: 5, roundScore: 5),
                   ],
                   gamePointParams: _initialPointParams,
                 ),
@@ -646,21 +649,34 @@ void main() {
             );
 
           await tick();
+
+          bloc.add(IncreaseScoreEvent(playerId: testPlayer1.playerId));
+          await tick();
           bloc.add(NextTurnEvent(allInsults));
           await tick();
+
           final previousInsult = bloc.state.game.mostRecentInsult;
 
-          bloc.add(NextTurnEvent(allInsults));
+          bloc.add(IncreaseScoreEvent(playerId: testPlayer1.playerId));
           await tick();
           bloc.add(NextTurnEvent(allInsults));
           await tick();
+
+          bloc.add(IncreaseScoreEvent(playerId: testPlayer1.playerId));
+          await tick();
+          bloc.add(NextTurnEvent(allInsults));
+          await tick();
+
           expect(
             bloc.state.game.mostRecentInsult,
             equals(previousInsult),
           );
+
+          bloc.add(IncreaseScoreEvent(playerId: testPlayer1.playerId));
+          await tick();
           bloc.add(NextTurnEvent(allInsults));
           await tick();
-          await tick();
+
           expect(
             bloc.state.game.mostRecentInsult,
             isNot(previousInsult),
@@ -706,8 +722,8 @@ void main() {
               ScoreboardState(
                 Game(
                   players: [
-                    testPlayer1.copyWith(score: 10),
-                    testPlayer2.copyWith(score: 5),
+                    testPlayer1.copyWith(score: 10, roundScore: 10),
+                    testPlayer2.copyWith(score: 5, roundScore: 5),
                   ],
                   gamePointParams: _initialPointParams,
                   mostRecentInsult: 'I should not repeat',

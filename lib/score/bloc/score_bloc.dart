@@ -113,12 +113,19 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   void _changeToNextTurn(NextTurnEvent event, Emitter<ScoreboardState> emit) {
     final game = state.game;
     final players = game.players;
-    final roundHighScore = players.map((e) => e.roundScore).max;
-    final winningPlayer =
-        players.firstWhere((p) => p.roundScore == roundHighScore);
+    Player? roundWinner;
+    Player? roundLoser;
 
-    final losingPlayer =
-        players.firstWhere((element) => element != winningPlayer);
+    final roundScores = players.map((e) => e.roundScore).toSet();
+
+    if (roundScores.length > 1) {
+      final roundHighScore = roundScores.max;
+      roundWinner =
+          players.firstWhereOrNull((p) => p.roundScore == roundHighScore);
+
+      roundLoser =
+          players.firstWhereOrNull((element) => element != roundWinner);
+    }
 
     final playersWithResetRoundScores = <Player>[];
 
@@ -130,11 +137,17 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     final insults = List<String>.from(event.insults);
     if (insults.isNotEmpty && state.areInsultsEnabled) {
-      newInsult = _shuffledAndFormattedInsult(
-        insults,
-        winningPlayer,
-        losingPlayer,
-      );
+      final isNotATieGame = roundWinner != null && roundLoser != null;
+
+      if (isNotATieGame) {
+        newInsult = _shuffledAndFormattedInsult(
+          insults,
+          roundWinner,
+          roundLoser,
+        );
+      } else {
+        newInsult = 'lame tie game';
+      }
 
       tts.speak(newInsult);
     }
@@ -152,7 +165,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         game: game.copyWith(
           players: playersWithResetRoundScores,
           round: game.round.copyWith(
-            roundWinner: winningPlayer,
+            roundWinner: roundWinner,
             roundCount: game.round.roundCount + 1,
           ),
           mostRecentInsult: newInsult,
