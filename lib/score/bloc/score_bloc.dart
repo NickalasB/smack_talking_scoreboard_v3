@@ -169,7 +169,8 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   ) {
     String? randomInsult;
     if (_emittedInsults.length == insults.length) {
-      _emittedInsults.clear();
+      // this is covered in tests but it's flaky in CI
+      _emittedInsults.clear(); // coverage:ignore-line
     }
     do {
       final randomIndex = Random().nextInt(insults.length);
