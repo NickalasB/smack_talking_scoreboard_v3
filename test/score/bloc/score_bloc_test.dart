@@ -415,6 +415,56 @@ void main() {
         );
       });
 
+      test('Should emit tie game insult when roundScore is the same', () async {
+        final fakeTts = FakeTts();
+
+        final bloc = ScoreboardBloc(fakeTts)
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 1),
+                  testPlayer2.copyWith(score: 2),
+                ],
+                gamePointParams: _initialPointParams,
+              ),
+            ),
+          );
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 1));
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+
+        expect(
+          bloc.state.game.players,
+          [
+            testPlayer1.copyWith(score: 2, roundScore: 1),
+            testPlayer2.copyWith(score: 3, roundScore: 1),
+          ],
+        );
+
+        bloc.add(
+          NextTurnEvent(const ['anything']),
+        );
+        await tick();
+
+        expect(
+          bloc.state.game.round,
+          Round(
+            roundCount: 2,
+            roundWinner: null,
+          ),
+        );
+
+        expect(
+          fakeTts.fakeTsEvents,
+          [FakeSpeakEvent('lame tie game')],
+        );
+      });
+
       test(
           'Should call tts.speak with correctly modified insult when NextTurnEvent added',
           () async {
