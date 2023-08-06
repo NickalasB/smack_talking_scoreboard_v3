@@ -114,7 +114,7 @@ class ScoreboardView extends StatelessWidget {
   }
 }
 
-class MyAppBar extends StatelessWidget with PreferredSizeWidget {
+class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar({super.key});
 
   @override

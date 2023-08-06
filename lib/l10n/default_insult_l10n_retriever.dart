@@ -9,7 +9,7 @@ List<String> localizedDefaultInsults(
 
   final insultList = <String>[];
   for (var i = 0; i <= maxDefaultInsultIndex; i++) {
-    insultList.add(l10n.insult(i));
+    insultList.add(l10n.insult(i.toString()));
   }
 
   return insultList;

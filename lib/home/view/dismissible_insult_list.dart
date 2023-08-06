@@ -104,7 +104,7 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
     AlignmentGeometry alignmentGeometry,
   ) =>
       ColoredBox(
-        color: theme.errorColor,
+        color: theme.colorScheme.error,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Align(
@@ -127,7 +127,7 @@ TextSpan replaceWordsWithStyledText(
   final theme = Theme.of(context);
 
   input.splitMapJoin(
-    RegExp(r'\$\w+\$'),
+    RegExp(r'##\w+##'),
     onMatch: (match) {
       final word = match.group(0) ?? '';
       if (word == hiPlayerInsultKey) {
