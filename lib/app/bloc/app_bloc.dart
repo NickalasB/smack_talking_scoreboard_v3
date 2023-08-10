@@ -28,6 +28,7 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
           ...userAddedInsultsOnly.toSet(),
           ...correctDefaultInsultsToUse,
         ],
+        tieInsults: event.defaultTieInsults,
         didCompleteInitialLoad: true,
       ),
     );

@@ -6,6 +6,7 @@ void main() {
     test('Should have value-type equality', () {
       final initialEvent = LoadDefaultInsultsEvent(
         defaultInsults: const ['default1', 'default2'],
+        defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
       );
 
       expect(
@@ -13,6 +14,7 @@ void main() {
         equals(
           LoadDefaultInsultsEvent(
             defaultInsults: const ['default1', 'default2'],
+            defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
           ),
         ),
       );
@@ -22,6 +24,17 @@ void main() {
         isNot(
           LoadDefaultInsultsEvent(
             defaultInsults: const ['default3', 'default4'],
+            defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
+          ),
+        ),
+      );
+
+      expect(
+        initialEvent,
+        isNot(
+          LoadDefaultInsultsEvent(
+            defaultInsults: const ['default1', 'default2'],
+            defaultTieInsults: const ['tieDefault3', 'tieDefault4'],
           ),
         ),
       );

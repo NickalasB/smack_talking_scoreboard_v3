@@ -10,10 +10,11 @@ import '../../helpers/test_helpers.dart';
 void main() {
   group('AppState', () {
     test('Should have value-type equality', () {
-      final appState1 = AppState(insults: const ['A']);
+      final appState1 = AppState(insults: const ['A'], tieInsults: const ['1']);
 
       expect(appState1, equals(appState1.copyWith()));
       expect(appState1, isNot(appState1.copyWith(insults: ['B'])));
+      expect(appState1, isNot(appState1.copyWith(tieInsults: ['2'])));
     });
   });
 
@@ -23,6 +24,7 @@ void main() {
         ..add(
           LoadDefaultInsultsEvent(
             defaultInsults: const ['default1', 'default2'],
+            defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
           ),
         );
       await tick();
@@ -32,6 +34,7 @@ void main() {
         equals(
           const AppState().copyWith(
             insults: const ['default1', 'default2'],
+            tieInsults: const ['tieDefault1', 'tieDefault2'],
             didCompleteInitialLoad: true,
           ),
         ),
@@ -48,6 +51,7 @@ void main() {
       bloc.add(
         LoadDefaultInsultsEvent(
           defaultInsults: const ['default1', 'default2'],
+          defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
         ),
       );
       await tick();
@@ -57,6 +61,7 @@ void main() {
         equals(
           const AppState().copyWith(
             insults: const ['userSavedInsult', 'default1', 'default2'],
+            tieInsults: const ['tieDefault1', 'tieDefault2'],
             didCompleteInitialLoad: true,
           ),
         ),
@@ -75,6 +80,7 @@ void main() {
       bloc.add(
         LoadDefaultInsultsEvent(
           defaultInsults: const ['default1', 'default2'],
+          defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
         ),
       );
       await tick();
@@ -89,6 +95,7 @@ void main() {
       bloc.add(
         LoadDefaultInsultsEvent(
           defaultInsults: const ['default1', 'default2'],
+          defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
         ),
       );
       await tick();
@@ -98,6 +105,7 @@ void main() {
         equals(
           const AppState().copyWith(
             insults: const [],
+            tieInsults: const ['tieDefault1', 'tieDefault2'],
             didCompleteInitialLoad: true,
           ),
         ),
@@ -116,6 +124,7 @@ void main() {
       bloc.add(
         LoadDefaultInsultsEvent(
           defaultInsults: const ['default1', 'default2'],
+          defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
         ),
       );
       await tick();
@@ -123,6 +132,7 @@ void main() {
       bloc.add(
         LoadDefaultInsultsEvent(
           defaultInsults: const ['default1', 'default2'],
+          defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
         ),
       );
       await tick();
@@ -132,6 +142,7 @@ void main() {
         equals(
           const AppState().copyWith(
             insults: const ['userSavedInsult', 'default1', 'default2'],
+            tieInsults: const ['tieDefault1', 'tieDefault2'],
             didCompleteInitialLoad: true,
           ),
         ),
@@ -145,6 +156,7 @@ void main() {
         ..add(
           LoadDefaultInsultsEvent(
             defaultInsults: const ['default1', 'default2'],
+            defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
           ),
         );
       await tick();
@@ -157,6 +169,7 @@ void main() {
       bloc.add(
         LoadDefaultInsultsEvent(
           defaultInsults: const ['default1', 'default2'],
+          defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
         ),
       );
 
@@ -165,6 +178,7 @@ void main() {
         equals(
           const AppState().copyWith(
             insults: const ['default2'],
+            tieInsults: const ['tieDefault1', 'tieDefault2'],
             didCompleteInitialLoad: true,
           ),
         ),
