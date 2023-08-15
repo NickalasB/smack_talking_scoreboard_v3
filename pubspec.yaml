@@ -19,11 +19,14 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_tts: ^3.6.3
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  hive_generator: ^2.0.0
   hydrated_bloc: ^9.1.2
   intl: ^0.18.0
   json_annotation: ^4.7.0
   json_serializable: ^6.5.4
-  path_provider: ^2.0.15
+  path_provider: ^2.1.0
 
 dev_dependencies:
   bloc_test: ^9.1.1
@@ -32,6 +35,7 @@ dev_dependencies:
   given_when_then: ^0.2.0
   golden_toolkit: ^0.15.0
   page_object: ^0.2.0
+  mocktail: ^1.0.0
   very_good_analysis: ^5.0.0+1
 
 flutter:

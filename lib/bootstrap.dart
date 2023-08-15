@@ -10,8 +10,10 @@ import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:smack_talking_scoreboard_v3/score/bloc/insults_model.dart';
 
 class AppBlocObserver extends BlocObserver {
   @override
@@ -39,6 +41,9 @@ Future<void> bootstrap(
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      await Hive.initFlutter();
+      Hive.registerAdapter(InsultsModelAdapter());
 
       EquatableConfig.stringify;
       HydratedBloc.storage = await HydratedStorage.build(
