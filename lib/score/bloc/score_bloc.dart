@@ -12,6 +12,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/models/round.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 const hiPlayerInsultKey = '##HI##';
@@ -47,6 +48,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
           players: [event.player1, event.player2],
           gamePointParams: event.gamePointParams,
           gameWinner: null,
+          round: const Round(),
         ),
       ),
     );
@@ -110,7 +112,6 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     }
   }
 
-  // TODO(me): handle tie game case + hitting button twice emits wrong player
   void _changeToNextTurn(NextTurnEvent event, Emitter<ScoreboardState> emit) {
     final game = state.game;
     final players = game.players;
@@ -168,7 +169,6 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
           players: playersWithResetRoundScores,
           round: game.round.copyWith(
             roundWinner: roundWinner,
-            roundCount: game.round.roundCount + 1,
           ),
           mostRecentInsult: newInsult,
           gameWinner: gameWinnerOrNull,
@@ -251,13 +251,17 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         )
         .toList();
 
+    final newRound = Round(roundCount: state.game.round.roundCount + 1);
+
     final newGame = event.shouldKeepNames
         ? initialScoreboardState.game.copyWith(
             players: keepNamesNewGame,
             gamePointParams: state.game.gamePointParams,
+            round: newRound,
           )
         : initialGame.copyWith(
             gamePointParams: state.game.gamePointParams,
+            round: newRound,
           );
 
     emit(
@@ -271,6 +275,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   void _gameOverEvent(GameOverEvent event, Emitter<ScoreboardState> emit) {
     emit(
       state.copyWith(
+        isGameInProgress: false,
         game: state.game.copyWith(gameWinner: null),
       ),
     );

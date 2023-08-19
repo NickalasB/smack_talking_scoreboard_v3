@@ -346,7 +346,7 @@ void main() {
         expect(
           bloc.state.game.round,
           Round(
-            roundCount: 2,
+            roundCount: 1,
             roundWinner: testPlayer2.copyWith(score: 7, roundScore: 2),
           ),
         );
@@ -355,7 +355,7 @@ void main() {
           bloc,
           isAScoreboardState.havingRound(
             Round(
-              roundCount: 2,
+              roundCount: 1,
               roundWinner: testPlayer2.copyWith(score: 7, roundScore: 2),
             ),
           ),
@@ -409,7 +409,7 @@ void main() {
         expect(
           bloc.state.game.round,
           Round(
-            roundCount: 2,
+            roundCount: 1,
             roundWinner: testPlayer2.copyWith(score: 7, roundScore: 2),
           ),
         );
@@ -457,7 +457,7 @@ void main() {
         expect(
           bloc.state.game.round,
           Round(
-            roundCount: 2,
+            roundCount: 1,
             roundWinner: null,
           ),
         );
@@ -996,6 +996,7 @@ void main() {
               gamePointParams: GamePointParams(
                 winningScore: 100,
               ),
+              round: Round(roundCount: 11),
             ),
           ),
         );
@@ -1037,9 +1038,8 @@ void main() {
                 testPlayer1.copyWith(playerName: 'Nick', score: 0),
                 testPlayer2.copyWith(playerName: 'Bob', score: 0),
               ],
-              gamePointParams: GamePointParams(
-                winningScore: 100,
-              ),
+              gamePointParams: GamePointParams(winningScore: 100),
+              round: Round(roundCount: 11),
             ),
           ),
         );
