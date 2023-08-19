@@ -50,7 +50,10 @@ class _ChangeTurnButtonState extends State<ChangeTurnButton> {
           ? null
           : () {
               context.readScoreboard.add(
-                NextTurnEvent(context.readApp.state.insults),
+                NextTurnEvent(
+                  context.readApp.state.insults,
+                  tieInsults: context.readApp.state.tieInsults,
+                ),
               );
 
               _checkIfGameHasWinner();

@@ -11,10 +11,15 @@ AppState _$AppStateFromJson(Map<String, dynamic> json) => AppState(
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      tieInsults: (json['tieInsults'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       didCompleteInitialLoad: json['didCompleteInitialLoad'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$AppStateToJson(AppState instance) => <String, dynamic>{
       'insults': instance.insults,
+      'tieInsults': instance.tieInsults,
       'didCompleteInitialLoad': instance.didCompleteInitialLoad,
     };

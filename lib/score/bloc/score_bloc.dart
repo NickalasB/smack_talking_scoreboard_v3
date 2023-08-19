@@ -37,6 +37,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   }
   final Tts tts;
   final List<String?> _emittedInsults = [];
+  final List<String?> _emittedTieInsults = [];
 
   void _startGame(StartGameEvent event, Emitter<ScoreboardState> emit) {
     return emit(
@@ -113,12 +114,19 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   void _changeToNextTurn(NextTurnEvent event, Emitter<ScoreboardState> emit) {
     final game = state.game;
     final players = game.players;
-    final roundHighScore = players.map((e) => e.roundScore).max;
-    final winningPlayer =
-        players.firstWhere((p) => p.roundScore == roundHighScore);
+    Player? roundWinner;
+    Player? roundLoser;
 
-    final losingPlayer =
-        players.firstWhere((element) => element != winningPlayer);
+    final roundScores = players.map((e) => e.roundScore).toSet();
+
+    if (roundScores.length > 1) {
+      final roundHighScore = roundScores.max;
+      roundWinner =
+          players.firstWhereOrNull((p) => p.roundScore == roundHighScore);
+
+      roundLoser =
+          players.firstWhereOrNull((element) => element != roundWinner);
+    }
 
     final playersWithResetRoundScores = <Player>[];
 
@@ -129,12 +137,19 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     }
 
     final insults = List<String>.from(event.insults);
+    final tieInsults = List<String>.from(event.tieInsults);
     if (insults.isNotEmpty && state.areInsultsEnabled) {
-      newInsult = _shuffledAndFormattedInsult(
-        insults,
-        winningPlayer,
-        losingPlayer,
-      );
+      final isNotATieGame = roundWinner != null && roundLoser != null;
+
+      if (isNotATieGame) {
+        newInsult = _shuffledAndFormattedInsult(
+          insults,
+          roundWinner,
+          roundLoser,
+        );
+      } else {
+        newInsult = _shuffledTieInsult(tieInsults);
+      }
 
       tts.speak(newInsult);
     }
@@ -152,7 +167,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         game: game.copyWith(
           players: playersWithResetRoundScores,
           round: game.round.copyWith(
-            roundWinner: winningPlayer,
+            roundWinner: roundWinner,
             roundCount: game.round.roundCount + 1,
           ),
           mostRecentInsult: newInsult,
@@ -167,21 +182,43 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     Player winningPlayer,
     Player losingPlayer,
   ) {
-    String? randomInsult;
     if (_emittedInsults.length == insults.length) {
       // this is covered in tests but it's flaky in CI
       _emittedInsults.clear(); // coverage:ignore-line
     }
-    do {
-      final randomIndex = Random().nextInt(insults.length);
-      randomInsult = insults[randomIndex];
-    } while (_emittedInsults.contains(randomInsult) ||
-        randomInsult == state.game.mostRecentInsult);
+
+    final randomInsult = _randomizedInsult(insults, _emittedInsults);
 
     _emittedInsults.add(randomInsult);
     return randomInsult
         .replaceAll(hiPlayerInsultKey, winningPlayer.playerName)
         .replaceAll(lowPlayerInsultKey, losingPlayer.playerName);
+  }
+
+  String _shuffledTieInsult(
+    List<String> tieInsults,
+  ) {
+    if (_emittedTieInsults.length == tieInsults.length) {
+      // this is covered in tests but it's flaky in CI
+      _emittedTieInsults.clear(); // coverage:ignore-line
+    }
+
+    final randomInsult = _randomizedInsult(tieInsults, _emittedTieInsults);
+
+    _emittedTieInsults.add(randomInsult);
+    return randomInsult;
+  }
+
+  String _randomizedInsult(List<String> insults, List<String?> emittedInsults) {
+    String? randomInsult;
+
+    do {
+      final randomIndex = Random().nextInt(insults.length);
+      randomInsult = insults[randomIndex];
+    } while (emittedInsults.contains(randomInsult) ||
+        randomInsult == state.game.mostRecentInsult);
+
+    return randomInsult;
   }
 
   void _toggleInsultVolume(

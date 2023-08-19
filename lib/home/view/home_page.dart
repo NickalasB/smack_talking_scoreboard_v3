@@ -20,6 +20,7 @@ const numOfScrollingInsults = 8;
 
 @visibleForTesting
 const maxDefaultInsultIndex = 22;
+const maxDefaultTieInsultIndex = 10;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -50,6 +51,10 @@ class _HomePageState extends State<HomePage> {
         defaultInsults: localizedDefaultInsults(
           context,
           maxDefaultInsultIndex: maxDefaultInsultIndex,
+        ),
+        defaultTieInsults: localizedDefaultTieInsults(
+          context,
+          maxDefaultTieInsultIndex: maxDefaultTieInsultIndex,
         ),
       ),
     );

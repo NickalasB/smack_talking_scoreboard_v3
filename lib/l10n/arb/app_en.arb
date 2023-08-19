@@ -18,6 +18,13 @@
       }
     }
   },
+  "tieGameInsult": "{value, select, 0 {Oh wow- a tie! Cuz that's fun?} 1 {At least you two won't be lonely in sucks-ville} 2 {I'm just gonna say it. You both suck equally} 3 {Tie games are like plain yogurt. Lame.} 4 {Cool. Looks like nobody showed up to play today} 5 {This is more boring than a draw at an arm wrestling contest.} 6 {What if we actually tried to score? I think that would be more fun for everyone.} 7 {Maybe go back and read the instructions on how to actually score in this game?} 8 {I can't tell. Is anyone actually trying here?} 9 {Dear diary. Today I witnessed a game so uneventful, I just wanted to lay down and cry} 10 {Don't bother scoring. Everyone is totally entertained by absolutely nothing happening!} other{}}}",
+  "@tieGameInsult": {
+    "description": "Strings to use when a game is tied",
+    "value": {
+      "type": "String"
+    }
+  },
   "appTitle": "Smack Talking Scoreboard",
   "@appTitle": {
     "description": "The title of this app"

@@ -415,6 +415,59 @@ void main() {
         );
       });
 
+      test('Should emit tie game insult when roundScore is the same', () async {
+        final fakeTts = FakeTts();
+
+        final bloc = ScoreboardBloc(fakeTts)
+          ..emit(
+            ScoreboardState(
+              Game(
+                players: [
+                  testPlayer1.copyWith(score: 1),
+                  testPlayer2.copyWith(score: 2),
+                ],
+                gamePointParams: _initialPointParams,
+              ),
+            ),
+          );
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 1));
+        await tick();
+
+        bloc.add(IncreaseScoreEvent(playerId: 2));
+        await tick();
+
+        expect(
+          bloc.state.game.players,
+          [
+            testPlayer1.copyWith(score: 2, roundScore: 1),
+            testPlayer2.copyWith(score: 3, roundScore: 1),
+          ],
+        );
+
+        bloc.add(
+          NextTurnEvent(
+            const ['anything'],
+            tieInsults: const ['lame tie game'],
+          ),
+        );
+        await tick();
+
+        expect(
+          bloc.state.game.round,
+          Round(
+            roundCount: 2,
+            roundWinner: null,
+          ),
+        );
+
+        expect(
+          fakeTts.fakeTsEvents,
+          [FakeSpeakEvent('lame tie game')],
+        );
+      });
+
       test(
           'Should call tts.speak with correctly modified insult when NextTurnEvent added',
           () async {
@@ -424,8 +477,8 @@ void main() {
             ScoreboardState(
               Game(
                 players: [
-                  testPlayer1.copyWith(score: 10),
-                  testPlayer2.copyWith(score: 5),
+                  testPlayer1.copyWith(score: 10, roundScore: 10),
+                  testPlayer2.copyWith(score: 5, roundScore: 5),
                 ],
                 gamePointParams: _initialPointParams,
               ),
@@ -511,8 +564,8 @@ void main() {
                 ScoreboardState(
                   Game(
                     players: [
-                      testPlayer1.copyWith(score: 10),
-                      testPlayer2.copyWith(score: 5),
+                      testPlayer1.copyWith(score: 10, roundScore: 10),
+                      testPlayer2.copyWith(score: 5, roundScore: 5),
                     ],
                     gamePointParams: _initialPointParams,
                     mostRecentInsult: 'I should not repeat',
@@ -540,6 +593,48 @@ void main() {
           }
         });
 
+        test('Should not emit same tie insult twice test', () async {
+          final insults = ['insult1', 'insult2'];
+
+          final repeatTieInsults =
+              List.generate(99, (index) => 'I should not repeat');
+          final allTieInsults = [...repeatTieInsults, 'It should always be me'];
+          for (var i = 0; i < 100; i++) {
+            final fakeTts = FakeTts();
+            final bloc = ScoreboardBloc(fakeTts)
+              ..emit(
+                ScoreboardState(
+                  Game(
+                    players: [
+                      testPlayer1.copyWith(score: 1, roundScore: 10),
+                      testPlayer2.copyWith(score: 1, roundScore: 10),
+                    ],
+                    gamePointParams: _initialPointParams,
+                    mostRecentInsult: 'I should not repeat',
+                  ),
+                  areInsultsEnabled: true,
+                ),
+              );
+            await tick();
+
+            bloc.add(
+              NextTurnEvent(insults, tieInsults: allTieInsults),
+            );
+            await tick();
+
+            expect(
+              fakeTts.fakeTsEvents,
+              [FakeSpeakEvent('It should always be me')],
+            );
+
+            expectStateAndHydratedState(
+              bloc,
+              isAScoreboardState
+                  .havingMostRecentInsult('It should always be me'),
+            );
+          }
+        });
+
         test(
             'Should not repeat any insults until all insults have been emitted',
             () async {
@@ -551,8 +646,8 @@ void main() {
               ScoreboardState(
                 Game(
                   players: [
-                    testPlayer1.copyWith(score: 10),
-                    testPlayer2.copyWith(score: 5),
+                    testPlayer1.copyWith(score: 10, roundScore: 10),
+                    testPlayer2.copyWith(score: 5, roundScore: 5),
                   ],
                   gamePointParams: _initialPointParams,
                 ),
@@ -565,7 +660,53 @@ void main() {
 
             final previousInsult = bloc.state.game.mostRecentInsult;
 
+            bloc.add(IncreaseScoreEvent(playerId: testPlayer1.playerId));
+            await tick();
+
             bloc.add(NextTurnEvent(allInsults));
+            await tick();
+
+            expect(
+              bloc.state.game.mostRecentInsult,
+              isNot(previousInsult),
+            );
+          }
+        });
+
+        test(
+            'Should not repeat any TIE insults until all TIE insults have been emitted',
+            () async {
+          final allTieInsults = List.generate(2, (index) => 'String$index');
+
+          final fakeTts = FakeTts();
+          final bloc = ScoreboardBloc(fakeTts)
+            ..emit(
+              ScoreboardState(
+                Game(
+                  players: [
+                    testPlayer1.copyWith(score: 10, roundScore: 5),
+                    testPlayer2.copyWith(score: 5, roundScore: 5),
+                  ],
+                  gamePointParams: _initialPointParams,
+                ),
+                areInsultsEnabled: true,
+              ),
+            );
+
+          for (var i = 0; i < 100; i++) {
+            await tick();
+
+            final previousInsult = bloc.state.game.mostRecentInsult;
+
+            bloc.add(IncreaseScoreEvent(playerId: testPlayer1.playerId));
+            await tick();
+
+            bloc.add(
+              NextTurnEvent(
+                const ['insult1', 'insult2'],
+                tieInsults: allTieInsults,
+              ),
+            );
             await tick();
 
             expect(
@@ -586,8 +727,8 @@ void main() {
               ScoreboardState(
                 Game(
                   players: [
-                    testPlayer1.copyWith(score: 10),
-                    testPlayer2.copyWith(score: 5),
+                    testPlayer1.copyWith(score: 10, roundScore: 10),
+                    testPlayer2.copyWith(score: 5, roundScore: 5),
                   ],
                   gamePointParams: _initialPointParams,
                 ),
@@ -596,21 +737,34 @@ void main() {
             );
 
           await tick();
+
+          bloc.add(IncreaseScoreEvent(playerId: testPlayer1.playerId));
+          await tick();
           bloc.add(NextTurnEvent(allInsults));
           await tick();
+
           final previousInsult = bloc.state.game.mostRecentInsult;
 
-          bloc.add(NextTurnEvent(allInsults));
+          bloc.add(IncreaseScoreEvent(playerId: testPlayer1.playerId));
           await tick();
           bloc.add(NextTurnEvent(allInsults));
           await tick();
+
+          bloc.add(IncreaseScoreEvent(playerId: testPlayer1.playerId));
+          await tick();
+          bloc.add(NextTurnEvent(allInsults));
+          await tick();
+
           expect(
             bloc.state.game.mostRecentInsult,
             equals(previousInsult),
           );
+
+          bloc.add(IncreaseScoreEvent(playerId: testPlayer1.playerId));
+          await tick();
           bloc.add(NextTurnEvent(allInsults));
           await tick();
-          await tick();
+
           expect(
             bloc.state.game.mostRecentInsult,
             isNot(previousInsult),
@@ -656,8 +810,8 @@ void main() {
               ScoreboardState(
                 Game(
                   players: [
-                    testPlayer1.copyWith(score: 10),
-                    testPlayer2.copyWith(score: 5),
+                    testPlayer1.copyWith(score: 10, roundScore: 10),
+                    testPlayer2.copyWith(score: 5, roundScore: 5),
                   ],
                   gamePointParams: _initialPointParams,
                   mostRecentInsult: 'I should not repeat',
