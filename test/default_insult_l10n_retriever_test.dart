@@ -22,8 +22,10 @@ void main() {
       );
 
       expect(
-        localizedDefaultInsults(ctx,
-            maxDefaultInsultIndex: maxDefaultInsultIndex),
+        localizedDefaultInsults(
+          ctx,
+          maxDefaultInsultIndex: maxDefaultInsultIndex,
+        ),
         [
           "##LOW##. Are your eyes even open while you're playing?",
           'My favorite book; How not to play this game. By ##LOW##',
@@ -52,8 +54,10 @@ void main() {
       );
 
       expect(
-        localizedDefaultTieInsults(ctx,
-            maxDefaultTieInsultIndex: maxDefaultTieInsultIndex),
+        localizedDefaultTieInsults(
+          ctx,
+          maxDefaultTieInsultIndex: maxDefaultTieInsultIndex,
+        ),
         [
           "Oh wow- a tie! Cuz that's fun?",
           "At least you two won't be lonely in sucks-ville",
