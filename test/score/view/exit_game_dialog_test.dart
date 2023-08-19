@@ -22,7 +22,7 @@ void main() {
     );
 
     testWidgets(
-      'Should pop and push to home and add ResetGameEvent without keeping names when YES button tapped',
+      'Should pop and push to home and add GameOverEvent',
       appHarness((given, when, then) async {
         await given.pumpWidget(const ExitGameDialog());
 
@@ -32,7 +32,7 @@ void main() {
 
         expect(
           then.harness.scoreBloc.addedEvents,
-          [ResetGameEvent(shouldKeepNames: false)],
+          [GameOverEvent()],
         );
 
         expect(
