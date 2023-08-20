@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/home/view/dismissible_insult_list.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/settings.dart';
 
 import '../../../harness.dart';
@@ -60,7 +61,9 @@ void main() {
       'Should properly replace and style instances of ##HI## and ##LOW## within insults',
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
-          const ManageInsultsBottomSheet(),
+          DismissibleInsultList(
+            names: List.generate(150, (index) => 'PlayerName'),
+          ),
           appState: const AppState().copyWith(
             insults: [
               ' ##HI## you are awesome. ##LOW## you are poop',
