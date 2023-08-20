@@ -1,12 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
-import 'package:smack_talking_scoreboard_v3/home/view/settings.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/score_bloc.dart';
 
 class DismissibleInsultList extends StatefulWidget {
-  const DismissibleInsultList({super.key});
+  const DismissibleInsultList({required this.names, super.key});
+
+  final List<String> names;
 
   @override
   State<DismissibleInsultList> createState() => _DismissibleInsultListState();
@@ -77,6 +80,7 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
                                     child: Text.rich(
                                       replaceWordsWithStyledText(
                                         context,
+                                        widget.names,
                                         insult,
                                         textStyle: Theme.of(context)
                                             .textTheme
@@ -119,6 +123,7 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
 
 TextSpan replaceWordsWithStyledText(
   BuildContext context,
+  List<String> names,
   String input, {
   required TextStyle textStyle,
 }) {
@@ -133,7 +138,7 @@ TextSpan replaceWordsWithStyledText(
       if (word == hiPlayerInsultKey) {
         children.add(
           TextSpan(
-            text: defaultHiText,
+            text: names[Random().nextInt(names.length)],
             style: textStyle.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.primary,
@@ -144,7 +149,7 @@ TextSpan replaceWordsWithStyledText(
       if (word == lowPlayerInsultKey) {
         children.add(
           TextSpan(
-            text: defaultLowText,
+            text: names[Random().nextInt(names.length)],
             style: textStyle.copyWith(
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.error,

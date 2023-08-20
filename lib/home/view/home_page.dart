@@ -120,6 +120,7 @@ class _HomePageState extends State<HomePage> {
                             child: Text.rich(
                               replaceWordsWithStyledText(
                                 context,
+                                randomNames,
                                 '${_insults[Random().nextInt(_insults.length)]} ',
                                 textStyle:
                                     Theme.of(context).textTheme.headlineLarge!,
