@@ -97,6 +97,10 @@
   "@savedInsults": {
     "description": "Title for custom insults column"
   },
+  "withRandomNames": "(with random names)",
+  "@withRandomNames": {
+    "description": "SubTitle for custom insults column"
+  },
   "pickYourPoison": "Pick Your Poison",
   "@pickYourPoison": {
     "description": "Title for start game form"
