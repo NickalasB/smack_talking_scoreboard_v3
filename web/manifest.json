@@ -1,6 +1,6 @@
 {
-    "name": "Smack Talking Scoreboard V3",
-    "short_name": "Smack Talking Scoreboard V3",
+    "name": "Smack Talking Scoreboard",
+    "short_name": "Smack Talking Scoreboard",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

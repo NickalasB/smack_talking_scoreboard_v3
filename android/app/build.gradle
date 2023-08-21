@@ -59,7 +59,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.zonkeyinventions.smack_talking_scoreboard_v3"
+        applicationId "com.zonkeyinventions.smack_talking_scoreboard"
         minSdkVersion flutterMinSdkVersion
         targetSdkVersion flutterTargetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -89,17 +89,17 @@ android {
         production {
             dimension "default"
             applicationIdSuffix ""
-            manifestPlaceholders = [appName: "Smack Talking Scoreboard V3"]
+            manifestPlaceholders = [appName: "Smack Talking Scoreboard"]
         }
         staging {
             dimension "default"
             applicationIdSuffix ".stg"
-            manifestPlaceholders = [appName: "[STG] Smack Talking Scoreboard V3"]
+            manifestPlaceholders = [appName: "[STG] Smack Talking Scoreboard"]
         }
         development {
             dimension "default"
             applicationIdSuffix ".dev"
-            manifestPlaceholders = [appName: "[DEV] Smack Talking Scoreboard V3"]
+            manifestPlaceholders = [appName: "[DEV] Smack Talking Scoreboard"]
         }
     }
 
