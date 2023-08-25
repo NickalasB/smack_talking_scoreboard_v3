@@ -57,27 +57,22 @@ class ScoreboardView extends StatelessWidget {
     }
 
     Widget landScapeView() {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      return Stack(
         children: [
-          Expanded(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(child: PlayerScore(player: players.first)),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 24),
-                  child: FractionallySizedBox(
-                    heightFactor: .65,
-                    child: SizedBox(
-                      width: 48,
-                      child: ChangeTurnButton(isLandscape: true),
-                    ),
-                  ),
-                ),
-                Expanded(child: PlayerScore(player: players[1])),
-              ],
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(child: PlayerScore(player: players.first)),
+              const SizedBox(width: 16),
+              Expanded(child: PlayerScore(player: players[1])),
+            ],
+          ),
+          const Align(
+            alignment: Alignment.bottomCenter,
+            child: FractionallySizedBox(
+              widthFactor: .25,
+              child: ChangeTurnButton(),
             ),
           ),
         ],
