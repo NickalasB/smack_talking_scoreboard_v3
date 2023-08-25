@@ -41,8 +41,6 @@ class _ChangeTurnButtonState extends State<ChangeTurnButton> {
             },
       label: next,
       textStyle: Theme.of(context).textTheme.headlineSmall,
-
-
     );
   }
 
