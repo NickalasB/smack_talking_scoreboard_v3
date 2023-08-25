@@ -7,11 +7,7 @@ import 'package:smack_talking_scoreboard_v3/score/score.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
 class ChangeTurnButton extends StatefulWidget {
-  const ChangeTurnButton({
-    super.key,
-    this.isLandscape = false,
-  });
-  final bool isLandscape;
+  const ChangeTurnButton({super.key});
 
   @override
   State<ChangeTurnButton> createState() => _ChangeTurnButtonState();
@@ -26,22 +22,7 @@ class _ChangeTurnButtonState extends State<ChangeTurnButton> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final next = context.l10n.next;
-
-    final horizontalNext = Column(
-      mainAxisSize: MainAxisSize.min,
-      children: next.characters
-          .map(
-            (s) => Text(
-              s,
-              style: theme.textTheme.titleLarge?.copyWith(
-                color: theme.canvasColor,
-              ),
-            ),
-          )
-          .toList(),
-    );
 
     final isGameOver = context.isGameOver;
     return PrimaryButton.filled(
@@ -58,9 +39,10 @@ class _ChangeTurnButtonState extends State<ChangeTurnButton> {
 
               _checkIfGameHasWinner();
             },
-      label: widget.isLandscape ? null : next,
+      label: next,
       textStyle: Theme.of(context).textTheme.headlineSmall,
-      child: widget.isLandscape ? horizontalNext : null,
+
+
     );
   }
 
