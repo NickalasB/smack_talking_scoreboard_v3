@@ -31,7 +31,8 @@ void main() {
         await when.userTaps(homePage.menuItem(label: 'Manage Insults'));
         await when.pumpForInfiniteAnimation();
 
-        then.findsWidgets(find.byType(Dismissible), widgetCount: maxDefaultInsultIndex + 1);
+        then.findsWidgets(find.byType(Dismissible),
+            widgetCount: maxDefaultInsultIndex + 1);
       }),
     );
 
