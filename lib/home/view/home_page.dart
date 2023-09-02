@@ -19,8 +19,8 @@ import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_but
 const numOfScrollingInsults = 8;
 
 @visibleForTesting
-const maxDefaultInsultIndex = 22;
-const maxDefaultTieInsultIndex = 10;
+const maxDefaultInsultIndex = 103;
+const maxDefaultTieInsultIndex = 29;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
