@@ -58,7 +58,7 @@ void main() {
     );
 
     testGoldens(
-      'Should properly replace and style instances of ##HI## and ##LOW## within insults',
+      'Should properly replace and style instances of ##HIGH## and ##LOW## within insults',
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           DismissibleInsultList(
@@ -66,7 +66,7 @@ void main() {
           ),
           appState: const AppState().copyWith(
             insults: [
-              ' ##HI## you are awesome. ##LOW## you are poop',
+              ' ##HIGH## you are awesome. ##LOW## you are poop',
               'Nothing to replace or style here'
             ],
           ),

@@ -15,14 +15,14 @@ void main() {
     });
 
     group('CreateInsultEvent', () {
-      test(r'Should replace "$HI/LOW$" with hiLowKey', () async {
+      test('Should replace "##HIGH/LOW##" with highLowKey', () async {
         final bloc = InsultCreatorBloc()
-          ..add(CreateInsultEvent(r'$HI/LOW$', index: 0));
+          ..add(CreateInsultEvent('##HIGH/LOW##', index: 0));
         await tick();
 
         expect(
           bloc.state,
-          InsultCreatorState(inValidKey),
+          InsultCreatorState(invalidKey),
         );
       });
 

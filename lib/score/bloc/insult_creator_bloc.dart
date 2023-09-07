@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-const inValidKey = r'$invalid$';
-const hiLowKey = r'$HI/LOW$';
+const invalidKey = '##invalid##';
+const highLowKey = '##HIGH/LOW##';
 
 class InsultCreatorBloc extends Bloc<InsultCreatorEvent, InsultCreatorState> {
   InsultCreatorBloc() : super(const InsultCreatorState('')) {
@@ -27,7 +27,7 @@ class InsultCreatorBloc extends Bloc<InsultCreatorEvent, InsultCreatorState> {
 
     final fullInsultPhrase = List<String>.from(insultMap.values)
         .join(' ')
-        .replaceAll(hiLowKey, inValidKey);
+        .replaceAll(highLowKey, invalidKey);
 
     emit(InsultCreatorState(fullInsultPhrase));
   }

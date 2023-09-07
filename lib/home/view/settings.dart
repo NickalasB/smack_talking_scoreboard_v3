@@ -12,8 +12,8 @@ import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
-const defaultHiLowText = 'HI/LOW';
-const defaultHiText = 'HI';
+const defaultHiLowText = 'HIGH/LOW';
+const defaultHiText = 'HIGH';
 const defaultLowText = 'LOW';
 
 class AddInsultsBottomSheet extends StatelessWidget {
@@ -140,7 +140,7 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
         final scoreboardBloc = context.readScoreboard;
 
         final isValidInsult = constructedInsult.trim().isNotEmpty &&
-            !constructedInsult.contains(r'$invalid');
+            !constructedInsult.contains(invalidKey);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -296,7 +296,7 @@ class _PlayerPlusTextInputState extends State<PlayerPlusTextInput> {
 
   void createInsultEvent() {
     final insultCreatorBloc = context.readInsultCreator;
-    final formattedDraggedText = '\$$draggedText\$';
+    final formattedDraggedText = '##$draggedText##';
     fullInsultInfo = '$formattedDraggedText ${widget.controller.text}';
     insultCreatorBloc.add(
       CreateInsultEvent(
@@ -425,7 +425,7 @@ class DraggableHiLowScore extends StatelessWidget {
       child: Material(
         child: Tooltip(
           message: isHighScorer
-              ? strings.draggableToolTipHi
+              ? strings.draggableToolTipHigh
               : strings.draggableToolTipLow,
           preferBelow: false,
           verticalOffset: 40,

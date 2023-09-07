@@ -487,7 +487,7 @@ void main() {
         await tick();
 
         bloc.add(
-          NextTurnEvent(const ['##HI## you are good. ##LOW## you are bad.']),
+          NextTurnEvent(const ['##HIGH## you are good. ##LOW## you are bad.']),
         );
         await tick();
 
@@ -1053,7 +1053,7 @@ void main() {
           final fakeTts = FakeTts();
           ScoreboardBloc(fakeTts).add(
             SpeakInsultEvent(
-              '##HI## you are awesome. ##LOW## you stink',
+              '##HIGH## you are awesome. ##LOW## you stink',
             ),
           );
           await tick();

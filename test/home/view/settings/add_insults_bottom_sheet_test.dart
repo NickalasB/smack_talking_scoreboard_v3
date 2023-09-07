@@ -72,7 +72,7 @@ void main() {
   );
 
   testWidgets(
-    'Should show tool tips when user taps draggable HI or LOW',
+    'Should show tool tips when user taps draggable HIGH or LOW',
     appHarness((given, when, then) async {
       await given.pumpWidget(const AppPopupMenuButton());
 
@@ -87,7 +87,7 @@ void main() {
 
       then.findsWidget(
         addInsultPage.toolTipMessage(
-          "Drag me to the HI/LOW above to insert the HI scorer's name",
+          "Drag me to the HIGH/LOW above to insert the HIGH scorer's name",
         ),
       );
 
@@ -96,7 +96,7 @@ void main() {
 
       then.findsWidget(
         addInsultPage.toolTipMessage(
-          "Drag me to the HI/LOW above to insert the LOW scorer's name",
+          "Drag me to the HIGH/LOW above to insert the LOW scorer's name",
         ),
       );
     }),
@@ -154,13 +154,13 @@ void main() {
       await when.idle();
 
       then.addedAppBlocEvents(
-        containsAll([SaveInsultEvent(r'$HI$ anything')]),
+        containsAll([SaveInsultEvent('##HIGH## anything')]),
       );
     }),
   );
 
   testWidgets(
-    'Should reset HI/LOW drag target when user drags draggable to target but moves off target',
+    'Should reset HIGH/LOW drag target when user drags draggable to target but moves off target',
     appHarness((given, when, then) async {
       await given.pumpWidget(const AppPopupMenuButton());
 
@@ -247,7 +247,7 @@ void main() {
 
       then.addedAppBlocEvents(
         containsAll(
-          [SaveInsultEvent(r'$HI$ 0 $LOW$ 1 $LOW$ 2 $HI$ 3')],
+          [SaveInsultEvent('##HIGH## 0 ##LOW## 1 ##LOW## 2 ##HIGH## 3')],
         ),
       );
     }),
@@ -278,7 +278,7 @@ void main() {
       await when.idle();
 
       then.addedScoreBlocEvents(
-        containsAll([SpeakInsultEvent(r'$HI$ anything')]),
+        containsAll([SpeakInsultEvent('##HIGH## anything')]),
       );
     }),
   );
@@ -316,7 +316,7 @@ void main() {
           (p0) => p0.last,
           'lastEvent',
           CreateInsultEvent(
-            r'$LOW$ I should be deleted when undo button is pressed',
+            '##LOW## I should be deleted when undo button is pressed',
             index: 1,
           ),
         ),
