@@ -55,7 +55,13 @@ class AppState extends Equatable {
 
   @override
   String toString() {
-    return 'AppState(\ninsults:$insults\ntieInsults:$tieInsults\ndeletedDefaultInsults:$deletedDefaultInsults\ndidCompleteInitialLoad:$didCompleteInitialLoad\n)';
+    return 'AppState(\n'
+        'insults:$insults\n'
+        'tieInsults:$tieInsults\n'
+        'originalDefaultInsults:$originalDefaultInsults\n'
+        'deletedDefaultInsults:$deletedDefaultInsults\n'
+        'didCompleteInitialLoad:$didCompleteInitialLoad\n'
+        ')';
   }
 
   @override
