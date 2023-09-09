@@ -423,6 +423,7 @@ class DraggableHiLowScore extends StatelessWidget {
         onPressed: () {}, // coverage:ignore-line
       ),
       child: Material(
+        color: Colors.transparent,
         child: Tooltip(
           message: isHighScorer
               ? strings.draggableToolTipHigh
