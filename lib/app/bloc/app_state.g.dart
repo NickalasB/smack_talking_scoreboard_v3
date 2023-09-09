@@ -15,11 +15,21 @@ AppState _$AppStateFromJson(Map<String, dynamic> json) => AppState(
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      originalDefaultInsults: (json['originalDefaultInsults'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      deletedDefaultInsults: (json['deletedDefaultInsults'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       didCompleteInitialLoad: json['didCompleteInitialLoad'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$AppStateToJson(AppState instance) => <String, dynamic>{
       'insults': instance.insults,
       'tieInsults': instance.tieInsults,
+      'originalDefaultInsults': instance.originalDefaultInsults,
+      'deletedDefaultInsults': instance.deletedDefaultInsults,
       'didCompleteInitialLoad': instance.didCompleteInitialLoad,
     };
