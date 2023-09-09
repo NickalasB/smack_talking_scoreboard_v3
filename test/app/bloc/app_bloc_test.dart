@@ -10,11 +10,48 @@ import '../../helpers/test_helpers.dart';
 void main() {
   group('AppState', () {
     test('Should have value-type equality', () {
-      final appState1 = AppState(insults: const ['A'], tieInsults: const ['1']);
+      final appState1 = AppState(
+        insults: const ['A'],
+        tieInsults: const ['1'],
+        originalDefaultInsults: const ['A'],
+        deletedDefaultInsults: const ['A'],
+        didCompleteInitialLoad: true,
+      );
 
       expect(appState1, equals(appState1.copyWith()));
       expect(appState1, isNot(appState1.copyWith(insults: ['B'])));
       expect(appState1, isNot(appState1.copyWith(tieInsults: ['2'])));
+      expect(
+        appState1,
+        isNot(appState1.copyWith(originalDefaultInsults: ['B'])),
+      );
+      expect(
+        appState1,
+        isNot(appState1.copyWith(deletedDefaultInsults: ['B'])),
+      );
+      expect(
+        appState1,
+        isNot(appState1.copyWith(didCompleteInitialLoad: false)),
+      );
+    });
+
+    test('toString', () {
+      final state = AppState().copyWith(
+        insults: const ['insult1'],
+        tieInsults: const ['tieDefault1'],
+        originalDefaultInsults: const ['default1'],
+        deletedDefaultInsults: const ['default1'],
+        didCompleteInitialLoad: true,
+      );
+      expect(
+        state.toString(),
+        'AppState(\n'
+        'insults:[insult1]\n'
+        'tieInsults:[tieDefault1]\n'
+        'originalDefaultInsults:[default1]\n'
+        'deletedDefaultInsults:[default1]\n'
+        'didCompleteInitialLoad:true\n)',
+      );
     });
   });
 
@@ -35,6 +72,7 @@ void main() {
           const AppState().copyWith(
             insults: const ['default1', 'default2'],
             tieInsults: const ['tieDefault1', 'tieDefault2'],
+            originalDefaultInsults: const ['default1', 'default2'],
             didCompleteInitialLoad: true,
           ),
         ),
@@ -62,6 +100,7 @@ void main() {
           const AppState().copyWith(
             insults: const ['userSavedInsult', 'default1', 'default2'],
             tieInsults: const ['tieDefault1', 'tieDefault2'],
+            originalDefaultInsults: const ['default1', 'default2'],
             didCompleteInitialLoad: true,
           ),
         ),
@@ -106,6 +145,8 @@ void main() {
           const AppState().copyWith(
             insults: const [],
             tieInsults: const ['tieDefault1', 'tieDefault2'],
+            originalDefaultInsults: const ['default1', 'default2'],
+            deletedDefaultInsults: const ['default1', 'default2'],
             didCompleteInitialLoad: true,
           ),
         ),
@@ -143,6 +184,7 @@ void main() {
           const AppState().copyWith(
             insults: const ['userSavedInsult', 'default1', 'default2'],
             tieInsults: const ['tieDefault1', 'tieDefault2'],
+            originalDefaultInsults: const ['default1', 'default2'],
             didCompleteInitialLoad: true,
           ),
         ),
@@ -179,6 +221,59 @@ void main() {
           const AppState().copyWith(
             insults: const ['default2'],
             tieInsults: const ['tieDefault1', 'tieDefault2'],
+            originalDefaultInsults: const ['default1', 'default2'],
+            deletedDefaultInsults: const ['default1'],
+            didCompleteInitialLoad: true,
+          ),
+        ),
+      );
+    });
+
+    test(
+        'should update default insults when new defaultInsults added, while not re-adding deleted default insults',
+        () async {
+      final bloc = AppBloc()
+        ..add(
+          LoadDefaultInsultsEvent(
+            defaultInsults: const ['default1', 'default2'],
+            defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
+          ),
+        );
+      await tick();
+
+      bloc.add(DeleteInsultEvent('default1'));
+      await tick();
+
+      bloc.add(SaveInsultEvent('userInsult1'));
+      await tick();
+
+      bloc.add(SaveInsultEvent('userInsult2'));
+      await tick();
+
+      bloc.add(DeleteInsultEvent('userInsult1'));
+      await tick();
+
+      bloc.add(
+        LoadDefaultInsultsEvent(
+          defaultInsults: const ['default1', 'default2', 'newDefaultInsult'],
+          defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
+        ),
+      );
+
+      await tick();
+
+      expectStateAndHydratedState(
+        bloc,
+        equals(
+          const AppState().copyWith(
+            insults: const ['userInsult2', 'default2', 'newDefaultInsult'],
+            tieInsults: const ['tieDefault1', 'tieDefault2'],
+            originalDefaultInsults: const [
+              'default1',
+              'default2',
+              'newDefaultInsult',
+            ],
+            deletedDefaultInsults: const ['default1'],
             didCompleteInitialLoad: true,
           ),
         ),
@@ -248,6 +343,58 @@ void main() {
         equals(
           stateWithInsults.copyWith(
             insults: const ['insult2'],
+          ),
+        ),
+      );
+    });
+
+    test(
+        'Should add deleted insult to state.deletedDefaultInsults when deleted insult is from defaults',
+        () async {
+      final stateWithInsults = const AppState().copyWith(
+        originalDefaultInsults: const ['default1', 'default2'],
+        insults: const ['default1', 'default2'],
+      );
+
+      final bloc = AppBloc()..emit(stateWithInsults);
+      await tick();
+
+      bloc.add(DeleteInsultEvent('default1'));
+      await tick();
+
+      expectStateAndHydratedState(
+        bloc,
+        equals(
+          stateWithInsults.copyWith(
+            insults: const ['default2'],
+            originalDefaultInsults: const ['default1', 'default2'],
+            deletedDefaultInsults: const ['default1'],
+          ),
+        ),
+      );
+    });
+
+    test(
+        'Should NOT add deleted insult to state.deletedDefaultInsults when deleted insult is NOT from defaults',
+        () async {
+      final stateWithInsults = const AppState().copyWith(
+        originalDefaultInsults: const ['default1', 'default2'],
+        insults: const ['default1', 'default2', 'userInsult'],
+      );
+
+      final bloc = AppBloc()..emit(stateWithInsults);
+      await tick();
+
+      bloc.add(DeleteInsultEvent('userInsult'));
+      await tick();
+
+      expectStateAndHydratedState(
+        bloc,
+        equals(
+          stateWithInsults.copyWith(
+            insults: const ['default1', 'default2'],
+            originalDefaultInsults: const ['default1', 'default2'],
+            deletedDefaultInsults: const [],
           ),
         ),
       );
