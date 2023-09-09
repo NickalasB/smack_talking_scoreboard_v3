@@ -1,6 +1,6 @@
 name: smack_talking_scoreboard_v3
 description: A scoreboard app that talks smack for you
-version: 2.0.0+1
+version: 2.0.0+4
 publish_to: none
 
 environment:
