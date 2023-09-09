@@ -28,10 +28,10 @@ void main() {
       expect(
         state.toString(),
         'AppState(\n'
-            'insults:[insult1]\n'
-            'tieInsults:[tieDefault1]\n'
-            'deletedDefaultInsults:[default1]\n'
-            'didCompleteInitialLoad:true\n)',
+        'insults:[insult1]\n'
+        'tieInsults:[tieDefault1]\n'
+        'deletedDefaultInsults:[default1]\n'
+        'didCompleteInitialLoad:true\n)',
       );
     });
   });
