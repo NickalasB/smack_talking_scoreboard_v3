@@ -28,6 +28,7 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
           ...userAddedInsultsOnly.toSet(),
           ...correctDefaultInsultsToUse,
         ],
+        originalDefaultInsults: event.defaultInsults,
         tieInsults: event.defaultTieInsults,
         didCompleteInitialLoad: true,
       ),
@@ -38,7 +39,7 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
     List<String> defaultInsults,
   ) {
     final userModifiedDefaultInsults = defaultInsults
-        .where((insult) => state.insults.contains(insult))
+        .where((insult) => !state.deletedDefaultInsults.contains(insult))
         .toList();
 
     if (!state.didCompleteInitialLoad) {
@@ -62,8 +63,19 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
 
   void _deleteInsult(DeleteInsultEvent event, Emitter<AppState> emit) {
     final insults = List<String>.from(state.insults)..remove(event.insult);
+    final originalDefaultInsults = state.originalDefaultInsults;
+    final deletedDefaultInsults =
+        List<String>.from(state.deletedDefaultInsults);
+
+    if (originalDefaultInsults.contains(event.insult)) {
+      deletedDefaultInsults.add(event.insult);
+    }
+
     emit(
-      state.copyWith(insults: insults),
+      state.copyWith(
+        insults: insults,
+        deletedDefaultInsults: deletedDefaultInsults,
+      ),
     );
   }
 
