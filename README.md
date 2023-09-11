@@ -186,7 +186,7 @@ Update the `CFBundleLocalizations` array in the `Info.plist` at `ios/Runner/Info
 1. On android run `flutter build appbundle -t lib/main_production.dart`
    1. The release bundle for your app is created at `smack_talking_scoreboard_v3/build/app/outputs/bundle/productionRelease/app-production-release.aab`
    2. More- https://docs.flutter.dev/deployment/android
-2. On iOS
+2. On iOS run `flutter build ipa -t lib/main_production.dart`
    1. More- https://docs.flutter.dev/deployment/ios
 
 
