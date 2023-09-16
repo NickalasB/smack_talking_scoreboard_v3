@@ -1,3 +1,4 @@
+// ignore_for_file:prefer_const_constructors
 import 'dart:async';
 
 import 'package:flutter/services.dart';
@@ -100,6 +101,16 @@ void main() {
           ],
         );
       });
+    });
+  });
+
+  group('Voice', () {
+    final voice1 = Voice(name: 'name1', locale: 'locale1');
+    test('Should have value-type equality', () {
+      expect(voice1, equals(Voice(name: 'name1', locale: 'locale1')));
+
+      expect(voice1, isNot(Voice(name: 'name2', locale: 'locale1')));
+      expect(voice1, isNot(Voice(name: 'name1', locale: 'locale2')));
     });
   });
 }
