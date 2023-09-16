@@ -33,6 +33,74 @@ void main() {
       unawaited(stopCall);
       expect(fakeTtsEngine.stopCompleters, hasLength(1));
     });
+
+    group('available voices', () {
+      test(
+          'Should return available voices as a list of voices when get availableVoices called',
+          () async {
+        final fakeTtsEngine = _FakeTtsEngine();
+        final tts = TtsImplementation(fakeTtsEngine);
+
+        final availableVoicesCall = tts.availableVoices;
+
+        fakeTtsEngine.availableVoicesCompleters.last.complete(
+          [
+            {
+              'name': 'any_name',
+              'locale': 'any_locale',
+            },
+            {
+              'name': 'any_name2',
+              'locale': 'any_locale2',
+            },
+          ],
+        );
+
+        expect(
+          await availableVoicesCall,
+          const [
+            Voice(name: 'any_name', locale: 'any_locale'),
+            Voice(name: 'any_name2', locale: 'any_locale2')
+          ],
+        );
+      });
+
+      test(
+          'Should return empty list and log error when get availableVoices call fails',
+          () async {
+        final fakeTtsEngine = _FakeTtsEngine();
+        final tts = TtsImplementation(fakeTtsEngine);
+
+        final availableVoicesCall = tts.availableVoices;
+
+        fakeTtsEngine.availableVoicesCompleters.last.completeError(
+          Exception('something went wrong'),
+        );
+
+        expect(await availableVoicesCall, isEmpty);
+      });
+
+      test(
+          'Should call ttsEngine.setVoice with correct data when setVoice called',
+          () async {
+        final fakeTtsEngine = _FakeTtsEngine();
+        final tts = TtsImplementation(fakeTtsEngine);
+
+        unawaited(
+          tts.setVoice(const Voice(name: 'any_name', locale: 'any_locale')),
+        );
+
+        expect(
+          fakeTtsEngine.setVoiceCalls,
+          const [
+            {
+              'name': 'any_name',
+              'locale': 'any_locale',
+            }
+          ],
+        );
+      });
+    });
   });
 }
 
@@ -40,6 +108,8 @@ class _FakeTtsEngine implements FlutterTts {
   final speakCompleters = <Completer<dynamic>>[];
   final stopCompleters = <Completer<dynamic>>[];
   final volumeCompleters = <Completer<dynamic>>[];
+  final availableVoicesCompleters = <Completer<dynamic>>[];
+  final setVoiceCalls = <Map<String, String>>[];
 
   @override
   VoidCallback? cancelHandler;
@@ -86,6 +156,18 @@ class _FakeTtsEngine implements FlutterTts {
   }
 
   @override
+  Future<dynamic> get getVoices async {
+    final completer = Completer<dynamic>();
+    availableVoicesCompleters.add(completer);
+    return completer.future;
+  }
+
+  @override
+  Future<dynamic> setVoice(Map<String, String> voice) async {
+    setVoiceCalls.add(voice);
+  }
+
+  @override
   Future<dynamic> areLanguagesInstalled(List<String> languages) {
     throw UnimplementedError();
   }
@@ -118,9 +200,6 @@ class _FakeTtsEngine implements FlutterTts {
   @override
   Future<SpeechRateValidRange> get getSpeechRateValidRange =>
       throw UnimplementedError();
-
-  @override
-  Future<dynamic> get getVoices => throw UnimplementedError();
 
   @override
   Future<dynamic> isLanguageAvailable(String language) {
@@ -209,11 +288,6 @@ class _FakeTtsEngine implements FlutterTts {
 
   @override
   void setStartHandler(VoidCallback callback) {}
-
-  @override
-  Future<dynamic> setVoice(Map<String, String> voice) {
-    throw UnimplementedError();
-  }
 
   @override
   Future<dynamic> synthesizeToFile(String text, String fileName) {
