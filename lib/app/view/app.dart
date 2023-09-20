@@ -20,19 +20,31 @@ import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 const homeRouteName = '/';
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({
     super.key,
   });
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  late final Tts ttsImplementation;
+  @override
+  void initState() {
+    ttsImplementation = TtsImplementation(FlutterTts());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => ScoreboardBloc(TtsImplementation(FlutterTts())),
+          create: (_) => ScoreboardBloc(ttsImplementation),
         ),
-        BlocProvider(create: (_) => AppBloc()),
+        BlocProvider(create: (_) => AppBloc(ttsImplementation)),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
