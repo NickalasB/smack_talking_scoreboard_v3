@@ -61,7 +61,7 @@ void main() {
           await availableVoicesCall,
           const [
             Voice(name: 'any_name', locale: 'any_locale'),
-            Voice(name: 'any_name2', locale: 'any_locale2')
+            Voice(name: 'any_name2', locale: 'any_locale2'),
           ],
         );
       });
