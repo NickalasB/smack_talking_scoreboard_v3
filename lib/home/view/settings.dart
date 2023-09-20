@@ -648,5 +648,5 @@ const randomNames = [
   'Everett',
   'Kaleb',
   'Rhett',
-  'Jaxson'
+  'Jaxson',
 ];

@@ -67,7 +67,7 @@ void main() {
           appState: const AppState().copyWith(
             insults: [
               ' ##HIGH## you are awesome. ##LOW## you are poop',
-              'Nothing to replace or style here'
+              'Nothing to replace or style here',
             ],
           ),
         );

@@ -36,7 +36,7 @@ class _DismissibleInsultListState extends State<DismissibleInsultList> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                )
+                ),
               ]
             : [
                 ...insults.map((insult) {
