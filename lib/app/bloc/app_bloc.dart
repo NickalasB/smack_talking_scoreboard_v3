@@ -1,15 +1,18 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 class AppBloc extends HydratedBloc<AppEvent, AppState> {
-  AppBloc() : super(const AppState()) {
+  AppBloc(this.tts) : super(const AppState()) {
     on<LoadDefaultInsultsEvent>(_loadDefaultInsults);
 
     on<SaveInsultEvent>(_saveInsult);
 
     on<DeleteInsultEvent>(_deleteInsult);
   }
+
+  final Tts tts;
 
   void _loadDefaultInsults(
     LoadDefaultInsultsEvent event,

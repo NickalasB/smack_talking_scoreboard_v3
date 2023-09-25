@@ -3,8 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 import '../../flutter_test_config.dart';
+import '../../helpers/fake_tts.dart';
 import '../../helpers/test_helpers.dart';
 
 void main() {
@@ -13,6 +15,7 @@ void main() {
       final appState1 = AppState(
         insults: const ['A'],
         tieInsults: const ['1'],
+        availableVoices: const [Voice(name: 'anyName', locale: 'anyLocale')],
         originalDefaultInsults: const ['A'],
         deletedDefaultInsults: const ['A'],
         didCompleteInitialLoad: true,
@@ -20,6 +23,16 @@ void main() {
 
       expect(appState1, equals(appState1.copyWith()));
       expect(appState1, isNot(appState1.copyWith(insults: ['B'])));
+      expect(
+        appState1,
+        isNot(
+          appState1.copyWith(
+            availableVoices: const [
+              Voice(name: 'anyName2', locale: 'anyLocale2'),
+            ],
+          ),
+        ),
+      );
       expect(appState1, isNot(appState1.copyWith(tieInsults: ['2'])));
       expect(
         appState1,
@@ -39,6 +52,7 @@ void main() {
       final state = AppState().copyWith(
         insults: const ['insult1'],
         tieInsults: const ['tieDefault1'],
+        availableVoices: const [Voice(name: 'anyName', locale: 'anyLocale')],
         originalDefaultInsults: const ['default1'],
         deletedDefaultInsults: const ['default1'],
         didCompleteInitialLoad: true,
@@ -48,6 +62,7 @@ void main() {
         'AppState(\n'
         'insults:[insult1]\n'
         'tieInsults:[tieDefault1]\n'
+        'availableVoices:[Voice(anyName, anyLocale)]\n'
         'originalDefaultInsults:[default1]\n'
         'deletedDefaultInsults:[default1]\n'
         'didCompleteInitialLoad:true\n)',
@@ -57,7 +72,7 @@ void main() {
 
   group('LoadDefaultInsultsEvent', () {
     test('should add default insults', () async {
-      final bloc = AppBloc()
+      final bloc = _appBloc
         ..add(
           LoadDefaultInsultsEvent(
             defaultInsults: const ['default1', 'default2'],
@@ -80,7 +95,7 @@ void main() {
     });
 
     test('should include user saved insults', () async {
-      final bloc = AppBloc()
+      final bloc = _appBloc
         ..add(
           SaveInsultEvent('userSavedInsult'),
         );
@@ -110,7 +125,7 @@ void main() {
     test(
         'should emit state with empty default insults when a user has deleted them all',
         () async {
-      final bloc = AppBloc()
+      final bloc = _appBloc
         ..add(
           SaveInsultEvent('userSavedInsult'),
         );
@@ -156,7 +171,7 @@ void main() {
     test(
         'should only one include one instance of default insults plus user saved insults when added more than once',
         () async {
-      final bloc = AppBloc()
+      final bloc = _appBloc
         ..add(
           SaveInsultEvent('userSavedInsult'),
         );
@@ -184,6 +199,7 @@ void main() {
           const AppState().copyWith(
             insults: const ['userSavedInsult', 'default1', 'default2'],
             tieInsults: const ['tieDefault1', 'tieDefault2'],
+            availableVoices: [],
             originalDefaultInsults: const ['default1', 'default2'],
             didCompleteInitialLoad: true,
           ),
@@ -194,7 +210,7 @@ void main() {
     test(
         'should allow deleting of default insults only load modified default insults',
         () async {
-      final bloc = AppBloc()
+      final bloc = _appBloc
         ..add(
           LoadDefaultInsultsEvent(
             defaultInsults: const ['default1', 'default2'],
@@ -221,6 +237,7 @@ void main() {
           const AppState().copyWith(
             insults: const ['default2'],
             tieInsults: const ['tieDefault1', 'tieDefault2'],
+            availableVoices: [],
             originalDefaultInsults: const ['default1', 'default2'],
             deletedDefaultInsults: const ['default1'],
             didCompleteInitialLoad: true,
@@ -232,7 +249,7 @@ void main() {
     test(
         'should update default insults when new defaultInsults added, while not re-adding deleted default insults',
         () async {
-      final bloc = AppBloc()
+      final bloc = _appBloc
         ..add(
           LoadDefaultInsultsEvent(
             defaultInsults: const ['default1', 'default2'],
@@ -268,6 +285,7 @@ void main() {
           const AppState().copyWith(
             insults: const ['userInsult2', 'default2', 'newDefaultInsult'],
             tieInsults: const ['tieDefault1', 'tieDefault2'],
+            availableVoices: [],
             originalDefaultInsults: const [
               'default1',
               'default2',
@@ -285,7 +303,7 @@ void main() {
     test(
         'should emit state with new insult when SaveInsultEvent added with valid text',
         () async {
-      final bloc = AppBloc();
+      final bloc = _appBloc;
       await tick();
 
       bloc.add(SaveInsultEvent('be better'));
@@ -303,7 +321,7 @@ void main() {
     test(
         'should NOT emit state with new insult when SaveInsultEvent added with empty or null text',
         () async {
-      final bloc = AppBloc();
+      final bloc = _appBloc;
       await tick();
 
       bloc.add(SaveInsultEvent(''));
@@ -332,7 +350,7 @@ void main() {
         ],
       );
 
-      final bloc = AppBloc()..emit(stateWithInsults);
+      final bloc = _appBloc..emit(stateWithInsults);
       await tick();
 
       bloc.add(DeleteInsultEvent('insult1'));
@@ -356,7 +374,7 @@ void main() {
         insults: const ['default1', 'default2'],
       );
 
-      final bloc = AppBloc()..emit(stateWithInsults);
+      final bloc = _appBloc..emit(stateWithInsults);
       await tick();
 
       bloc.add(DeleteInsultEvent('default1'));
@@ -382,7 +400,7 @@ void main() {
         insults: const ['default1', 'default2', 'userInsult'],
       );
 
-      final bloc = AppBloc()..emit(stateWithInsults);
+      final bloc = _appBloc..emit(stateWithInsults);
       await tick();
 
       bloc.add(DeleteInsultEvent('userInsult'));
@@ -406,3 +424,5 @@ void expectStateAndHydratedState(AppBloc bloc, dynamic matcher) {
   expect(bloc.state, matcher);
   expect(bloc.fromJson(testStorage.read('AppBloc')!), matcher);
 }
+
+AppBloc get _appBloc => AppBloc(FakeTts());

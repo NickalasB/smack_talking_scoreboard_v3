@@ -283,14 +283,14 @@ extension AppWhen on WidgetTestWhen<AppHarness> {
 }
 
 class FakeScoreBloc extends FakeBloc<ScoreboardEvent, ScoreboardState>
+    with TtsMixin
     implements ScoreboardBloc {
   FakeScoreBloc(super.initialState);
-
-  @override
-  Tts get tts => FakeTts();
 }
 
-class FakeAppBloc extends FakeBloc<AppEvent, AppState> implements AppBloc {
+class FakeAppBloc extends FakeBloc<AppEvent, AppState>
+    with TtsMixin
+    implements AppBloc {
   FakeAppBloc(super.initialState);
 }
 
@@ -298,4 +298,8 @@ class FakeInsultCreatorBloc
     extends FakeBloc<InsultCreatorEvent, InsultCreatorState>
     implements InsultCreatorBloc {
   FakeInsultCreatorBloc(super.initialState);
+}
+
+mixin TtsMixin {
+  Tts get tts => FakeTts();
 }
