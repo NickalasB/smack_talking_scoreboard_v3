@@ -4,7 +4,9 @@ import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 class AppBloc extends HydratedBloc<AppEvent, AppState> {
-  AppBloc(this.tts) : super(const AppState()) {
+  AppBloc(Tts tts) : super(const AppState()) {
+    _tts = tts;
+
     on<LoadDefaultInsultsEvent>(_loadDefaultInsults);
 
     on<SaveInsultEvent>(_saveInsult);
@@ -16,7 +18,7 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
     add(LoadAvailableVoicesEvent());
   }
 
-  final Tts tts;
+  late final Tts _tts;
 
   void _loadDefaultInsults(
     LoadDefaultInsultsEvent event,
@@ -90,7 +92,7 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
     LoadAvailableVoicesEvent event,
     Emitter<AppState> emit,
   ) async {
-    final voices = await tts.availableVoices;
+    final voices = await _tts.availableVoices;
 
     emit(state.copyWith(availableVoices: voices));
   }
