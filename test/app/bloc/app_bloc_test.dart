@@ -72,14 +72,10 @@ void main() {
 
   group('LoadDefaultInsultsEvent', () {
     test('should add default insults', () async {
-      final bloc = _appBloc
-        ..add(
-          LoadDefaultInsultsEvent(
-            defaultInsults: const ['default1', 'default2'],
-            defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
-          ),
-        );
-      await tick();
+      final bloc = await _appBlocInitializedWith(
+        defaultInsults: const ['default1', 'default2'],
+        defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
+      );
 
       expectStateAndHydratedState(
         bloc,
@@ -95,7 +91,7 @@ void main() {
     });
 
     test('should include user saved insults', () async {
-      final bloc = _appBloc
+      final bloc = await _appBlocInitializedWith()
         ..add(
           SaveInsultEvent('userSavedInsult'),
         );
@@ -210,14 +206,10 @@ void main() {
     test(
         'should allow deleting of default insults only load modified default insults',
         () async {
-      final bloc = _appBloc
-        ..add(
-          LoadDefaultInsultsEvent(
-            defaultInsults: const ['default1', 'default2'],
-            defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
-          ),
-        );
-      await tick();
+      final bloc = await _appBlocInitializedWith(
+        defaultInsults: const ['default1', 'default2'],
+        defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
+      );
 
       bloc.add(
         DeleteInsultEvent('default1'),
@@ -249,14 +241,10 @@ void main() {
     test(
         'should update default insults when new defaultInsults added, while not re-adding deleted default insults',
         () async {
-      final bloc = _appBloc
-        ..add(
-          LoadDefaultInsultsEvent(
-            defaultInsults: const ['default1', 'default2'],
-            defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
-          ),
-        );
-      await tick();
+      final bloc = await _appBlocInitializedWith(
+        defaultInsults: const ['default1', 'default2'],
+        defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
+      );
 
       bloc.add(DeleteInsultEvent('default1'));
       await tick();
@@ -293,6 +281,28 @@ void main() {
             ],
             deletedDefaultInsults: const ['default1'],
             didCompleteInitialLoad: true,
+          ),
+        ),
+      );
+    });
+  });
+
+  group('LoadAvailableVoicesEvent', () {
+    test('should call tts.available voices on bloc initialization', () async {
+      final fakeTts = FakeTts();
+      final bloc = await _appBlocInitializedWith(
+        tts: fakeTts,
+        availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
+      );
+
+      expect(fakeTts.getVoicesCompleters, hasLength(1));
+
+      expectStateAndHydratedState(
+        bloc,
+        equals(
+          const AppState().copyWith(
+            didCompleteInitialLoad: true,
+            availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
           ),
         ),
       );
@@ -426,3 +436,30 @@ void expectStateAndHydratedState(AppBloc bloc, dynamic matcher) {
 }
 
 AppBloc get _appBloc => AppBloc(FakeTts());
+
+AppBloc appBloc(Tts? tts) => AppBloc(tts ?? FakeTts());
+
+Future<AppBloc> _appBlocInitializedWith({
+  FakeTts? tts,
+  List<Voice> availableVoices = const [],
+  List<String> defaultInsults = const [],
+  List<String> defaultTieInsults = const [],
+}) async {
+  final fakeTts = tts ?? FakeTts();
+
+  final bloc = appBloc(fakeTts)
+    ..add(
+      LoadDefaultInsultsEvent(
+        defaultInsults: defaultInsults,
+        defaultTieInsults: defaultTieInsults,
+      ),
+    );
+
+  await tick();
+
+  fakeTts.getVoicesCompleters.last.complete(availableVoices);
+
+  await tick();
+
+  return bloc;
+}
