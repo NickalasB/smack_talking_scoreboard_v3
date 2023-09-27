@@ -15,6 +15,13 @@ class LoadDefaultInsultsEvent extends AppEvent {
   List<Object?> get props => [defaultInsults, defaultTieInsults];
 }
 
+class LoadAvailableVoicesEvent extends AppEvent {
+  LoadAvailableVoicesEvent();
+
+  @override // coverage:ignore-line
+  List<Object?> get props => []; // coverage:ignore-line
+}
+
 class SaveInsultEvent extends AppEvent {
   SaveInsultEvent(this.insult);
   final String? insult;

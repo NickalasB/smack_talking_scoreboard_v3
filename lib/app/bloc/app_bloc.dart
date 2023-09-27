@@ -10,6 +10,10 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
     on<SaveInsultEvent>(_saveInsult);
 
     on<DeleteInsultEvent>(_deleteInsult);
+
+    on<LoadAvailableVoicesEvent>(_loadAvailableVoices);
+
+    add(LoadAvailableVoicesEvent());
   }
 
   final Tts tts;
@@ -80,6 +84,15 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
         deletedDefaultInsults: deletedDefaultInsults,
       ),
     );
+  }
+
+  Future<void> _loadAvailableVoices(
+    LoadAvailableVoicesEvent event,
+    Emitter<AppState> emit,
+  ) async {
+    final voices = await tts.availableVoices;
+
+    emit(state.copyWith(availableVoices: voices));
   }
 
   @override
