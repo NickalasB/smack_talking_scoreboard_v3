@@ -68,9 +68,9 @@ class TtsImplementation implements Tts {
   }
 
   @override
-  Future<void> setVoice(Voice voice) async {
+  Future<void> setVoice(Voice voice) {
     final voicesAsStringMap = voice.toJson().cast<String, String>();
-    await ttsEngine.setVoice(voicesAsStringMap);
+    return ttsEngine.setVoice(voicesAsStringMap);
   }
 }
 

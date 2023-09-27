@@ -320,6 +320,50 @@ void main() {
     });
   });
 
+  group('SetVoiceEvent', () {
+    test('should call tts.setVoice and emit voice when SetVoiceEvent added',
+        () async {
+      final fakeTts = FakeTts();
+      final bloc = await _appBlocInitializedWith(
+        tts: fakeTts,
+        availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
+      );
+
+      expectStateAndHydratedState(
+        bloc,
+        equals(
+          const AppState().copyWith(
+            didCompleteInitialLoad: true,
+            availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
+            selectedVoice: null, // ignore:avoid_redundant_argument_values
+          ),
+        ),
+      );
+
+      bloc.add(SetVoiceEvent(Voice(name: 'anyName', locale: 'anyLocale')));
+
+      await tick();
+
+      expect(fakeTts.setVoiceCompleters, hasLength(1));
+
+      fakeTts.setVoiceCompleters.single.complete(
+        Voice(name: 'anyName', locale: 'anyLocale'),
+      );
+      await tick();
+
+      expectStateAndHydratedState(
+        bloc,
+        equals(
+          const AppState().copyWith(
+            didCompleteInitialLoad: true,
+            availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
+            selectedVoice: Voice(name: 'anyName', locale: 'anyLocale'),
+          ),
+        ),
+      );
+    });
+  });
+
   group('SaveInsultEvent', () {
     test(
         'should emit state with new insult when SaveInsultEvent added with valid text',

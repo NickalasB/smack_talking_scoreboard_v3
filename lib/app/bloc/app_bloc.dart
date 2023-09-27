@@ -15,6 +15,8 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
 
     on<LoadAvailableVoicesEvent>(_loadAvailableVoices);
 
+    on<SetVoiceEvent>(_setVoice);
+
     add(LoadAvailableVoicesEvent());
   }
 
@@ -95,6 +97,15 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
     final voices = await _tts.availableVoices;
 
     emit(state.copyWith(availableVoices: voices));
+  }
+
+  Future<void> _setVoice(
+    SetVoiceEvent event,
+    Emitter<AppState> emit,
+  ) async {
+    await _tts.setVoice(event.voice);
+
+    emit(state.copyWith(selectedVoice: event.voice));
   }
 
   @override
