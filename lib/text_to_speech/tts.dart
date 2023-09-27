@@ -20,7 +20,19 @@ abstract class Tts {
 }
 
 class TtsImplementation implements Tts {
-  const TtsImplementation(this.ttsEngine);
+  TtsImplementation(this.ttsEngine) {
+    // This is needed in order to hear the voice played on older iOS devices
+    // https://github.com/dlutton/flutter_tts/issues/394
+    ttsEngine.setIosAudioCategory(
+      IosTextToSpeechAudioCategory.playback,
+      [
+        IosTextToSpeechAudioCategoryOptions.mixWithOthers,
+        IosTextToSpeechAudioCategoryOptions
+            .interruptSpokenAudioAndMixWithOthers,
+      ],
+      IosTextToSpeechAudioMode.voicePrompt,
+    );
+  }
 
   final FlutterTts ttsEngine;
 
