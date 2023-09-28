@@ -8,6 +8,30 @@ import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 void main() {
   group('TtsImplementation', () {
+    test('should set proper iOS options on creation', () {
+      final fakeTts = _FakeTtsEngine();
+      TtsImplementation(fakeTts);
+
+      expect(
+        fakeTts.iosTextToSpeechAudioCategory,
+        IosTextToSpeechAudioCategory.playback,
+      );
+
+      expect(
+        fakeTts.iosTextToSpeechAudioCategoryOptions,
+        [
+          IosTextToSpeechAudioCategoryOptions.mixWithOthers,
+          IosTextToSpeechAudioCategoryOptions
+              .interruptSpokenAudioAndMixWithOthers,
+        ],
+      );
+
+      expect(
+        fakeTts.iosTextToSpeechAudioMode,
+        IosTextToSpeechAudioMode.voicePrompt,
+      );
+    });
+
     test('Should speak when speak called', () async {
       final fakeTtsEngine = _FakeTtsEngine();
       final tts = TtsImplementation(fakeTtsEngine);
@@ -121,6 +145,11 @@ class _FakeTtsEngine implements FlutterTts {
   final volumeCompleters = <Completer<dynamic>>[];
   final availableVoicesCompleters = <Completer<dynamic>>[];
   final setVoiceCalls = <Map<String, String>>[];
+
+  late final IosTextToSpeechAudioCategory iosTextToSpeechAudioCategory;
+  late final List<IosTextToSpeechAudioCategoryOptions>
+      iosTextToSpeechAudioCategoryOptions;
+  late final IosTextToSpeechAudioMode iosTextToSpeechAudioMode;
 
   @override
   VoidCallback? cancelHandler;
@@ -257,8 +286,10 @@ class _FakeTtsEngine implements FlutterTts {
     IosTextToSpeechAudioCategory category,
     List<IosTextToSpeechAudioCategoryOptions> options, [
     IosTextToSpeechAudioMode mode = IosTextToSpeechAudioMode.defaultMode,
-  ]) {
-    throw UnimplementedError();
+  ]) async {
+    iosTextToSpeechAudioCategory = category;
+    iosTextToSpeechAudioCategoryOptions = options;
+    iosTextToSpeechAudioMode = mode;
   }
 
   @override

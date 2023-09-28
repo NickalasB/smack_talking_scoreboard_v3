@@ -19,7 +19,9 @@ const hiPlayerInsultKey = '##HIGH##';
 const lowPlayerInsultKey = '##LOW##';
 
 class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
-  ScoreboardBloc(this.tts) : super(initialScoreboardState) {
+  ScoreboardBloc(Tts tts) : super(initialScoreboardState) {
+    _tts = tts;
+
     on<StartGameEvent>(_startGame);
 
     on<IncreaseScoreEvent>(_increaseScore);
@@ -36,7 +38,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     on<SpeakInsultEvent>(_speak);
   }
-  final Tts tts;
+  late final Tts _tts;
   final List<String?> _emittedInsults = [];
   final List<String?> _emittedTieInsults = [];
 
@@ -152,7 +154,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
         newInsult = _shuffledTieInsult(tieInsults);
       }
 
-      tts.speak(newInsult);
+      _tts.speak(newInsult);
     }
 
     final scores = players.map((e) => e.score);
@@ -232,7 +234,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
       newAreInsultsEnabled = true;
     }
 
-    tts.setVolume(newAreInsultsEnabled ? 1 : 0);
+    _tts.setVolume(newAreInsultsEnabled ? 1 : 0);
     emit(
       state.copyWith(
         areInsultsEnabled: newAreInsultsEnabled,
@@ -285,7 +287,7 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
     final genericInsult = event.insult
         .replaceAll(hiPlayerInsultKey, 'winning player')
         .replaceAll(lowPlayerInsultKey, 'losing player');
-    tts.speak(genericInsult);
+    _tts.speak(genericInsult);
   }
 
   @override

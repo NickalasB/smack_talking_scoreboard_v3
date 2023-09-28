@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 abstract class AppEvent extends Equatable {}
 
@@ -20,6 +21,15 @@ class LoadAvailableVoicesEvent extends AppEvent {
 
   @override // coverage:ignore-line
   List<Object?> get props => []; // coverage:ignore-line
+}
+
+class SetVoiceEvent extends AppEvent {
+  SetVoiceEvent(this.voice);
+
+  final Voice voice;
+
+  @override
+  List<Object?> get props => [voice];
 }
 
 class SaveInsultEvent extends AppEvent {
