@@ -16,6 +16,7 @@ void main() {
         insults: const ['A'],
         tieInsults: const ['1'],
         availableVoices: const [Voice(name: 'anyName', locale: 'anyLocale')],
+        selectedVoice: Voice(name: 'anyName', locale: 'anyLocale'),
         originalDefaultInsults: const ['A'],
         deletedDefaultInsults: const ['A'],
         didCompleteInitialLoad: true,
@@ -30,6 +31,14 @@ void main() {
             availableVoices: const [
               Voice(name: 'anyName2', locale: 'anyLocale2'),
             ],
+          ),
+        ),
+      );
+      expect(
+        appState1,
+        isNot(
+          appState1.copyWith(
+            selectedVoice: const Voice(name: 'anyName2', locale: 'anyLocale2'),
           ),
         ),
       );
@@ -53,6 +62,7 @@ void main() {
         insults: const ['insult1'],
         tieInsults: const ['tieDefault1'],
         availableVoices: const [Voice(name: 'anyName', locale: 'anyLocale')],
+        selectedVoice: const Voice(name: 'anyName', locale: 'anyLocale'),
         originalDefaultInsults: const ['default1'],
         deletedDefaultInsults: const ['default1'],
         didCompleteInitialLoad: true,
@@ -63,6 +73,7 @@ void main() {
         'insults:[insult1]\n'
         'tieInsults:[tieDefault1]\n'
         'availableVoices:[Voice(anyName, anyLocale)]\n'
+        'selectedVoice:Voice(anyName, anyLocale)\n'
         'originalDefaultInsults:[default1]\n'
         'deletedDefaultInsults:[default1]\n'
         'didCompleteInitialLoad:true\n)',
@@ -303,6 +314,50 @@ void main() {
           const AppState().copyWith(
             didCompleteInitialLoad: true,
             availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
+          ),
+        ),
+      );
+    });
+  });
+
+  group('SetVoiceEvent', () {
+    test('should call tts.setVoice and emit voice when SetVoiceEvent added',
+        () async {
+      final fakeTts = FakeTts();
+      final bloc = await _appBlocInitializedWith(
+        tts: fakeTts,
+        availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
+      );
+
+      expectStateAndHydratedState(
+        bloc,
+        equals(
+          const AppState().copyWith(
+            didCompleteInitialLoad: true,
+            availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
+            selectedVoice: null, // ignore:avoid_redundant_argument_values
+          ),
+        ),
+      );
+
+      bloc.add(SetVoiceEvent(Voice(name: 'anyName', locale: 'anyLocale')));
+
+      await tick();
+
+      expect(fakeTts.setVoiceCompleters, hasLength(1));
+
+      fakeTts.setVoiceCompleters.single.complete(
+        Voice(name: 'anyName', locale: 'anyLocale'),
+      );
+      await tick();
+
+      expectStateAndHydratedState(
+        bloc,
+        equals(
+          const AppState().copyWith(
+            didCompleteInitialLoad: true,
+            availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
+            selectedVoice: Voice(name: 'anyName', locale: 'anyLocale'),
           ),
         ),
       );
