@@ -301,5 +301,5 @@ class FakeInsultCreatorBloc
 }
 
 mixin TtsMixin {
-  Tts get tts => FakeTts();
+  FakeTts get tts => FakeTts();
 }
