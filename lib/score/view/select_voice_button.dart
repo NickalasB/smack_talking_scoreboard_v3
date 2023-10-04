@@ -1,19 +1,16 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
-import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
-import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 
 class SelectVoicesButton extends StatelessWidget {
   const SelectVoicesButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return context.readApp.state.availableVoices.isEmpty
+    final availableVoices = context.readApp.state.availableVoices;
+    return availableVoices.isEmpty
         ? const SizedBox.shrink(key: Key('empty_voices_shrink_box'))
         : IconButton(
             key: const Key('select_voice_button'),
@@ -37,20 +34,20 @@ class SelectVoicesButton extends StatelessWidget {
       useRootNavigator: true,
       isScrollControlled: true,
       context: context,
-      builder: (context) {
+      builder: (_) {
+        final availableVoices = context.readApp.state.availableVoices;
         return SingleChildScrollView(
           key: const Key('select_voices_bottom_sheet'),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
-            children: context.readApp.state.availableVoices
-                .where((element) => element.locale.contains('en'))
-                .map(
+            children: availableVoices.map(
               (v) {
                 return ListTile(
                   title: Text(
-                    v.name,
+                    context.l10n.voiceNumber(availableVoices.indexOf(v)),
                   ),
+                  selected: v == context.watchApp.state.selectedVoice,
                   onTap: () {
                     context.readApp.add(SetVoiceEvent(v));
                   },

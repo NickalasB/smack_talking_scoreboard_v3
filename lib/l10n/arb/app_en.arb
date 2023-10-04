@@ -184,5 +184,15 @@
   "next": "NEXT",
   "@next": {
     "description": "button label for indicting user is ready for next step"
+  },
+  "voiceNumber": "Voice # {index}",
+  "@voiceNumber": {
+    "description": "button label for indicting user is ready for next step",
+    "placeholders": {
+      "index": {
+        "type": "int",
+        "example": "1"
+      }
+    }
   }
 }

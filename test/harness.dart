@@ -6,12 +6,12 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/app/locale_service.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/score.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
-import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 import 'helpers/fake_bloc.dart';
 import 'helpers/fake_scoreboard_dependencies_data.dart';
@@ -289,7 +289,7 @@ class FakeScoreBloc extends FakeBloc<ScoreboardEvent, ScoreboardState>
 }
 
 class FakeAppBloc extends FakeBloc<AppEvent, AppState>
-    with TtsMixin
+    with TtsMixin, LocaleServiceMixin
     implements AppBloc {
   FakeAppBloc(super.initialState);
 }
@@ -302,4 +302,15 @@ class FakeInsultCreatorBloc
 
 mixin TtsMixin {
   FakeTts get tts => FakeTts();
+}
+
+mixin LocaleServiceMixin {
+  AppLocaleService get localeService => FakeLocaleService();
+}
+
+class FakeLocaleService implements AppLocaleService {
+  String fakeLocaleName = 'en_US';
+
+  @override
+  String get platformLocaleName => fakeLocaleName;
 }

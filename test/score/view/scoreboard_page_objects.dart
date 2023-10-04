@@ -19,6 +19,11 @@ class ScoreBoardPageObject extends PageObject {
 
   Finder get volume => find.byKey(const Key('volume_button'));
 
+  Finder get setVoicesButton => find.byKey(const Key('select_voice_button'));
+
+  Finder get selectVoicesBottomSheet =>
+      find.byKey(const Key('select_voices_bottom_sheet'));
+
   // TODO(nibradshaw): delete these as they now belong to HomePage
   Finder get addInsultsBottomSheet =>
       find.byKey(const Key('add_insults_bottom_sheet'));

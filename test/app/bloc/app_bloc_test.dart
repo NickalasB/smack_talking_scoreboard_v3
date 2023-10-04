@@ -3,9 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/app/locale_service.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 import '../../flutter_test_config.dart';
+import '../../harness.dart';
 import '../../helpers/fake_tts.dart';
 import '../../helpers/test_helpers.dart';
 
@@ -303,7 +305,8 @@ void main() {
       final fakeTts = FakeTts();
       final bloc = await _appBlocInitializedWith(
         tts: fakeTts,
-        availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
+        localeService: FakeLocaleService()..fakeLocaleName = 'en_US',
+        availableVoices: [Voice(name: 'anyName', locale: 'en-US')],
       );
 
       expect(fakeTts.getVoicesCompleters, hasLength(1));
@@ -313,7 +316,38 @@ void main() {
         equals(
           const AppState().copyWith(
             didCompleteInitialLoad: true,
-            availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
+            availableVoices: [Voice(name: 'anyName', locale: 'en-US')],
+          ),
+        ),
+      );
+    });
+
+    test('should only return voices that match the platformLocale', () async {
+      final fakeTts = FakeTts();
+      final fakeLocaleService = FakeLocaleService()..fakeLocaleName = 'en_AU';
+
+      final bloc = await _appBlocInitializedWith(
+        tts: fakeTts,
+        localeService: fakeLocaleService,
+        availableVoices: [
+          Voice(name: 'name1', locale: 'en-AU'),
+          Voice(name: 'name2', locale: 'en-AU'),
+          Voice(name: 'name3', locale: 'es-US'),
+          Voice(name: 'name4', locale: 'es-IN'),
+        ],
+      );
+
+      expect(fakeTts.getVoicesCompleters, hasLength(1));
+
+      expectStateAndHydratedState(
+        bloc,
+        equals(
+          const AppState().copyWith(
+            didCompleteInitialLoad: true,
+            availableVoices: [
+              Voice(name: 'name1', locale: 'en-AU'),
+              Voice(name: 'name2', locale: 'en-AU'),
+            ],
           ),
         ),
       );
@@ -326,7 +360,8 @@ void main() {
       final fakeTts = FakeTts();
       final bloc = await _appBlocInitializedWith(
         tts: fakeTts,
-        availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
+        localeService: FakeLocaleService()..fakeLocaleName = 'any_Locale',
+        availableVoices: [Voice(name: 'anyName', locale: 'any-Locale')],
       );
 
       expectStateAndHydratedState(
@@ -334,20 +369,20 @@ void main() {
         equals(
           const AppState().copyWith(
             didCompleteInitialLoad: true,
-            availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
+            availableVoices: [Voice(name: 'anyName', locale: 'any-Locale')],
             selectedVoice: null, // ignore:avoid_redundant_argument_values
           ),
         ),
       );
 
-      bloc.add(SetVoiceEvent(Voice(name: 'anyName', locale: 'anyLocale')));
+      bloc.add(SetVoiceEvent(Voice(name: 'anyName', locale: 'any-Locale')));
 
       await tick();
 
       expect(fakeTts.setVoiceCompleters, hasLength(1));
 
       fakeTts.setVoiceCompleters.single.complete(
-        Voice(name: 'anyName', locale: 'anyLocale'),
+        Voice(name: 'anyName', locale: 'any-Locale'),
       );
       await tick();
 
@@ -356,8 +391,8 @@ void main() {
         equals(
           const AppState().copyWith(
             didCompleteInitialLoad: true,
-            availableVoices: [Voice(name: 'anyName', locale: 'anyLocale')],
-            selectedVoice: Voice(name: 'anyName', locale: 'anyLocale'),
+            availableVoices: [Voice(name: 'anyName', locale: 'any-Locale')],
+            selectedVoice: Voice(name: 'anyName', locale: 'any-Locale'),
           ),
         ),
       );
@@ -490,19 +525,24 @@ void expectStateAndHydratedState(AppBloc bloc, dynamic matcher) {
   expect(bloc.fromJson(testStorage.read('AppBloc')!), matcher);
 }
 
-AppBloc get _appBloc => AppBloc(FakeTts());
+AppBloc get _appBloc => AppBloc(FakeTts(), FakeLocaleService());
 
-AppBloc appBloc(Tts? tts) => AppBloc(tts ?? FakeTts());
+AppBloc appBloc(Tts? tts, {LocaleService? localeService}) => AppBloc(
+      tts ?? FakeTts(),
+      localeService ?? FakeLocaleService(),
+    );
 
 Future<AppBloc> _appBlocInitializedWith({
   FakeTts? tts,
+  FakeLocaleService? localeService,
   List<Voice> availableVoices = const [],
   List<String> defaultInsults = const [],
   List<String> defaultTieInsults = const [],
 }) async {
   final fakeTts = tts ?? FakeTts();
+  final fakeLocaleService = localeService ?? FakeLocaleService();
 
-  final bloc = appBloc(fakeTts)
+  final bloc = appBloc(fakeTts, localeService: fakeLocaleService)
     ..add(
       LoadDefaultInsultsEvent(
         defaultInsults: defaultInsults,
