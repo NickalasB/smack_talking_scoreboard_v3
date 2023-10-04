@@ -1,5 +1,6 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/select_voice_button.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
@@ -38,8 +39,11 @@ void main() {
     testWidgets(
       'Should launch select voices bottom sheet when pressed',
       appHarness((given, when, then) async {
-        await given.appState(const AppState(
-            availableVoices: [Voice(name: 'name', locale: 'locale')]));
+        await given.appState(
+          const AppState(
+            availableVoices: [Voice(name: 'name', locale: 'locale')],
+          ),
+        );
         await given.pumpWidget(const SelectVoicesButton());
         await tick();
 
@@ -47,6 +51,33 @@ void main() {
         await when.pumpAndSettle();
 
         then.findsWidget(page.selectVoicesBottomSheet);
+      }),
+    );
+
+    testWidgets(
+      'Should Add SetVoiceEvent when selecting a voice',
+      appHarness((given, when, then) async {
+        await given.appState(
+          const AppState(
+            availableVoices: [
+              Voice(name: 'name', locale: 'locale'),
+              Voice(name: 'name2', locale: 'locale'),
+            ],
+          ),
+        );
+        await given.pumpWidget(const SelectVoicesButton());
+        await tick();
+
+        await when.userTaps(page.setVoicesButton);
+        await when.pumpAndSettle();
+
+        await when.userTaps(find.byType(ListTile).at(0));
+        await when.pumpAndSettle();
+        await tick();
+
+        then.addedAppBlocEvents(
+          [SetVoiceEvent(const Voice(name: 'name', locale: 'locale'))],
+        );
       }),
     );
   });
