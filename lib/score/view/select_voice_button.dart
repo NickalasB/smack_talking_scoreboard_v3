@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
@@ -9,13 +10,14 @@ class SelectVoicesButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final availableVoices = context.readApp.state.availableVoices;
+    final appBloc = context.readApp;
+    final availableVoices = appBloc.state.availableVoices;
     return availableVoices.isEmpty
         ? const SizedBox.shrink(key: Key('empty_voices_shrink_box'))
         : IconButton(
             key: const Key('select_voice_button'),
             onPressed: () async {
-              await showSelectVoiceDialog(context);
+              await showSelectVoiceDialog(context, appBloc);
             },
             icon: SvgPicture.asset(
               'assets/voice_selection.svg',
@@ -29,13 +31,14 @@ class SelectVoicesButton extends StatelessWidget {
           );
   }
 
-  Future<void> showSelectVoiceDialog(BuildContext context) async {
+  Future<void> showSelectVoiceDialog(
+      BuildContext context, AppBloc appBloc) async {
     return showModalBottomSheet<void>(
       useRootNavigator: true,
       isScrollControlled: true,
       context: context,
-      builder: (_) {
-        final availableVoices = context.readApp.state.availableVoices;
+      builder: (context) {
+        final availableVoices = appBloc.state.availableVoices;
         return SingleChildScrollView(
           key: const Key('select_voices_bottom_sheet'),
           child: Column(
@@ -47,9 +50,11 @@ class SelectVoicesButton extends StatelessWidget {
                   title: Text(
                     context.l10n.voiceNumber(availableVoices.indexOf(v)),
                   ),
-                  selected: v == context.watchApp.state.selectedVoice,
+                  selected: v == appBloc.state.selectedVoice,
                   onTap: () {
-                    context.readApp.add(SetVoiceEvent(v));
+                    appBloc.add(SetVoiceEvent(v,
+                        sampleInsult:
+                            "Well. This is what it will sound like when you're getting insulted. Idiot"));
                   },
                 );
               },

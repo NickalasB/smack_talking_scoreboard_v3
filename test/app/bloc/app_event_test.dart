@@ -46,19 +46,36 @@ void main() {
     test('Should have value-type equality', () {
       final setVoiceEvent1 = SetVoiceEvent(
         const Voice(name: 'anyName', locale: 'anyLocale'),
+        sampleInsult: 'anything',
       );
 
       expect(
         setVoiceEvent1,
         equals(
-          SetVoiceEvent(const Voice(name: 'anyName', locale: 'anyLocale')),
+          SetVoiceEvent(
+            const Voice(name: 'anyName', locale: 'anyLocale'),
+            sampleInsult: 'anything',
+          ),
         ),
       );
 
       expect(
         setVoiceEvent1,
         isNot(
-          SetVoiceEvent(const Voice(name: 'anyName2', locale: 'anyLocale')),
+          SetVoiceEvent(
+            const Voice(name: 'anyName2', locale: 'anyLocale'),
+            sampleInsult: 'anything',
+          ),
+        ),
+      );
+
+      expect(
+        setVoiceEvent1,
+        isNot(
+          SetVoiceEvent(
+            const Voice(name: 'anyName', locale: 'anyLocale'),
+            sampleInsult: 'anything2',
+          ),
         ),
       );
     });

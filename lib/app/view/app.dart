@@ -45,7 +45,9 @@ class _AppState extends State<App> {
         BlocProvider(
           create: (_) => ScoreboardBloc(ttsImplementation),
         ),
-        BlocProvider(create: (_) => AppBloc(ttsImplementation, const AppLocaleService())),
+        BlocProvider(
+          create: (_) => AppBloc(ttsImplementation, const AppLocaleService()),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

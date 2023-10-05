@@ -55,7 +55,7 @@ void main() {
     );
 
     testWidgets(
-      'Should Add SetVoiceEvent when selecting a voice',
+      'Should Add SetVoiceEvent and speak sample insult when selecting a voice',
       appHarness((given, when, then) async {
         await given.appState(
           const AppState(
@@ -76,7 +76,39 @@ void main() {
         await tick();
 
         then.addedAppBlocEvents(
-          [SetVoiceEvent(const Voice(name: 'name', locale: 'locale'))],
+          [
+            SetVoiceEvent(
+              const Voice(name: 'name', locale: 'locale'),
+              sampleInsult:
+                  "Well. This is what it will sound like when you're getting insulted. Idiot",
+            ),
+          ],
+        );
+      }),
+    );
+
+    testWidgets(
+      'Should show ListTile in selected state when voice is selected',
+      appHarness((given, when, then) async {
+        await given.appState(
+          const AppState(
+            availableVoices: [
+              Voice(name: 'name', locale: 'locale'),
+              Voice(name: 'name2', locale: 'locale'),
+            ],
+            selectedVoice: Voice(name: 'name2', locale: 'locale'),
+          ),
+        );
+        await given.pumpWidget(const SelectVoicesButton());
+        await tick();
+
+        await when.userTaps(page.setVoicesButton);
+        await when.pumpAndSettle();
+
+        then.findsWidget(
+          find.byWidgetPredicate(
+            (widget) => widget is ListTile && widget.selected == true,
+          ),
         );
       }),
     );

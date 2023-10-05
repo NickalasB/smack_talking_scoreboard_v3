@@ -375,16 +375,29 @@ void main() {
         ),
       );
 
-      bloc.add(SetVoiceEvent(Voice(name: 'anyName', locale: 'any-Locale')));
+      bloc.add(
+        SetVoiceEvent(
+          Voice(name: 'anyName', locale: 'any-Locale'),
+          sampleInsult: 'any insult',
+        ),
+      );
 
       await tick();
-
-      expect(fakeTts.setVoiceCompleters, hasLength(1));
 
       fakeTts.setVoiceCompleters.single.complete(
         Voice(name: 'anyName', locale: 'any-Locale'),
       );
+
       await tick();
+
+      expect(
+        fakeTts.fakeTsEvents,
+        [
+          FakeGetVoicesEvent(),
+          FakeSetVoiceEvent(Voice(name: 'anyName', locale: 'any-Locale')),
+          FakeSpeakEvent('any insult'),
+        ],
+      );
 
       expectStateAndHydratedState(
         bloc,
@@ -395,6 +408,35 @@ void main() {
             selectedVoice: Voice(name: 'anyName', locale: 'any-Locale'),
           ),
         ),
+      );
+    });
+
+    test(
+        'should NOT call tts.setVoice and emit voice when SetVoiceEvent added without sample insult',
+        () async {
+      final fakeTts = FakeTts();
+      final bloc = await _appBlocInitializedWith(
+        tts: fakeTts,
+        localeService: FakeLocaleService()..fakeLocaleName = 'any_Locale',
+        availableVoices: [Voice(name: 'anyName', locale: 'any-Locale')],
+      );
+
+      bloc.add(SetVoiceEvent(Voice(name: 'anyName', locale: 'any-Locale')));
+
+      await tick();
+
+      fakeTts.setVoiceCompleters.single.complete(
+        Voice(name: 'anyName', locale: 'any-Locale'),
+      );
+
+      await tick();
+
+      expect(
+        fakeTts.fakeTsEvents,
+        [
+          FakeGetVoicesEvent(),
+          FakeSetVoiceEvent(Voice(name: 'anyName', locale: 'any-Locale')),
+        ],
       );
     });
   });

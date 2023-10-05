@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
@@ -116,6 +118,10 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
     Emitter<AppState> emit,
   ) async {
     await _tts.setVoice(event.voice);
+    final sampleInsult = event.sampleInsult;
+    if (sampleInsult != null) {
+      unawaited(_tts.speak(sampleInsult));
+    }
 
     emit(state.copyWith(selectedVoice: event.voice));
   }
