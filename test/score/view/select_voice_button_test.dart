@@ -27,8 +27,11 @@ void main() {
     testWidgets(
       'Should show button if available voices is not empty',
       appHarness((given, when, then) async {
-        await given.appState(const AppState(
-            availableVoices: [Voice(name: 'name', locale: 'locale')]));
+        await given.appState(
+          const AppState(
+            availableVoices: [Voice(name: 'name', locale: 'locale')],
+          ),
+        );
         await given.pumpWidget(const SelectVoicesButton());
         await tick();
 

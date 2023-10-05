@@ -32,7 +32,9 @@ class SelectVoicesButton extends StatelessWidget {
   }
 
   Future<void> showSelectVoiceDialog(
-      BuildContext context, AppBloc appBloc) async {
+    BuildContext context,
+    AppBloc appBloc,
+  ) async {
     return showModalBottomSheet<void>(
       useRootNavigator: true,
       isScrollControlled: true,
@@ -52,9 +54,12 @@ class SelectVoicesButton extends StatelessWidget {
                   ),
                   selected: v == appBloc.state.selectedVoice,
                   onTap: () {
-                    appBloc.add(SetVoiceEvent(v,
-                        sampleInsult:
-                            "Well. This is what it will sound like when you're getting insulted. Idiot"));
+                    appBloc.add(
+                      SetVoiceEvent(
+                        v,
+                        sampleInsult: context.l10n.satVoiceInsult,
+                      ),
+                    );
                   },
                 );
               },

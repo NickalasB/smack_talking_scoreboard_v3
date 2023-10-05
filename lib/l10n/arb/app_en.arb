@@ -185,6 +185,10 @@
   "@next": {
     "description": "button label for indicting user is ready for next step"
   },
+  "satVoiceInsult": "Well. This is what it will sound like when you're getting insulted. Idiot",
+  "@setVoiceInsult": {
+    "description": "sentence to be read aloud when user sets a new voice"
+  },
   "voiceNumber": "Voice # {index}",
   "@voiceNumber": {
     "description": "button label for indicting user is ready for next step",
