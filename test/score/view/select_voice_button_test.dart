@@ -83,7 +83,7 @@ void main() {
             SetVoiceEvent(
               const Voice(name: 'name', locale: 'locale'),
               sampleInsult:
-                  "Well. This is what it will sound like when you're getting insulted. Idiot",
+                  "Well. This is what it will sound like when you're getting insulted. You are an idiot",
             ),
           ],
         );
