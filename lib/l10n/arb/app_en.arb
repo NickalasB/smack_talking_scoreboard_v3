@@ -185,7 +185,7 @@
   "@next": {
     "description": "button label for indicting user is ready for next step"
   },
-  "satVoiceInsult": "Well. This is what it will sound like when you're getting insulted. You are an idiot",
+  "satVoiceInsult": "Well. Are you going to just pick your nose or actually pick a voice here?",
   "@setVoiceInsult": {
     "description": "sentence to be read aloud when user sets a new voice"
   },
@@ -198,5 +198,9 @@
         "example": "1"
       }
     }
+  },
+  "pickVoice": "Pick a Voice",
+  "@pickVoice": {
+    "description": "Title for voice selection bottom sheet"
   }
 }

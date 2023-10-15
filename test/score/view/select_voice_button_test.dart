@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/score.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/select_voice_button.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
@@ -42,12 +44,12 @@ void main() {
     testWidgets(
       'Should launch select voices bottom sheet when pressed',
       appHarness((given, when, then) async {
-        await given.appState(
-          const AppState(
+        await given.pumpWidgetWithState(
+          const ScoreboardView(),
+          appState: const AppState(
             availableVoices: [Voice(name: 'name', locale: 'locale')],
           ),
         );
-        await given.pumpWidget(const SelectVoicesButton());
         await tick();
 
         await when.userTaps(page.setVoicesButton);
@@ -68,7 +70,7 @@ void main() {
             ],
           ),
         );
-        await given.pumpWidget(const SelectVoicesButton());
+        await given.pumpWidget(const ScoreboardView());
         await tick();
 
         await when.userTaps(page.setVoicesButton);
@@ -90,7 +92,7 @@ void main() {
       }),
     );
 
-    testWidgets(
+    testGoldens(
       'Should show ListTile in selected state when voice is selected',
       appHarness((given, when, then) async {
         await given.appState(
@@ -102,12 +104,13 @@ void main() {
             selectedVoice: Voice(name: 'name2', locale: 'locale'),
           ),
         );
-        await given.pumpWidget(const SelectVoicesButton());
+        await given.pumpWidget(const ScoreboardView());
         await tick();
 
         await when.userTaps(page.setVoicesButton);
         await when.pumpAndSettle();
 
+        await then.screenMatchesGoldenFile('select_voice_list_selected');
         then.findsWidget(
           find.byWidgetPredicate(
             (widget) => widget is ListTile && widget.selected == true,

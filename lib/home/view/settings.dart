@@ -98,7 +98,8 @@ class BottomSheetHeader extends StatelessWidget {
           ),
         ),
         if (subTitle != null) Text(subTitle!),
-        const Divider(thickness: 2),
+        const SizedBox(height: 8),
+        const Divider(thickness: 2, height: 2),
       ],
     );
   }
