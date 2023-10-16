@@ -19,7 +19,9 @@ void main() {
       appHarness((given, when, then) async {
         // ignore: avoid_redundant_argument_values
         await given.appState(const AppState(availableVoices: []));
-        await given.pumpWidget(const SelectVoicesButton());
+        await given.pumpWidget(
+          SelectVoicesButton(appBloc: FakeAppBloc(const AppState())),
+        );
         await tick();
 
         then.findsWidget(find.byKey(const Key('empty_voices_shrink_box')));
@@ -34,7 +36,9 @@ void main() {
             availableVoices: [Voice(name: 'name', locale: 'locale')],
           ),
         );
-        await given.pumpWidget(const SelectVoicesButton());
+        await given.pumpWidget(
+          SelectVoicesButton(appBloc: FakeAppBloc(const AppState())),
+        );
         await tick();
 
         then.findsWidget(page.setVoicesButton);
@@ -85,7 +89,7 @@ void main() {
             SetVoiceEvent(
               const Voice(name: 'name', locale: 'locale'),
               sampleInsult:
-                  "Well. This is what it will sound like when you're getting insulted. You are an idiot",
+                  'Well. Are you going to just pick your nose or actually pick a voice here?',
             ),
           ],
         );

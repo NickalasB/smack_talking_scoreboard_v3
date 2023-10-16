@@ -3,8 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
-import 'package:smack_talking_scoreboard_v3/home/view/settings.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/ui_components/bottom_sheet_header.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 class SelectVoicesButton extends StatelessWidget {
