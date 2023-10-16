@@ -19,9 +19,7 @@ void main() {
       appHarness((given, when, then) async {
         // ignore: avoid_redundant_argument_values
         await given.appState(const AppState(availableVoices: []));
-        await given.pumpWidget(
-          SelectVoicesButton(appBloc: FakeAppBloc(const AppState())),
-        );
+        await given.pumpWidget(const SelectVoicesButton());
         await tick();
 
         then.findsWidget(find.byKey(const Key('empty_voices_shrink_box')));
@@ -37,7 +35,7 @@ void main() {
           ),
         );
         await given.pumpWidget(
-          SelectVoicesButton(appBloc: FakeAppBloc(const AppState())),
+          const SelectVoicesButton(),
         );
         await tick();
 
@@ -54,7 +52,6 @@ void main() {
             availableVoices: [Voice(name: 'name', locale: 'locale')],
           ),
         );
-        await tick();
 
         await when.userTaps(page.setVoicesButton);
         await when.pumpAndSettle();
@@ -99,15 +96,14 @@ void main() {
     testGoldens(
       'Should show ListTile in selected state when voice is selected',
       appHarness((given, when, then) async {
-        await given.appState(
-          const AppState(
-            availableVoices: [
-              Voice(name: 'name', locale: 'locale'),
-              Voice(name: 'name2', locale: 'locale'),
-            ],
-            selectedVoice: Voice(name: 'name2', locale: 'locale'),
-          ),
+        const appState = AppState(
+          availableVoices: [
+            Voice(name: 'name', locale: 'locale'),
+            Voice(name: 'name2', locale: 'locale'),
+          ],
+          selectedVoice: Voice(name: 'name2', locale: 'locale'),
         );
+        await given.appState(appState);
         await given.pumpWidget(const ScoreboardView());
         await tick();
 
@@ -117,7 +113,28 @@ void main() {
         await then.screenMatchesGoldenFile('select_voice_list_selected');
         then.findsWidget(
           find.byWidgetPredicate(
-            (widget) => widget is ListTile && widget.selected == true,
+            (widget) =>
+                widget is ListTile &&
+                widget.title is Text &&
+                (widget.title! as Text).data == 'Voice # 1' &&
+                widget.selected == true,
+          ),
+        );
+
+        when.harness.appBloc.emit(
+          appState.copyWith(
+            selectedVoice: const Voice(name: 'name', locale: 'locale'),
+          ),
+        );
+        await when.pumpAndSettle();
+
+        then.findsWidget(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is ListTile &&
+                widget.title is Text &&
+                (widget.title! as Text).data == 'Voice # 0' &&
+                widget.selected == true,
           ),
         );
       }),

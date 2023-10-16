@@ -38,20 +38,14 @@ class AppHarness extends WidgetTestHarness with FakeScoreboardDependenciesData {
 extension AppGiven on WidgetTestGiven<AppHarness> {
   Future<void> pumpWidget(Widget child, {Brightness? brightness}) async {
     await harness.tester.pumpMaterialWidget(
-      MultiBlocProvider(
-        providers: [
-          BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
-          BlocProvider<AppBloc>(create: (context) => harness.appBloc),
-          BlocProvider<InsultCreatorBloc>(
-            create: (context) => harness.insultCreatorBloc,
-          ),
-        ],
-        child: Builder(
-          builder: (context) {
-            return child;
-          },
+      child,
+      providers: [
+        BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
+        BlocProvider<AppBloc>(create: (context) => harness.appBloc),
+        BlocProvider<InsultCreatorBloc>(
+          create: (context) => harness.insultCreatorBloc,
         ),
-      ),
+      ],
       navigatorObserver: harness.navigationObserver,
       brightness: brightness,
     );
@@ -59,20 +53,14 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
 
   Future<void> pumpWidgetWithDependencies(Widget child) async {
     await harness.tester.pumpMaterialWidget(
-      MultiBlocProvider(
-        providers: [
-          BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
-          BlocProvider<AppBloc>(create: (context) => harness.appBloc),
-        ],
-        child: Builder(
-          builder: (context) {
-            return ScoreboardPageDependencies(
-              data: harness,
-              child: child,
-            );
-          },
-        ),
+      ScoreboardPageDependencies(
+        data: harness,
+        child: child,
       ),
+      providers: [
+        BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
+        BlocProvider<AppBloc>(create: (context) => harness.appBloc),
+      ],
     );
   }
 
@@ -93,22 +81,16 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
       harness.insultCreatorBloc = FakeInsultCreatorBloc(insultCreatorState);
     }
     await harness.tester.pumpMaterialWidget(
-      MultiBlocProvider(
-        providers: [
-          BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
-          BlocProvider<AppBloc>(create: (context) => harness.appBloc),
-          BlocProvider<InsultCreatorBloc>(
-            create: (context) => harness.insultCreatorBloc,
-          ),
-        ],
-        child: Builder(
-          builder: (context) {
-            return child;
-          },
-        ),
-      ),
+      child,
       navigatorObserver: harness.navigationObserver,
       brightness: brightness,
+      providers: [
+        BlocProvider<ScoreboardBloc>(create: (_) => harness.scoreBloc),
+        BlocProvider<AppBloc>(create: (_) => harness.appBloc),
+        BlocProvider<InsultCreatorBloc>(
+          create: (context) => harness.insultCreatorBloc,
+        ),
+      ],
     );
   }
 

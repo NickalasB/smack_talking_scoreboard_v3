@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
@@ -10,10 +9,7 @@ import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 class SelectVoicesButton extends StatelessWidget {
   const SelectVoicesButton({
     super.key,
-    required this.appBloc,
   });
-
-  final AppBloc appBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +19,7 @@ class SelectVoicesButton extends StatelessWidget {
         : IconButton(
             key: const Key('select_voice_button'),
             onPressed: () async {
-              await showSelectVoiceDialog(context, availableVoices, appBloc);
+              await showSelectVoiceDialog(context, availableVoices);
             },
             icon: SvgPicture.asset(
               'assets/voice_selection.svg',
@@ -41,13 +37,29 @@ class SelectVoicesButton extends StatelessWidget {
 Future<void> showSelectVoiceDialog(
   BuildContext context,
   List<Voice> availableVoices,
-  AppBloc appBloc,
 ) async {
   return showModalBottomSheet<void>(
     context: context,
     useRootNavigator: true,
     isScrollControlled: true,
-    builder: (context) => FractionallySizedBox(
+    builder: (_) => _DialogContent(availableVoices),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(20),
+        topRight: Radius.circular(20),
+      ),
+    ),
+  );
+}
+
+class _DialogContent extends StatelessWidget {
+  const _DialogContent(this.availableVoices);
+
+  final List<Voice> availableVoices;
+
+  @override
+  Widget build(BuildContext context) {
+    return FractionallySizedBox(
       key: const Key('select_voices_bottom_sheet'),
       heightFactor: .75,
       child: Column(
@@ -60,17 +72,17 @@ Future<void> showSelectVoiceDialog(
               color: Colors.transparent,
               child: ListView.separated(
                 shrinkWrap: true,
-                itemBuilder: (context, index) {
+                itemBuilder: (_, index) {
                   return ListTile(
                     title: Text(
                       context.l10n.voiceNumber(index),
                     ),
-                    selected:
-                        availableVoices[index] == appBloc.state.selectedVoice,
+                    selected: availableVoices[index] ==
+                        context.watchApp.state.selectedVoice,
                     selectedTileColor:
                         Theme.of(context).colorScheme.secondaryContainer,
                     onTap: () {
-                      appBloc.add(
+                      context.readApp.add(
                         SetVoiceEvent(
                           availableVoices[index],
                           sampleInsult: context.l10n.satVoiceInsult,
@@ -92,12 +104,6 @@ Future<void> showSelectVoiceDialog(
         ],
       ),
       // child: SelectVoiceDialogContent(availableVoices),
-    ),
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(20),
-        topRight: Radius.circular(20),
-      ),
-    ),
-  );
+    );
+  }
 }
