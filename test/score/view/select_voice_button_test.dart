@@ -116,7 +116,7 @@ void main() {
             (widget) =>
                 widget is ListTile &&
                 widget.title is Text &&
-                (widget.title! as Text).data == 'Voice # 1' &&
+                (widget.title! as Text).data == 'Voice # 2' &&
                 widget.selected == true,
           ),
         );
@@ -133,7 +133,37 @@ void main() {
             (widget) =>
                 widget is ListTile &&
                 widget.title is Text &&
-                (widget.title! as Text).data == 'Voice # 0' &&
+                (widget.title! as Text).data == 'Voice # 1' &&
+                widget.selected == true,
+          ),
+        );
+      }),
+    );
+
+    testWidgets(
+      'Should scroll to selected voice when bottom sheet opened',
+      appHarness((given, when, then) async {
+        final voices = List.generate(
+          20,
+          (index) => Voice(name: 'name$index', locale: 'locale'),
+        );
+        final appState = AppState(
+          availableVoices: voices,
+          selectedVoice: voices.last,
+        );
+        await given.appState(appState);
+        await given.pumpWidget(const ScoreboardView());
+        await tick();
+
+        await when.userTaps(page.setVoicesButton);
+        await when.pumpAndSettle();
+
+        then.findsWidget(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is ListTile &&
+                widget.title is Text &&
+                (widget.title! as Text).data == 'Voice # 20' &&
                 widget.selected == true,
           ),
         );

@@ -38,11 +38,27 @@ Future<void> showSelectVoiceDialog(
   BuildContext context,
   List<Voice> availableVoices,
 ) async {
+  final scrollController = ScrollController();
+
+  final selectedVoice = context.readApp.state.selectedVoice;
+  if (selectedVoice != null) {
+    const tileHeight = 56; // height info is from ListTile documentation
+    final offset = tileHeight * availableVoices.indexOf(selectedVoice);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      scrollController.animateTo(
+        offset.toDouble(),
+        duration: kThemeAnimationDuration,
+        curve: Curves.easeIn,
+      );
+    });
+  }
+
   return showModalBottomSheet<void>(
     context: context,
     useRootNavigator: true,
     isScrollControlled: true,
-    builder: (_) => _DialogContent(availableVoices),
+    builder: (_) => _DialogContent(availableVoices, scrollController),
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(20),
@@ -53,10 +69,11 @@ Future<void> showSelectVoiceDialog(
 }
 
 class _DialogContent extends StatelessWidget {
-  const _DialogContent(this.availableVoices);
+  const _DialogContent(this.availableVoices, this.scrollController);
 
   final List<Voice> availableVoices;
 
+  final ScrollController scrollController;
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
@@ -72,10 +89,11 @@ class _DialogContent extends StatelessWidget {
               color: Colors.transparent,
               child: ListView.separated(
                 shrinkWrap: true,
+                controller: scrollController,
                 itemBuilder: (_, index) {
                   return ListTile(
                     title: Text(
-                      context.l10n.voiceNumber(index),
+                      context.l10n.voiceNumber(index + 1),
                     ),
                     selected: availableVoices[index] ==
                         context.watchApp.state.selectedVoice,
@@ -91,7 +109,7 @@ class _DialogContent extends StatelessWidget {
                     },
                   );
                 },
-                separatorBuilder: (context, index) {
+                separatorBuilder: (_, index) {
                   return const Divider(
                     thickness: 2,
                     height: 2,
