@@ -274,6 +274,9 @@ class FakeAppBloc extends FakeBloc<AppEvent, AppState>
     with TtsMixin, LocaleServiceMixin
     implements AppBloc {
   FakeAppBloc(super.initialState);
+
+  @override
+  AppState? get initialAppState => throw UnimplementedError();
 }
 
 class FakeInsultCreatorBloc

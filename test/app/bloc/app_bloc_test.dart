@@ -86,9 +86,13 @@ void main() {
   group('LoadDefaultInsultsEvent', () {
     test('should add default insults', () async {
       final bloc = await _appBlocInitializedWith(
-        defaultInsults: const ['default1', 'default2'],
-        defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
+        appState: AppState(
+          originalDefaultInsults: const ['default1', 'default2'],
+          tieInsults: const ['tieDefault1', 'tieDefault2'],
+        ),
       );
+
+      await tick();
 
       expectStateAndHydratedState(
         bloc,
@@ -220,8 +224,10 @@ void main() {
         'should allow deleting of default insults only load modified default insults',
         () async {
       final bloc = await _appBlocInitializedWith(
-        defaultInsults: const ['default1', 'default2'],
-        defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
+        appState: AppState(
+          originalDefaultInsults: const ['default1', 'default2'],
+          tieInsults: const ['tieDefault1', 'tieDefault2'],
+        ),
       );
 
       bloc.add(
@@ -255,8 +261,10 @@ void main() {
         'should update default insults when new defaultInsults added, while not re-adding deleted default insults',
         () async {
       final bloc = await _appBlocInitializedWith(
-        defaultInsults: const ['default1', 'default2'],
-        defaultTieInsults: const ['tieDefault1', 'tieDefault2'],
+        appState: AppState(
+          originalDefaultInsults: const ['default1', 'default2'],
+          tieInsults: const ['tieDefault1', 'tieDefault2'],
+        ),
       );
 
       bloc.add(DeleteInsultEvent('default1'));
@@ -306,10 +314,66 @@ void main() {
       final bloc = await _appBlocInitializedWith(
         tts: fakeTts,
         localeService: FakeLocaleService()..fakeLocaleName = 'en_US',
-        availableVoices: [Voice(name: 'anyName', locale: 'en-US')],
+        appState: AppState(
+          availableVoices: const [
+            Voice(name: 'anyName', locale: 'en-US'),
+          ],
+        ),
       );
 
       expect(fakeTts.getVoicesCompleters, hasLength(1));
+
+      expectStateAndHydratedState(
+        bloc,
+        equals(
+          const AppState().copyWith(
+            didCompleteInitialLoad: true,
+            availableVoices: [Voice(name: 'anyName', locale: 'en-US')],
+          ),
+        ),
+      );
+    });
+
+    test(
+        'should call tts.setVoice when selectedVoice is not null on bloc initialization',
+        () async {
+      final fakeTts = FakeTts();
+      final bloc = await _appBlocInitializedWith(
+        tts: fakeTts,
+        localeService: FakeLocaleService()..fakeLocaleName = 'en_US',
+        appState: AppState(
+          availableVoices: const [Voice(name: 'anyName', locale: 'en-US')],
+          selectedVoice: Voice(name: 'anyName', locale: 'en-US'),
+        ),
+      );
+
+      expect(fakeTts.setVoiceCompleters, hasLength(1));
+
+      expectStateAndHydratedState(
+        bloc,
+        equals(
+          const AppState().copyWith(
+            didCompleteInitialLoad: true,
+            availableVoices: [Voice(name: 'anyName', locale: 'en-US')],
+            selectedVoice: Voice(name: 'anyName', locale: 'en-US'),
+          ),
+        ),
+      );
+    });
+
+    test(
+        'should NOT call tts.setVoice when selectedVoice is null on bloc initialization',
+        () async {
+      final fakeTts = FakeTts();
+      final bloc = await _appBlocInitializedWith(
+        tts: fakeTts,
+        localeService: FakeLocaleService()..fakeLocaleName = 'en_US',
+        appState: AppState(
+          availableVoices: const [Voice(name: 'anyName', locale: 'en-US')],
+        ),
+      );
+
+      expect(fakeTts.setVoiceCompleters, isEmpty);
 
       expectStateAndHydratedState(
         bloc,
@@ -329,12 +393,14 @@ void main() {
       final bloc = await _appBlocInitializedWith(
         tts: fakeTts,
         localeService: fakeLocaleService,
-        availableVoices: [
-          Voice(name: 'name1', locale: 'en-AU'),
-          Voice(name: 'name2', locale: 'en-AU'),
-          Voice(name: 'name3', locale: 'es-US'),
-          Voice(name: 'name4', locale: 'es-IN'),
-        ],
+        appState: AppState(
+          availableVoices: const [
+            Voice(name: 'name1', locale: 'en-AU'),
+            Voice(name: 'name2', locale: 'en-AU'),
+            Voice(name: 'name3', locale: 'es-US'),
+            Voice(name: 'name4', locale: 'es-IN'),
+          ],
+        ),
       );
 
       expect(fakeTts.getVoicesCompleters, hasLength(1));
@@ -361,7 +427,9 @@ void main() {
       final bloc = await _appBlocInitializedWith(
         tts: fakeTts,
         localeService: FakeLocaleService()..fakeLocaleName = 'any_Locale',
-        availableVoices: [Voice(name: 'anyName', locale: 'any-Locale')],
+        appState: AppState(
+          availableVoices: const [Voice(name: 'anyName', locale: 'any-Locale')],
+        ),
       );
 
       expectStateAndHydratedState(
@@ -418,7 +486,9 @@ void main() {
       final bloc = await _appBlocInitializedWith(
         tts: fakeTts,
         localeService: FakeLocaleService()..fakeLocaleName = 'any_Locale',
-        availableVoices: [Voice(name: 'anyName', locale: 'any-Locale')],
+        appState: AppState(
+          availableVoices: const [Voice(name: 'anyName', locale: 'any-Locale')],
+        ),
       );
 
       bloc.add(SetVoiceEvent(Voice(name: 'anyName', locale: 'any-Locale')));
@@ -569,32 +639,39 @@ void expectStateAndHydratedState(AppBloc bloc, dynamic matcher) {
 
 AppBloc get _appBloc => AppBloc(FakeTts(), FakeLocaleService());
 
-AppBloc appBloc(Tts? tts, {LocaleService? localeService}) => AppBloc(
+AppBloc appBloc(
+  Tts? tts, {
+  LocaleService? localeService,
+  AppState? initialAppState,
+}) =>
+    AppBloc(
       tts ?? FakeTts(),
       localeService ?? FakeLocaleService(),
+      initialAppState: initialAppState,
     );
 
 Future<AppBloc> _appBlocInitializedWith({
   FakeTts? tts,
   FakeLocaleService? localeService,
-  List<Voice> availableVoices = const [],
-  List<String> defaultInsults = const [],
-  List<String> defaultTieInsults = const [],
+  AppState? appState = const AppState(),
 }) async {
   final fakeTts = tts ?? FakeTts();
   final fakeLocaleService = localeService ?? FakeLocaleService();
 
-  final bloc = appBloc(fakeTts, localeService: fakeLocaleService)
-    ..add(
+  final bloc = appBloc(
+    fakeTts,
+    localeService: fakeLocaleService,
+    initialAppState: appState,
+  )..add(
       LoadDefaultInsultsEvent(
-        defaultInsults: defaultInsults,
-        defaultTieInsults: defaultTieInsults,
+        defaultInsults: appState!.originalDefaultInsults,
+        defaultTieInsults: appState.tieInsults,
       ),
     );
 
   await tick();
 
-  fakeTts.getVoicesCompleters.last.complete(availableVoices);
+  fakeTts.getVoicesCompleters.last.complete(appState.availableVoices);
 
   await tick();
 

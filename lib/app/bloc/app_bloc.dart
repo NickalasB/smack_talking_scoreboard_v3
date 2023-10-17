@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
@@ -7,7 +8,8 @@ import 'package:smack_talking_scoreboard_v3/app/locale_service.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 class AppBloc extends HydratedBloc<AppEvent, AppState> {
-  AppBloc(Tts tts, this.localeService) : super(const AppState()) {
+  AppBloc(Tts tts, this.localeService, {this.initialAppState})
+      : super(initialAppState ?? const AppState()) {
     _tts = tts;
 
     on<LoadDefaultInsultsEvent>(_loadDefaultInsults);
@@ -25,6 +27,8 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
 
   late final Tts _tts;
   final LocaleService localeService;
+  @visibleForTesting
+  final AppState? initialAppState;
 
   void _loadDefaultInsults(
     LoadDefaultInsultsEvent event,
@@ -105,10 +109,15 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
         .where((v) => v.locale.split('-').first == platformLocale)
         .toList();
 
+    final selectedVoice = state.selectedVoice;
+    if (selectedVoice != null) {
+      unawaited(_tts.setVoice(selectedVoice));
+    }
+
     emit(
       state.copyWith(
         availableVoices: voices,
-        selectedVoice: state.selectedVoice,
+        selectedVoice: selectedVoice,
       ),
     );
   }
