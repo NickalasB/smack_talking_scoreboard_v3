@@ -3,7 +3,7 @@
 
     <queries>
         <intent>
-            <action android:name="TextToSpeech.Engine.INTENT_ACTION_TTS_SERVICE" />
+            <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>
     </queries>
 

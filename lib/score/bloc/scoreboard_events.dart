@@ -68,11 +68,10 @@ class GameOverEvent extends ScoreboardEvent {
 }
 
 class ResetGameEvent extends ScoreboardEvent {
-  ResetGameEvent({required this.shouldKeepNames});
-  final bool shouldKeepNames;
+  ResetGameEvent();
 
   @override
-  List<Object?> get props => [shouldKeepNames];
+  List<Object?> get props => [];
 }
 
 class ToggleInsultVolumeEvent extends ScoreboardEvent {

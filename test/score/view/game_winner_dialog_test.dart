@@ -29,22 +29,6 @@ void main() {
     );
 
     testWidgets(
-      'Should add GameOverEvent when first launched',
-      appHarness((given, when, then) async {
-        await given.pumpWidgetWithState(
-          GameWinnerDialog(testPlayer1),
-          scoreboardState: _testGameWinnerState(testPlayer1),
-        );
-
-        then.addedScoreBlocEvents(
-          containsAll(
-            [GameOverEvent()],
-          ),
-        );
-      }),
-    );
-
-    testWidgets(
       'Should add ResetGameEvent, keep names and pop when yes button pressed',
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
@@ -55,7 +39,7 @@ void main() {
         await when.userTaps(gameWinnerDialogPage.yesButton);
         then.addedScoreBlocEvents(
           containsAll(
-            [ResetGameEvent(shouldKeepNames: true)],
+            [ResetGameEvent()],
           ),
         );
         expect(then.harness.navigationObserver.didPopRoute, isTrue);
@@ -63,7 +47,7 @@ void main() {
     );
 
     testWidgets(
-      'Should add ResetGameEvent, NOT keep names, and pop when yes button pressed',
+      'Should add GameOverEvent and pop when yes button pressed',
       appHarness((given, when, then) async {
         await given.pumpWidgetWithState(
           GameWinnerDialog(testPlayer1),
@@ -72,9 +56,9 @@ void main() {
 
         await when.userTaps(gameWinnerDialogPage.noButton);
         then.addedScoreBlocEvents(
-          containsAll(
-            [ResetGameEvent(shouldKeepNames: false)],
-          ),
+          [
+            GameOverEvent(),
+          ],
         );
         expect(then.harness.navigationObserver.didPushRoute, isTrue);
       }),

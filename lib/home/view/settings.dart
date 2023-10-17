@@ -10,6 +10,7 @@ import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/ui_components/bottom_sheet_header.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
 
 const defaultHiLowText = 'HIGH/LOW';
@@ -70,36 +71,6 @@ class ManageInsultsBottomSheet extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class BottomSheetHeader extends StatelessWidget {
-  const BottomSheetHeader({
-    required this.title,
-    this.subTitle,
-    super.key,
-  });
-
-  final String title;
-  final String? subTitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Text(
-            title,
-            style:
-                Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 28),
-          ),
-        ),
-        if (subTitle != null) Text(subTitle!),
-        const Divider(thickness: 2),
-      ],
     );
   }
 }
@@ -648,5 +619,5 @@ const randomNames = [
   'Everett',
   'Kaleb',
   'Rhett',
-  'Jaxson'
+  'Jaxson',
 ];

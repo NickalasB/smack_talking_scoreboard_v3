@@ -31,9 +31,6 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
     if (widget.shouldPlayAtLaunch) {
       confettiController.play();
     }
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.readScoreboard.add(GameOverEvent());
-    });
   }
 
   @override
@@ -80,8 +77,7 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
             PrimaryButton.filled(
               key: const Key('game_winner_yes_button'),
               onPressed: () {
-                context
-                    .addScoreboardEvent(ResetGameEvent(shouldKeepNames: true));
+                context.addScoreboardEvent(ResetGameEvent());
                 Navigator.of(context).pop();
               },
               label: strings.yes,
@@ -89,9 +85,7 @@ class _GameWinnerDialogState extends State<GameWinnerDialog> {
             PrimaryButton.outlined(
               key: const Key('game_winner_no_button'),
               onPressed: () {
-                context.addScoreboardEvent(
-                  ResetGameEvent(shouldKeepNames: false),
-                );
+                context.addScoreboardEvent(GameOverEvent());
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
               label: strings.no,

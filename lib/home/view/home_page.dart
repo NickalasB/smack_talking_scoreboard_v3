@@ -211,7 +211,7 @@ class AppPopupMenuButton extends StatelessWidget {
                 child: const ManageInsultsBottomSheet(),
               ),
             ),
-          )
+          ),
         ];
       },
     );

@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 part 'app_state.g.dart';
 
@@ -17,6 +18,8 @@ class AppState extends Equatable {
   const AppState({
     this.insults = const [],
     this.tieInsults = const [],
+    this.availableVoices = const [],
+    this.selectedVoice,
     this.originalDefaultInsults = const [],
     this.deletedDefaultInsults = const [],
     this.didCompleteInitialLoad = false,
@@ -31,6 +34,8 @@ class AppState extends Equatable {
   AppState copyWith({
     List<String>? insults,
     List<String>? tieInsults,
+    List<Voice>? availableVoices,
+    Voice? selectedVoice,
     List<String>? originalDefaultInsults,
     List<String>? deletedDefaultInsults,
     bool? didCompleteInitialLoad,
@@ -38,6 +43,8 @@ class AppState extends Equatable {
     return AppState(
       insults: insults ?? this.insults,
       tieInsults: tieInsults ?? this.tieInsults,
+      availableVoices: availableVoices ?? this.availableVoices,
+      selectedVoice: selectedVoice ?? this.selectedVoice,
       originalDefaultInsults:
           originalDefaultInsults ?? this.originalDefaultInsults,
       deletedDefaultInsults:
@@ -49,6 +56,8 @@ class AppState extends Equatable {
 
   final List<String> insults;
   final List<String> tieInsults;
+  final List<Voice> availableVoices;
+  final Voice? selectedVoice;
   final List<String> originalDefaultInsults;
   final List<String> deletedDefaultInsults;
   final bool didCompleteInitialLoad;
@@ -58,6 +67,8 @@ class AppState extends Equatable {
     return 'AppState(\n'
         'insults:$insults\n'
         'tieInsults:$tieInsults\n'
+        'availableVoices:$availableVoices\n'
+        'selectedVoice:$selectedVoice\n'
         'originalDefaultInsults:$originalDefaultInsults\n'
         'deletedDefaultInsults:$deletedDefaultInsults\n'
         'didCompleteInitialLoad:$didCompleteInitialLoad\n'
@@ -68,6 +79,8 @@ class AppState extends Equatable {
   List<Object?> get props => [
         insults,
         tieInsults,
+        availableVoices,
+        selectedVoice,
         originalDefaultInsults,
         deletedDefaultInsults,
         didCompleteInitialLoad,

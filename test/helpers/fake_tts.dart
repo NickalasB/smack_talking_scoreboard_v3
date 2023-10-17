@@ -4,16 +4,17 @@ import 'package:equatable/equatable.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 class FakeTts implements Tts {
-  FakeTts();
-  final speakCompleters = <Completer<dynamic>>[];
+  final speakCompleters = <Completer<String>>[];
   final stopCompleters = <Completer<dynamic>>[];
-  final volumeCompleters = <Completer<dynamic>>[];
+  final volumeCompleters = <Completer<double>>[];
+  final getVoicesCompleters = <Completer<dynamic>>[];
+  final setVoiceCompleters = <Completer<Voice>>[];
 
   final fakeTsEvents = <FakeTtsEvent>[];
 
   @override
   Future<dynamic> setVolume(double volume) async {
-    final completer = Completer<dynamic>();
+    final completer = Completer<double>();
     volumeCompleters.add(completer);
     fakeTsEvents.add(FakeSetVolumeEvent(volume));
     return completer.future;
@@ -21,7 +22,7 @@ class FakeTts implements Tts {
 
   @override
   Future<dynamic> speak(String text) async {
-    final completer = Completer<dynamic>();
+    final completer = Completer<String>();
     speakCompleters.add(completer);
     fakeTsEvents.add(FakeSpeakEvent(text));
     return completer.future;
@@ -32,6 +33,22 @@ class FakeTts implements Tts {
     final completer = Completer<dynamic>();
     fakeTsEvents.add(FakeStopEvent());
     stopCompleters.add(completer);
+  }
+
+  @override
+  Future<List<Voice>> get availableVoices {
+    final completer = Completer<List<Voice>>();
+    fakeTsEvents.add(FakeGetVoicesEvent());
+    getVoicesCompleters.add(completer);
+    return completer.future;
+  }
+
+  @override
+  Future<void> setVoice(Voice voice) {
+    final completer = Completer<Voice>();
+    fakeTsEvents.add(FakeSetVoiceEvent(voice));
+    setVoiceCompleters.add(completer);
+    return completer.future;
   }
 }
 
@@ -60,4 +77,20 @@ class FakeStopEvent extends FakeTtsEvent {
 
   @override
   List<Object?> get props => [];
+}
+
+class FakeGetVoicesEvent extends FakeTtsEvent {
+  FakeGetVoicesEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class FakeSetVoiceEvent extends FakeTtsEvent {
+  FakeSetVoiceEvent(this.voice);
+
+  final Voice voice;
+
+  @override
+  List<Object?> get props => [voice];
 }

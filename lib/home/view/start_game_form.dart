@@ -104,7 +104,7 @@ class _StartGameFormState extends State<StartGameForm> {
                     );
                 }
               },
-            )
+            ),
           ],
         ),
       ),
