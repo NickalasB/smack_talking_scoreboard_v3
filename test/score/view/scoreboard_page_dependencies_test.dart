@@ -143,20 +143,14 @@ class IntegrationHarness extends WidgetTestHarness with NavigationMixin {
 extension IntegrationGiven on WidgetTestGiven<IntegrationHarness> {
   Future<void> pumpWidgetWithRealDependencies(Widget child) async {
     await harness.tester.pumpMaterialWidget(
-      MultiBlocProvider(
-        providers: [
-          BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
-          BlocProvider<AppBloc>(create: (context) => harness.appBloc),
-        ],
-        child: Builder(
-          builder: (context) {
-            return ScoreboardPageDependencies(
-              data: harness,
-              child: child,
-            );
-          },
-        ),
+      ScoreboardPageDependencies(
+        data: harness,
+        child: child,
       ),
+      providers: [
+        BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
+        BlocProvider<AppBloc>(create: (context) => harness.appBloc),
+      ],
     );
   }
 }

@@ -4,8 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 class FakeTts implements Tts {
-  FakeTts();
-
   final speakCompleters = <Completer<String>>[];
   final stopCompleters = <Completer<dynamic>>[];
   final volumeCompleters = <Completer<double>>[];

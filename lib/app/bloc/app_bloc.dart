@@ -1,10 +1,15 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/app/locale_service.dart';
 import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 class AppBloc extends HydratedBloc<AppEvent, AppState> {
-  AppBloc(Tts tts) : super(const AppState()) {
+  AppBloc(Tts tts, this.localeService, {this.initialAppState})
+      : super(initialAppState ?? const AppState()) {
     _tts = tts;
 
     on<LoadDefaultInsultsEvent>(_loadDefaultInsults);
@@ -21,6 +26,9 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
   }
 
   late final Tts _tts;
+  final LocaleService localeService;
+  @visibleForTesting
+  final AppState? initialAppState;
 
   void _loadDefaultInsults(
     LoadDefaultInsultsEvent event,
@@ -94,9 +102,24 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
     LoadAvailableVoicesEvent event,
     Emitter<AppState> emit,
   ) async {
-    final voices = await _tts.availableVoices;
+    final platformLocale = localeService.platformLocaleName.split('_').first;
+    final availableVoices = await _tts.availableVoices;
 
-    emit(state.copyWith(availableVoices: voices));
+    final voices = availableVoices
+        .where((v) => v.locale.split('-').first == platformLocale)
+        .toList();
+
+    final selectedVoice = state.selectedVoice;
+    if (selectedVoice != null) {
+      unawaited(_tts.setVoice(selectedVoice));
+    }
+
+    emit(
+      state.copyWith(
+        availableVoices: voices,
+        selectedVoice: selectedVoice,
+      ),
+    );
   }
 
   Future<void> _setVoice(
@@ -104,6 +127,10 @@ class AppBloc extends HydratedBloc<AppEvent, AppState> {
     Emitter<AppState> emit,
   ) async {
     await _tts.setVoice(event.voice);
+    final sampleInsult = event.sampleInsult;
+    if (sampleInsult != null) {
+      unawaited(_tts.speak(sampleInsult));
+    }
 
     emit(state.copyWith(selectedVoice: event.voice));
   }

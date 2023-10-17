@@ -16,6 +16,7 @@ import 'package:smack_talking_scoreboard_v3/score/view/change_turn_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/reset_game_dialog.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/scoreboard_page_dependencies.dart';
+import 'package:smack_talking_scoreboard_v3/score/view/select_voice_button.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/volume_button.dart';
 
 class ScoreboardPage extends StatelessWidget with NavigationMixin {
@@ -130,7 +131,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: true,
       title: Text(strings.roundNumber(round.roundCount)),
-      actions: const [VolumeButton()],
+      actions: const [
+        SelectVoicesButton(),
+        VolumeButton(),
+      ],
     );
   }
 

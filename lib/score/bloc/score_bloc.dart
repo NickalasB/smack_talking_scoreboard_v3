@@ -243,7 +243,6 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
   }
 
   void _resetGame(ResetGameEvent event, Emitter<ScoreboardState> emit) {
-    final initialGame = initialScoreboardState.game;
     final keepNamesNewGame = state.game.players
         .map(
           (e) => e.copyWith(
@@ -255,23 +254,13 @@ class ScoreboardBloc extends HydratedBloc<ScoreboardEvent, ScoreboardState> {
 
     final newRound = Round(roundCount: state.game.round.roundCount + 1);
 
-    final newGame = event.shouldKeepNames
-        ? initialScoreboardState.game.copyWith(
-            players: keepNamesNewGame,
-            gamePointParams: state.game.gamePointParams,
-            round: newRound,
-          )
-        : initialGame.copyWith(
-            gamePointParams: state.game.gamePointParams,
-            round: newRound,
-          );
-
-    emit(
-      state.copyWith(
-        isGameInProgress: event.shouldKeepNames,
-        game: newGame,
-      ),
+    final newGame = initialScoreboardState.game.copyWith(
+      players: keepNamesNewGame,
+      gamePointParams: state.game.gamePointParams,
+      round: newRound,
     );
+
+    emit(state.copyWith(game: newGame));
   }
 
   void _gameOverEvent(GameOverEvent event, Emitter<ScoreboardState> emit) {

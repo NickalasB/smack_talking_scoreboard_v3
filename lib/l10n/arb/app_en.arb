@@ -184,5 +184,23 @@
   "next": "NEXT",
   "@next": {
     "description": "button label for indicting user is ready for next step"
+  },
+  "satVoiceInsult": "Well. Are you going to just pick your nose or actually pick a voice here?",
+  "@setVoiceInsult": {
+    "description": "sentence to be read aloud when user sets a new voice"
+  },
+  "voiceNumber": "Voice # {index}",
+  "@voiceNumber": {
+    "description": "button label for indicting user is ready for next step",
+    "placeholders": {
+      "index": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "pickVoice": "Pick a Voice",
+  "@pickVoice": {
+    "description": "Title for voice selection bottom sheet"
   }
 }

@@ -6,12 +6,12 @@ import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
+import 'package:smack_talking_scoreboard_v3/app/locale_service.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_state.dart';
 import 'package:smack_talking_scoreboard_v3/score/score.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/models/player.dart';
-import 'package:smack_talking_scoreboard_v3/text_to_speech/tts.dart';
 
 import 'helpers/fake_bloc.dart';
 import 'helpers/fake_scoreboard_dependencies_data.dart';
@@ -38,20 +38,14 @@ class AppHarness extends WidgetTestHarness with FakeScoreboardDependenciesData {
 extension AppGiven on WidgetTestGiven<AppHarness> {
   Future<void> pumpWidget(Widget child, {Brightness? brightness}) async {
     await harness.tester.pumpMaterialWidget(
-      MultiBlocProvider(
-        providers: [
-          BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
-          BlocProvider<AppBloc>(create: (context) => harness.appBloc),
-          BlocProvider<InsultCreatorBloc>(
-            create: (context) => harness.insultCreatorBloc,
-          ),
-        ],
-        child: Builder(
-          builder: (context) {
-            return child;
-          },
+      child,
+      providers: [
+        BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
+        BlocProvider<AppBloc>(create: (context) => harness.appBloc),
+        BlocProvider<InsultCreatorBloc>(
+          create: (context) => harness.insultCreatorBloc,
         ),
-      ),
+      ],
       navigatorObserver: harness.navigationObserver,
       brightness: brightness,
     );
@@ -59,20 +53,14 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
 
   Future<void> pumpWidgetWithDependencies(Widget child) async {
     await harness.tester.pumpMaterialWidget(
-      MultiBlocProvider(
-        providers: [
-          BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
-          BlocProvider<AppBloc>(create: (context) => harness.appBloc),
-        ],
-        child: Builder(
-          builder: (context) {
-            return ScoreboardPageDependencies(
-              data: harness,
-              child: child,
-            );
-          },
-        ),
+      ScoreboardPageDependencies(
+        data: harness,
+        child: child,
       ),
+      providers: [
+        BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
+        BlocProvider<AppBloc>(create: (context) => harness.appBloc),
+      ],
     );
   }
 
@@ -93,22 +81,16 @@ extension AppGiven on WidgetTestGiven<AppHarness> {
       harness.insultCreatorBloc = FakeInsultCreatorBloc(insultCreatorState);
     }
     await harness.tester.pumpMaterialWidget(
-      MultiBlocProvider(
-        providers: [
-          BlocProvider<ScoreboardBloc>(create: (context) => harness.scoreBloc),
-          BlocProvider<AppBloc>(create: (context) => harness.appBloc),
-          BlocProvider<InsultCreatorBloc>(
-            create: (context) => harness.insultCreatorBloc,
-          ),
-        ],
-        child: Builder(
-          builder: (context) {
-            return child;
-          },
-        ),
-      ),
+      child,
       navigatorObserver: harness.navigationObserver,
       brightness: brightness,
+      providers: [
+        BlocProvider<ScoreboardBloc>(create: (_) => harness.scoreBloc),
+        BlocProvider<AppBloc>(create: (_) => harness.appBloc),
+        BlocProvider<InsultCreatorBloc>(
+          create: (context) => harness.insultCreatorBloc,
+        ),
+      ],
     );
   }
 
@@ -289,9 +271,12 @@ class FakeScoreBloc extends FakeBloc<ScoreboardEvent, ScoreboardState>
 }
 
 class FakeAppBloc extends FakeBloc<AppEvent, AppState>
-    with TtsMixin
+    with TtsMixin, LocaleServiceMixin
     implements AppBloc {
   FakeAppBloc(super.initialState);
+
+  @override
+  AppState? get initialAppState => throw UnimplementedError();
 }
 
 class FakeInsultCreatorBloc
@@ -301,5 +286,16 @@ class FakeInsultCreatorBloc
 }
 
 mixin TtsMixin {
-  Tts get tts => FakeTts();
+  FakeTts get tts => FakeTts();
+}
+
+mixin LocaleServiceMixin {
+  AppLocaleService get localeService => FakeLocaleService();
+}
+
+class FakeLocaleService implements AppLocaleService {
+  String fakeLocaleName = 'en_US';
+
+  @override
+  String get platformLocaleName => fakeLocaleName;
 }

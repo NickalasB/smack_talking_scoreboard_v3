@@ -24,12 +24,13 @@ class LoadAvailableVoicesEvent extends AppEvent {
 }
 
 class SetVoiceEvent extends AppEvent {
-  SetVoiceEvent(this.voice);
+  SetVoiceEvent(this.voice, {this.sampleInsult});
 
   final Voice voice;
+  final String? sampleInsult;
 
   @override
-  List<Object?> get props => [voice];
+  List<Object?> get props => [voice, sampleInsult];
 }
 
 class SaveInsultEvent extends AppEvent {

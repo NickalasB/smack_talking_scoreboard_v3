@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_bloc.dart';
+import 'package:smack_talking_scoreboard_v3/app/locale_service.dart';
 import 'package:smack_talking_scoreboard_v3/app/view/app_theme.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
@@ -44,7 +45,9 @@ class _AppState extends State<App> {
         BlocProvider(
           create: (_) => ScoreboardBloc(ttsImplementation),
         ),
-        BlocProvider(create: (_) => AppBloc(ttsImplementation)),
+        BlocProvider(
+          create: (_) => AppBloc(ttsImplementation, const AppLocaleService()),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
