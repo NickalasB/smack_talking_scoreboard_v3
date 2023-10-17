@@ -211,7 +211,7 @@ void main() {
 
         expect(
           then.harness.scoreBloc.addedEvents,
-          [ResetGameEvent(shouldKeepNames: true)],
+          [ResetGameEvent()],
         );
         then.findsNoWidget(scoreboardPage.resetScoreDialog);
       }),

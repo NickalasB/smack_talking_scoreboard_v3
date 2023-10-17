@@ -986,7 +986,7 @@ void main() {
           inProgressState,
         );
 
-        bloc.add(ResetGameEvent(shouldKeepNames: false));
+        bloc.add(ResetGameEvent());
         await tick();
 
         expectStateAndHydratedState(
@@ -998,12 +998,13 @@ void main() {
               ),
               round: Round(roundCount: 11),
             ),
+            isGameInProgress: true,
           ),
         );
       });
 
       test(
-          'Should reset scores and rounds but keep NAMES and gamePointParams when ResetGameEvent added with shouldKeepNames: true',
+          'Should reset scores and rounds gamePointParams when ResetGameEvent added',
           () async {
         final inProgressState = ScoreboardState(
           Game(
@@ -1017,6 +1018,7 @@ void main() {
               roundCount: 10,
             ),
           ),
+          isGameInProgress: true,
         );
 
         final bloc = ScoreboardBloc(FakeTts())..emit(inProgressState);
@@ -1026,7 +1028,7 @@ void main() {
           inProgressState,
         );
 
-        bloc.add(ResetGameEvent(shouldKeepNames: true));
+        bloc.add(ResetGameEvent());
         await tick();
 
         expectStateAndHydratedState(
