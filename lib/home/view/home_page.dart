@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/dismissible_insult_list.dart';
-import 'package:smack_talking_scoreboard_v3/home/view/settings.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/settings/add_insults_bottom_sheet.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/settings/manage_insults_bottom_sheet.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/start_game_form.dart';
