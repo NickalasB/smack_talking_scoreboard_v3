@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_state.dart';
-import 'package:smack_talking_scoreboard_v3/home/view/dismissible_insult_list.dart';
 import 'package:smack_talking_scoreboard_v3/l10n/l10n.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
@@ -38,35 +37,6 @@ class AddInsultsBottomSheet extends StatelessWidget {
             ),
             const Expanded(
               child: AddInsultsContent(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ManageInsultsBottomSheet extends StatelessWidget {
-  const ManageInsultsBottomSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
-      child: FractionallySizedBox(
-        heightFactor: .5,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            BottomSheetHeader(
-              title: context.l10n.savedInsults,
-              subTitle: context.l10n.withRandomNames,
-              key: const Key('mange_insults_bottom_sheet'),
-            ),
-            const Expanded(
-              child: DismissibleInsultList(names: randomNames),
             ),
           ],
         ),
@@ -123,10 +93,10 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
                   child: Wrap(
                     runSpacing: 4,
                     children: inputAndPlayerList.mapIndexed<Widget>((i, w) {
-                      if (i + 1 > 1 && i + 1 == inputAndPlayerList.length) {
-                        return Stack(
-                          children: [
-                            w,
+                      return Stack(
+                        children: [
+                          w,
+                          if (i > 0 && i + 1 == inputAndPlayerList.length)
                             Positioned(
                               right: 1,
                               top: 1,
@@ -141,10 +111,7 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
                                   ),
                                   onPressed: () {
                                     insultCreatorBloc.add(
-                                      CreateInsultEvent(
-                                        '',
-                                        index: inputAndPlayerList.length - 1,
-                                      ),
+                                      RemoveLastInsultAdditionEvent(),
                                     );
                                     inputAndPlayerList
                                         .remove(inputAndPlayerList.last);
@@ -152,10 +119,8 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
                                 ),
                               ),
                             ),
-                          ],
-                        );
-                      }
-                      return w;
+                        ],
+                      );
                     }).toList(),
                   ),
                 ),
@@ -448,176 +413,3 @@ class HiLoWidget extends StatelessWidget {
     );
   }
 }
-
-const randomNames = [
-  'Emma',
-  'Liam',
-  'Olivia',
-  'Noah',
-  'Ava',
-  'William',
-  'Sophia',
-  'Michael',
-  'Mia',
-  'James',
-  'Isabella',
-  'Benjamin',
-  'Evelyn',
-  'John',
-  'Charlotte',
-  'David',
-  'Amelia',
-  'Robert',
-  'Harper',
-  'Mary',
-  'Evelyn',
-  'Abigail',
-  'Emily',
-  'Elizabeth',
-  'Daniel',
-  'Sofia',
-  'Avery',
-  'Ella',
-  'Scarlett',
-  'Grace',
-  'Chloe',
-  'Victoria',
-  'Riley',
-  'Aria',
-  'Lily',
-  'Aubrey',
-  'Zoey',
-  'Penelope',
-  'Lillian',
-  'Addison',
-  'Natalie',
-  'Edward',
-  'Hannah',
-  'William',
-  'Julia',
-  'Nora',
-  'Leah',
-  'Savannah',
-  'Audrey',
-  'Christopher',
-  'Stella',
-  'Joseph',
-  'Lucy',
-  'Anna',
-  'Violet',
-  'Hazel',
-  'Aurora',
-  'Gabriel',
-  'Gianna',
-  'Serenity',
-  'Aaliyah',
-  'Kennedy',
-  'Maya',
-  'Valentina',
-  'Ariana',
-  'David',
-  'Nevaeh',
-  'Kaylee',
-  'Maria',
-  'Andrew',
-  'Ruby',
-  'Jasmine',
-  'Laura',
-  'Taylor',
-  'Kylie',
-  'Alexa',
-  'Clara',
-  'Jocelyn',
-  'Sadie',
-  'Piper',
-  'Willow',
-  'Liliana',
-  'Luna',
-  'Eliana',
-  'Paisley',
-  'Ellie',
-  'Mila',
-  'Aubree',
-  'Kinsley',
-  'Charlie',
-  'Adalyn',
-  'Finley',
-  'Ryleigh',
-  'Emery',
-  'Gabriella',
-  'Jackson',
-  'Hailey',
-  'Kayden',
-  'Milani',
-  'Madelyn',
-  'Lydia',
-  'Adeline',
-  'Adaline',
-  'Avery',
-  'Zara',
-  'Eliana',
-  'Peyton',
-  'Alaina',
-  'Eliza',
-  'Arianna',
-  'Elena',
-  'Emilia',
-  'Sophie',
-  'Logan',
-  'Nova',
-  'Vera',
-  'Isabel',
-  'Everly',
-  'Isla',
-  'Skylar',
-  'Aria',
-  'Maeve',
-  'Alexandra',
-  'Quinn',
-  'Teagan',
-  'Charlie',
-  'Emerson',
-  'Autumn',
-  'Leilani',
-  'Nora',
-  'Harmony',
-  'Emery',
-  'Brielle',
-  'Leila',
-  'Annabelle',
-  'William',
-  'Stella',
-  'Delilah',
-  'Ariella',
-  'Josephine',
-  'Michael',
-  'Julia',
-  'Rose',
-  'Mariah',
-  'Cora',
-  'Reagan',
-  'Laila',
-  'Matthew',
-  'Madilyn',
-  'Makayla',
-  'Elise',
-  'Remi',
-  'Mckenzie',
-  'Lilah',
-  'Juliana',
-  'Esther',
-  'Valeria',
-  'Adelyn',
-  'Arabella',
-  'Athena',
-  'Raelynn',
-  'Aria',
-  'Lyric',
-  'Lia',
-  'Daniel',
-  'Nash',
-  'Everett',
-  'Kaleb',
-  'Rhett',
-  'Jaxson',
-];

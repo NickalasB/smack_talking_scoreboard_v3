@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:page_object/page_object.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
-import 'package:smack_talking_scoreboard_v3/home/view/settings.dart';
+import 'package:smack_talking_scoreboard_v3/home/view/settings/add_insults_bottom_sheet.dart';
 
 final addInsultPage = AddInsultPage();
 final homePage = HomePageObjects();

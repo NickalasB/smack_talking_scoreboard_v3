@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:smack_talking_scoreboard_v3/app/bloc/app_events.dart';
 import 'package:smack_talking_scoreboard_v3/home/view/home_page.dart';
-import 'package:smack_talking_scoreboard_v3/home/view/settings.dart';
+import 'package:smack_talking_scoreboard_v3/home/view/settings/add_insults_bottom_sheet.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/insult_creator_bloc.dart';
 import 'package:smack_talking_scoreboard_v3/score/bloc/scoreboard_events.dart';
 import 'package:smack_talking_scoreboard_v3/score/view/ui_components/primary_button.dart';
@@ -329,9 +329,59 @@ void main() {
         const TypeMatcher<List<InsultCreatorEvent>>().having(
           (p0) => p0.last,
           'lastEvent',
-          CreateInsultEvent('', index: 1),
+          RemoveLastInsultAdditionEvent(),
         ),
       );
+    }),
+  );
+
+  testGoldens(
+    'Should properly build complex insult',
+    appHarness((given, when, then) async {
+      await given.pumpWidget(
+        const AddInsultsBottomSheet(),
+      );
+      await when.pumpAndSettle();
+
+      await when.userDragsWidgetTo(
+        draggable: addInsultPage.lowDraggable,
+        target: addInsultPage.hiLowDragTarget(),
+      );
+
+      await when.userTypes('first', addInsultPage.insultTextField());
+      await when.pumpAndSettle();
+
+      await when.userTaps(addInsultPage.addMoreInsultButton);
+      await when.pumpAndSettle();
+
+      await when.userDragsWidgetTo(
+        draggable: addInsultPage.lowDraggable,
+        target: addInsultPage.hiLowDragTarget(at: 1),
+      );
+      await when.pumpAndSettle();
+
+      await when.userTypes(
+        'second',
+        addInsultPage.insultTextField(at: 1),
+      );
+      await when.pumpAndSettle();
+
+      await when.userTaps(addInsultPage.addMoreInsultButton);
+      await when.pumpAndSettle();
+
+      await when.userDragsWidgetTo(
+        draggable: addInsultPage.hiDraggable,
+        target: addInsultPage.hiLowDragTarget(at: 2),
+      );
+      await when.pumpAndSettle();
+
+      await when.userTypes(
+        'third',
+        addInsultPage.insultTextField(at: 2),
+      );
+      await when.pumpAndSettle();
+
+      await then.screenMatchesGoldenFile('complex_insult');
     }),
   );
 }

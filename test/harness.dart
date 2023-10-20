@@ -158,6 +158,7 @@ extension AppThen on WidgetTestThen<AppHarness> {
               await tester.pump(kThemeAnimationDuration);
               await tester.pump();
             },
+      autoHeight: true,
     );
   }
 
