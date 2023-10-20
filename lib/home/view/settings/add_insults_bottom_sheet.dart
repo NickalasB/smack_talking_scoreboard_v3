@@ -93,10 +93,10 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
                   child: Wrap(
                     runSpacing: 4,
                     children: inputAndPlayerList.mapIndexed<Widget>((i, w) {
-                      if (i + 1 > 1 && i + 1 == inputAndPlayerList.length) {
-                        return Stack(
-                          children: [
-                            w,
+                      return Stack(
+                        children: [
+                          w,
+                          if (i > 0 && i + 1 == inputAndPlayerList.length)
                             Positioned(
                               right: 1,
                               top: 1,
@@ -111,10 +111,7 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
                                   ),
                                   onPressed: () {
                                     insultCreatorBloc.add(
-                                      CreateInsultEvent(
-                                        '',
-                                        index: inputAndPlayerList.length - 1,
-                                      ),
+                                      RemoveLastInsultAdditionEvent(),
                                     );
                                     inputAndPlayerList
                                         .remove(inputAndPlayerList.last);
@@ -122,10 +119,8 @@ class _AddInsultsContentState extends State<AddInsultsContent> {
                                 ),
                               ),
                             ),
-                          ],
-                        );
-                      }
-                      return w;
+                        ],
+                      );
                     }).toList(),
                   ),
                 ),

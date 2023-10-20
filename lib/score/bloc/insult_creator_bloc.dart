@@ -12,6 +12,10 @@ class InsultCreatorBloc extends Bloc<InsultCreatorEvent, InsultCreatorState> {
     on<CreateInsultEvent>((event, emit) {
       _createInsult(insultMap, event, emit);
     });
+
+    on<RemoveLastInsultAdditionEvent>((event, emit) {
+      _removeLastInsultAddition(insultMap, event, emit);
+    });
   }
 
   void _createInsult(
@@ -31,6 +35,21 @@ class InsultCreatorBloc extends Bloc<InsultCreatorEvent, InsultCreatorState> {
 
     emit(InsultCreatorState(fullInsultPhrase));
   }
+
+  void _removeLastInsultAddition(
+    Map<int, String> insultMap,
+    RemoveLastInsultAdditionEvent event,
+    Emitter<InsultCreatorState> emit,
+  ) {
+    final keys = insultMap.keys;
+    insultMap.remove(keys.last);
+
+    final fullInsultPhrase = List<String>.from(insultMap.values)
+        .join(' ')
+        .replaceAll(highLowKey, invalidKey);
+
+    emit(InsultCreatorState(fullInsultPhrase));
+  }
 }
 
 abstract class InsultCreatorEvent extends Equatable {}
@@ -43,6 +62,13 @@ class CreateInsultEvent extends InsultCreatorEvent {
 
   @override
   List<Object?> get props => [insult, index];
+}
+
+class RemoveLastInsultAdditionEvent extends InsultCreatorEvent {
+  RemoveLastInsultAdditionEvent();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class InsultCreatorState extends Equatable {

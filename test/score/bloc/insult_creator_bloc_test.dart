@@ -75,4 +75,33 @@ void main() {
       );
     });
   });
+
+  group('RemoveLastInsultAdditionEvent', () {
+    test('Should remove last insult from insult list', () async {
+      final bloc = InsultCreatorBloc();
+      await tick();
+
+      bloc.add(CreateInsultEvent('First Insult', index: 0));
+      await tick();
+
+      bloc.add(CreateInsultEvent('Second Insult', index: 1));
+      await tick();
+
+      bloc.add(CreateInsultEvent('Third Insult', index: 2));
+      await tick();
+
+      expect(
+        bloc.state,
+        InsultCreatorState('First Insult Second Insult Third Insult'),
+      );
+
+      bloc.add(RemoveLastInsultAdditionEvent());
+      await tick();
+
+      expect(
+        bloc.state,
+        InsultCreatorState('First Insult Second Insult'),
+      );
+    });
+  });
 }
