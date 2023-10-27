@@ -28,7 +28,7 @@ dependencies:
   provider: ^6.0.5
 
 dev_dependencies:
-  bloc_test: ^9.1.1
+  bloc_test: ^9.1.5
   flutter_test:
     sdk: flutter
   given_when_then: ^0.2.0
