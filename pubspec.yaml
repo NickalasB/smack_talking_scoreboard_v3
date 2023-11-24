@@ -19,7 +19,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_svg: ^2.0.7
-  flutter_tts: ^3.8.3
+  flutter_tts: ^3.8.4
   hydrated_bloc: ^9.1.2
   intl: ^0.18.0
   json_annotation: ^4.8.1
